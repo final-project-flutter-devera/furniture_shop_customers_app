@@ -1,22 +1,20 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:furniture_shop/Screen/2.%20Login%20-%20Signup/Signup.dart';
+import 'package:furniture_shop/Screen/2.%20Login%20-%20Signup/Login.dart';
 import 'package:google_fonts/google_fonts.dart';
-import '../3.CustomerHomeScreen/Screen/CustomerHomeScreen.dart';
 
-class Login extends StatefulWidget {
-  const Login({super.key});
+class Signup extends StatefulWidget {
+  const Signup({super.key});
 
   @override
-  State<Login> createState() => _LoginState();
+  State<Signup> createState() => _SignupState();
 }
 
-class _LoginState extends State<Login> {
+class _SignupState extends State<Signup> {
   @override
   Widget build(BuildContext context) {
     double wMQ = MediaQuery.of(context).size.width;
     bool visiblePassword = false;
-
     return Scaffold(
       resizeToAvoidBottomInset: false,
       body: SafeArea(
@@ -45,21 +43,12 @@ class _LoginState extends State<Login> {
               ),
             ),
             Padding(
-              padding: const EdgeInsets.all(20),
+              padding: const EdgeInsets.all(10),
               child: Text.rich(
                 TextSpan(
                   children: [
                     TextSpan(
-                      text: 'Hello !\n',
-                      style: GoogleFonts.merriweather(
-                        color: const Color(0xFF909090),
-                        fontSize: 30,
-                        fontWeight: FontWeight.w400,
-                        height: 1.50,
-                      ),
-                    ),
-                    TextSpan(
-                      text: 'WELCOME BACK',
+                      text: 'WELCOME',
                       style: GoogleFonts.merriweather(
                         color: const Color(0xFF303030),
                         fontSize: 24,
@@ -94,31 +83,56 @@ class _LoginState extends State<Login> {
                                     fontSize: 14,
                                     fontWeight: FontWeight.w400,
                                     color: const Color(0xFF909090),
-                                  ),
-                                ),
+                                  ),),
                               ),
                               const SizedBox(height: 10),
                               TextFormField(
-                                obscureText: !visiblePassword,
                                 controller: TextEditingController(),
                                 decoration: InputDecoration(
-                                  labelText: 'Password',
+                                  labelText: 'Email',
                                   labelStyle: GoogleFonts.nunito(
                                     fontSize: 14,
                                     fontWeight: FontWeight.w400,
                                     color: const Color(0xFF909090),
-                                  ),
-                                  suffixIcon: IconButton(
-                                    onPressed: () {
-                                      setState(() {
-                                        visiblePassword = !visiblePassword;
-                                      });
-                                    },
-                                    icon: Icon(visiblePassword
-                                        ? Icons.visibility
-                                        : Icons.visibility_off),
-                                  ),
-                                ),
+                                  ),),
+                              ),
+                              const SizedBox(height: 10),
+                              TextFormField(
+                                controller: TextEditingController(),
+                                decoration: InputDecoration(
+                                    labelText: 'Password',
+                                    labelStyle: GoogleFonts.nunito(
+                                      fontSize: 14,
+                                      fontWeight: FontWeight.w400,
+                                      color: const Color(0xFF909090),
+                                    ),
+                                    suffixIcon: IconButton(
+                                      icon: Icon((visiblePassword == false) ? Icons.visibility : Icons.visibility_off),
+                                      onPressed: () {
+                                        setState(() {
+                                          visiblePassword = !visiblePassword;
+                                        });
+                                      },
+                                    )),
+                              ),
+                              const SizedBox(height: 10),
+                              TextFormField(
+                                controller: TextEditingController(),
+                                decoration: InputDecoration(
+                                    labelText: 'Password',
+                                    labelStyle: GoogleFonts.nunito(
+                                      fontSize: 14,
+                                      fontWeight: FontWeight.w400,
+                                      color: const Color(0xFF909090),
+                                    ),
+                                    suffixIcon: IconButton(
+                                      icon: Icon((visiblePassword == false) ? Icons.visibility : Icons.visibility_off),
+                                      onPressed: () {
+                                        setState(() {
+                                          visiblePassword = !visiblePassword;
+                                        });
+                                      },
+                                    )),
                               ),
                             ],
                           ),
@@ -127,27 +141,6 @@ class _LoginState extends State<Login> {
                           padding: const EdgeInsets.all(20),
                           child: GestureDetector(
                             onTap: () {},
-                            child: Text(
-                              'Forgot Password',
-                              style: GoogleFonts.nunito(
-                                fontSize: 18,
-                                fontWeight: FontWeight.w600,
-                                color: const Color(0xFF303030),
-                              ),
-                            ),
-                          ),
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.all(20),
-                          child: GestureDetector(
-                            onTap: () {
-                              Navigator.pushReplacement(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (_) => const CustomerHomeScreen(),
-                                ),
-                              );
-                            },
                             child: Container(
                               height: 50,
                               width: wMQ * 0.65,
@@ -157,7 +150,7 @@ class _LoginState extends State<Login> {
                               ),
                               child: Center(
                                 child: Text(
-                                  'Log in',
+                                  'Sign up',
                                   style: GoogleFonts.nunito(
                                     fontSize: 18,
                                     fontWeight: FontWeight.w600,
@@ -170,21 +163,29 @@ class _LoginState extends State<Login> {
                         ),
                         Padding(
                           padding: const EdgeInsets.all(20),
-                          child: GestureDetector(
-                            onTap: () {
-                              Navigator.pushReplacement(
-                                  context,
-                                  MaterialPageRoute(
-                                      builder: (_) => const Signup()));
-                            },
-                            child: Text(
-                              'SIGN UP',
-                              style: GoogleFonts.nunito(
-                                fontSize: 18,
-                                fontWeight: FontWeight.w600,
-                                color: const Color(0xFF303030),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Text(
+                                'Already have account?',
+                                style: GoogleFonts.nunito(
+                                    fontSize: 14, fontWeight: FontWeight.w600),
                               ),
-                            ),
+                              const SizedBox(width: 5),
+                              GestureDetector(
+                                onTap: () {
+                                  Navigator.pushReplacement(context, MaterialPageRoute(builder: (_)=>const Login()));
+                                },
+                                child: Text(
+                                  'SIGN IN',
+                                  style: GoogleFonts.nunito(
+                                    fontSize: 18,
+                                    fontWeight: FontWeight.w600,
+                                    color: const Color(0xFF303030),
+                                  ),
+                                ),
+                              ),
+                            ],
                           ),
                         ),
                       ],

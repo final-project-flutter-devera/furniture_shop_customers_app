@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'HomeScreen.dart';
-import 'ProfileScreen.dart';
-import 'FavoritesScreen.dart';
-import 'NotificationScreen.dart';
+import 'Components/HomeScreen.dart';
+import 'Components/ProfileScreen.dart';
+import 'Components/FavoritesScreen.dart';
+import 'Components/NotificationScreen.dart';
 
 class CustomerHomeScreen extends StatefulWidget {
   const CustomerHomeScreen({super.key});

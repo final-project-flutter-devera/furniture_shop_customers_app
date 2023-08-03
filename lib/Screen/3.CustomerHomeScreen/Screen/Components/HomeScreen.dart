@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
-import '../Body/Body_Customer_HomeScreen.dart';
+import '../../Body/Body_Customer_HomeScreen.dart';
+import 'SearchScreen.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -29,11 +30,20 @@ class _HomeScreenState extends State<HomeScreen> {
         appBar: AppBar(
           elevation: 0,
           backgroundColor: Colors.white,
-          leading: IconButton(
-              icon: SvgPicture.asset('assets/Images/Icons/search.svg',
-                  height: 24, width: 24),
-              color: Colors.black,
-              onPressed: () {}),
+          leading: InkWell(
+            child: IconButton(
+                icon: SvgPicture.asset('assets/Images/Icons/search.svg',
+                    height: 24, width: 24),
+                color: Colors.black,
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => const SearchScreen(),
+                    ),
+                  );
+                }),
+          ),
           title: const TitleAppBar(),
           centerTitle: true,
           actions: [
