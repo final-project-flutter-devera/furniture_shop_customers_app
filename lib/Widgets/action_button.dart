@@ -1,10 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
-class BlackButton extends StatelessWidget {
+class ActionButton extends StatelessWidget {
   final String title;
   final Size size;
-  BlackButton({super.key, required this.title, required this.size});
+  final Color color;
+  ActionButton(
+      {super.key,
+      required this.title,
+      required this.size,
+      required this.color});
 
   @override
   Widget build(BuildContext context) {
@@ -12,7 +17,7 @@ class BlackButton extends StatelessWidget {
       height: size.height,
       width: size.width,
       decoration: BoxDecoration(
-        color: Colors.black,
+        color: color,
         borderRadius: BorderRadius.circular(8),
       ),
       child: Center(
