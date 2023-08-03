@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 
-//Title Home Screen
+//Home Screen  ↓  ↓  ↓  ↓  ↓ ↓  ↓  ↓  ↓  ↓ ↓  ↓  ↓  ↓  ↓  ↓  ↓  ↓  ↓  ↓  ↓  ↓  ↓
 
 class TitleAppBar extends StatelessWidget {
   const TitleAppBar({super.key});
@@ -15,7 +15,7 @@ class TitleAppBar extends StatelessWidget {
           'Make home',
           style: GoogleFonts.gelasio(
             textStyle: const TextStyle(
-              fontSize: 20,
+              fontSize: 18,
               fontWeight: FontWeight.normal,
               color: Colors.black,
             ),
@@ -25,7 +25,7 @@ class TitleAppBar extends StatelessWidget {
           'BEAUTIFUL',
           style: GoogleFonts.gelasio(
             textStyle: const TextStyle(
-              fontSize: 20,
+              fontSize: 18,
               fontWeight: FontWeight.bold,
               color: Colors.black,
             ),
@@ -85,3 +85,5 @@ class HomeTabBar extends StatelessWidget {
     );
   }
 }
+
+// Home Screen ↑  ↑  ↑  ↑  ↑  ↑  ↑  ↑  ↑  ↑  ↑  ↑  ↑  ↑  ↑  ↑  ↑  ↑  ↑  ↑  ↑  ↑

@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:furniture_shop/Screen/CustomerHomeScreen/HomeScreen.dart';
+import 'HomeScreen.dart';
+import 'ProfileScreen.dart';
+import 'FavoritesScreen.dart';
+import 'NotificationScreen.dart';
 
 class CustomerHomeScreen extends StatefulWidget {
   const CustomerHomeScreen({super.key});
@@ -12,9 +15,9 @@ class _CustomerHomeScreen extends State<CustomerHomeScreen> {
   int _selectIndex = 0;
   final List<Widget> _tabs = const [
     HomeScreen(),
-    Center(child: Text('Favorites Screen')),
-    Center(child: Text('Notations Screen')),
-    Center(child: Text('Profile Screen')),
+    FavoritesScreen(),
+    NotificationScreen(),
+    ProfileScreen(),
   ];
 
   @override

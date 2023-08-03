@@ -1,8 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:furniture_shop/Screen/CustomerHomeScreen/CustomerHomeScreen.dart';
+import 'Screen/1. Boarding/BoardingScreen.dart';
 
 void main() {
+  WidgetsFlutterBinding.ensureInitialized();
+  SystemChrome.setPreferredOrientations([
+    DeviceOrientation.portraitDown,
+    DeviceOrientation.portraitUp,
+  ]).then((value) {
+    return const MyApp();
+  });
   runApp(const MyApp());
 }
 
@@ -13,7 +20,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return const MaterialApp(
       debugShowCheckedModeBanner: false,
-      home: CustomerHomeScreen(),
+      home: BoardingScreen(),
     );
   }
 }
