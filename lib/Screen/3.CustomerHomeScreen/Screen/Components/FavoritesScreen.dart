@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:google_fonts/google_fonts.dart';
 
+import 'CartScreen.dart';
 import 'SearchScreen.dart';
 
 class FavoritesScreen extends StatefulWidget {
@@ -28,17 +29,24 @@ class _FavoritesScreenState extends State<FavoritesScreen> {
               );
             },
             icon: SvgPicture.asset('assets/Images/Icons/search.svg',
-                height: 20, width: 20)),
+                height: 24, width: 24)),
         title: Text(
           'Favorites',
           style: GoogleFonts.merriweather(
-              fontSize: 16, fontWeight: FontWeight.w700, color: Colors.black),
+              fontSize: 18, fontWeight: FontWeight.w700, color: Colors.black),
         ),
         actions: [
           IconButton(
-              onPressed: () {},
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => const CartScreen(),
+                  ),
+                );
+              },
               icon: SvgPicture.asset('assets/Images/Icons/cart.svg',
-                  height: 20, width: 20)),
+                  height: 24, width: 24)),
         ],
         centerTitle: true,
       ),

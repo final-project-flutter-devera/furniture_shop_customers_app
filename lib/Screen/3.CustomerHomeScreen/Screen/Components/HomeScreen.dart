@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:furniture_shop/Constants/Colors.dart';
 
 import '../../Body/Body_Customer_HomeScreen.dart';
+import 'CartScreen.dart';
 import 'SearchScreen.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -29,12 +31,12 @@ class _HomeScreenState extends State<HomeScreen> {
         ),
         appBar: AppBar(
           elevation: 0,
-          backgroundColor: Colors.white,
+          backgroundColor: AppColor.white,
           leading: InkWell(
             child: IconButton(
                 icon: SvgPicture.asset('assets/Images/Icons/search.svg',
                     height: 24, width: 24),
-                color: Colors.black,
+                color: AppColor.black,
                 onPressed: () {
                   Navigator.push(
                     context,
@@ -48,8 +50,15 @@ class _HomeScreenState extends State<HomeScreen> {
           centerTitle: true,
           actions: [
             IconButton(
-                color: Colors.black,
-                onPressed: () {},
+                color: AppColor.black,
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => const CartScreen(),
+                    ),
+                  );
+                },
                 icon: SvgPicture.asset('assets/Images/Icons/cart.svg',
                     height: 24, width: 24)),
           ],
@@ -58,7 +67,7 @@ class _HomeScreenState extends State<HomeScreen> {
             child: SizedBox(
               height: 100,
               child: TabBar(
-                indicatorColor: Colors.black,
+                indicatorColor: AppColor.black,
                 isScrollable: true,
                 tabs: [
                   HomeTabBar(

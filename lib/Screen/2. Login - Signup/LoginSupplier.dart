@@ -1,19 +1,20 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:furniture_shop/Screen/2.%20Login%20-%20Signup/Login.dart';
 import 'package:furniture_shop/Screen/2.%20Login%20-%20Signup/Signup.dart';
 import 'package:google_fonts/google_fonts.dart';
 import '../../Constants/Colors.dart';
 import '../3.CustomerHomeScreen/Screen/CustomerHomeScreen.dart';
-import 'LoginSupplier.dart';
+import '../3.CustomerHomeScreen/Screen/SupplierHomeScreen.dart';
 
-class Login extends StatefulWidget {
-  const Login({super.key});
+class LoginSupplier extends StatefulWidget {
+  const LoginSupplier({super.key});
 
   @override
-  State<Login> createState() => _LoginState();
+  State<LoginSupplier> createState() => _LoginSupplierState();
 }
 
-class _LoginState extends State<Login> {
+class _LoginSupplierState extends State<LoginSupplier> {
   @override
   Widget build(BuildContext context) {
     double wMQ = MediaQuery.of(context).size.width;
@@ -52,7 +53,7 @@ class _LoginState extends State<Login> {
                 TextSpan(
                   children: [
                     TextSpan(
-                      text: 'Hello !\n',
+                      text: 'HELLO !\n',
                       style: GoogleFonts.merriweather(
                         color: const Color(0xFF909090),
                         fontSize: 30,
@@ -61,7 +62,7 @@ class _LoginState extends State<Login> {
                       ),
                     ),
                     TextSpan(
-                      text: 'WELCOME BACK',
+                      text: 'MY CUTE SUPPLIER',
                       style: GoogleFonts.merriweather(
                         color: const Color(0xFF303030),
                         fontSize: 24,
@@ -126,7 +127,7 @@ class _LoginState extends State<Login> {
                           ),
                         ),
                         Padding(
-                          padding: const EdgeInsets.all(20),
+                          padding: const EdgeInsets.all(10),
                           child: GestureDetector(
                             onTap: () {},
                             child: Text(
@@ -146,7 +147,7 @@ class _LoginState extends State<Login> {
                               Navigator.pushReplacement(
                                 context,
                                 MaterialPageRoute(
-                                  builder: (_) => const CustomerHomeScreen(),
+                                  builder: (_) => const SupplierHomeScreen(),
                                 ),
                               );
                             },
@@ -171,25 +172,6 @@ class _LoginState extends State<Login> {
                           ),
                         ),
                         Padding(
-                          padding: const EdgeInsets.all(20),
-                          child: GestureDetector(
-                            onTap: () {
-                              Navigator.pushReplacement(
-                                  context,
-                                  MaterialPageRoute(
-                                      builder: (_) => const Signup()));
-                            },
-                            child: Text(
-                              'SIGN UP',
-                              style: GoogleFonts.nunito(
-                                fontSize: 18,
-                                fontWeight: FontWeight.w600,
-                                color: const Color(0xFF303030),
-                              ),
-                            ),
-                          ),
-                        ),
-                        Padding(
                           padding: const EdgeInsets.all(10),
                           child: ClipRRect(
                             borderRadius: BorderRadius.circular(20),
@@ -200,12 +182,12 @@ class _LoginState extends State<Login> {
                                 Navigator.pushReplacement(
                                   context,
                                   MaterialPageRoute(
-                                    builder: (context) => const LoginSupplier(),
+                                    builder: (context) => const Login(),
                                   ),
                                 );
                               },
                               child: Text(
-                                'SUPPLIER LOGIN',
+                                'CUSTOMER LOGIN',
                                 style: GoogleFonts.nunito(
                                   fontSize: 18,
                                   fontWeight: FontWeight.w600,
