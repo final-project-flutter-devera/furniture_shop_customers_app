@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:google_fonts/google_fonts.dart';
 
+import 'SearchScreen.dart';
+
 class NotificationScreen extends StatefulWidget {
   const NotificationScreen({super.key});
 
@@ -17,12 +19,19 @@ class _NotificationScreenState extends State<NotificationScreen> {
         elevation: 0,
         backgroundColor: Colors.white,
         leading: IconButton(
-            onPressed: () {},
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => const SearchScreen(),
+                ),
+              );
+            },
             icon: SvgPicture.asset('assets/Images/Icons/search.svg',
-                height: 20, width: 20)),
+                height: 24, width: 24)),
         title: Text('Notifications',
             style: GoogleFonts.merriweather(
-                fontSize: 16,
+                fontSize: 18,
                 fontWeight: FontWeight.w700,
                 color: Colors.black)),
         centerTitle: true,
