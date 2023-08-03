@@ -13,7 +13,6 @@ class _LoginState extends State<Login> {
   @override
   Widget build(BuildContext context) {
     double wMQ = MediaQuery.of(context).size.width;
-    double hMQ = MediaQuery.of(context).size.height;
 
     return Scaffold(
       resizeToAvoidBottomInset: false,
