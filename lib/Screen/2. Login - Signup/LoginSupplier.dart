@@ -15,10 +15,11 @@ class LoginSupplier extends StatefulWidget {
 }
 
 class _LoginSupplierState extends State<LoginSupplier> {
+  bool visiblePassword = false;
   @override
   Widget build(BuildContext context) {
     double wMQ = MediaQuery.of(context).size.width;
-    bool visiblePassword = false;
+
 
     return Scaffold(
       resizeToAvoidBottomInset: false,

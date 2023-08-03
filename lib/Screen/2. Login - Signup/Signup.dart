@@ -11,10 +11,11 @@ class Signup extends StatefulWidget {
 }
 
 class _SignupState extends State<Signup> {
+  bool visiblePassword = false;
+
   @override
   Widget build(BuildContext context) {
     double wMQ = MediaQuery.of(context).size.width;
-    bool visiblePassword = false;
     return Scaffold(
       resizeToAvoidBottomInset: false,
       body: SafeArea(
@@ -83,7 +84,8 @@ class _SignupState extends State<Signup> {
                                     fontSize: 14,
                                     fontWeight: FontWeight.w400,
                                     color: const Color(0xFF909090),
-                                  ),),
+                                  ),
+                                ),
                               ),
                               const SizedBox(height: 10),
                               TextFormField(
@@ -94,10 +96,12 @@ class _SignupState extends State<Signup> {
                                     fontSize: 14,
                                     fontWeight: FontWeight.w400,
                                     color: const Color(0xFF909090),
-                                  ),),
+                                  ),
+                                ),
                               ),
                               const SizedBox(height: 10),
                               TextFormField(
+                                obscureText: !visiblePassword,
                                 controller: TextEditingController(),
                                 decoration: InputDecoration(
                                     labelText: 'Password',
@@ -107,7 +111,9 @@ class _SignupState extends State<Signup> {
                                       color: const Color(0xFF909090),
                                     ),
                                     suffixIcon: IconButton(
-                                      icon: Icon((visiblePassword == false) ? Icons.visibility : Icons.visibility_off),
+                                      icon: Icon(visiblePassword
+                                          ? Icons.visibility
+                                          : Icons.visibility_off),
                                       onPressed: () {
                                         setState(() {
                                           visiblePassword = !visiblePassword;
@@ -117,16 +123,19 @@ class _SignupState extends State<Signup> {
                               ),
                               const SizedBox(height: 10),
                               TextFormField(
+                                obscureText: !visiblePassword,
                                 controller: TextEditingController(),
                                 decoration: InputDecoration(
-                                    labelText: 'Password',
+                                    labelText: 'Re - Confirm Password',
                                     labelStyle: GoogleFonts.nunito(
                                       fontSize: 14,
                                       fontWeight: FontWeight.w400,
                                       color: const Color(0xFF909090),
                                     ),
                                     suffixIcon: IconButton(
-                                      icon: Icon((visiblePassword == false) ? Icons.visibility : Icons.visibility_off),
+                                      icon: Icon(visiblePassword
+                                          ? Icons.visibility
+                                          : Icons.visibility_off),
                                       onPressed: () {
                                         setState(() {
                                           visiblePassword = !visiblePassword;
@@ -174,7 +183,10 @@ class _SignupState extends State<Signup> {
                               const SizedBox(width: 5),
                               GestureDetector(
                                 onTap: () {
-                                  Navigator.pushReplacement(context, MaterialPageRoute(builder: (_)=>const Login()));
+                                  Navigator.pushReplacement(
+                                      context,
+                                      MaterialPageRoute(
+                                          builder: (_) => const Login()));
                                 },
                                 child: Text(
                                   'SIGN IN',
