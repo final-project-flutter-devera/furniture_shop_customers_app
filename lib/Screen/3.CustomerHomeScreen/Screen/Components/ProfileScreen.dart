@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:furniture_shop/Constants/Colors.dart';
-import 'package:google_fonts/google_fonts.dart';
-
+import 'package:furniture_shop/Widgets/AppBarButton.dart';
+import 'package:furniture_shop/Widgets/AppBarTitle.dart';
 import 'SearchScreen.dart';
 
 class ProfileScreen extends StatefulWidget {
@@ -20,23 +20,15 @@ class _ProfileScreenState extends State<ProfileScreen> {
       appBar: AppBar(
         elevation: 0,
         backgroundColor: AppColor.white,
-        leading: IconButton(
-            icon: SvgPicture.asset('assets/Images/Icons/search.svg',
-                height: 24, width: 24),
-            onPressed: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => const SearchScreen(),
-                ),
-              );
-            }),
-        title: Text('Profile',
-            style: GoogleFonts.merriweather(
-                textStyle: const TextStyle(
-                    fontSize: 18,
-                    fontWeight: FontWeight.w700,
-                    color: AppColor.black))),
+        leading: AppBarButtonPush(
+          aimRoute: const SearchScreen(),
+          icon: SvgPicture.asset(
+            'assets/Images/Icons/search.svg',
+            height: 24,
+            width: 24,
+          ),
+        ),
+        title: const AppBarTitle(label: 'Profile'),
         centerTitle: true,
         actions: [
           IconButton(

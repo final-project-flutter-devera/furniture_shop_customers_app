@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:furniture_shop/Constants/Colors.dart';
+import 'package:furniture_shop/Widgets/AppBarButton.dart';
 
 import '../../Body/Body_Customer_HomeScreen.dart';
 import 'CartScreen.dart';
@@ -32,35 +33,25 @@ class _HomeScreenState extends State<HomeScreen> {
         appBar: AppBar(
           elevation: 0,
           backgroundColor: AppColor.white,
-          leading: InkWell(
-            child: IconButton(
-                icon: SvgPicture.asset('assets/Images/Icons/search.svg',
-                    height: 24, width: 24),
-                color: AppColor.black,
-                onPressed: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => const SearchScreen(),
-                    ),
-                  );
-                }),
+          leading: AppBarButtonPush(
+            aimRoute: const SearchScreen(),
+            icon: SvgPicture.asset(
+              'assets/Images/Icons/search.svg',
+              height: 24,
+              width: 24,
+            ),
           ),
           title: const TitleAppBar(),
           centerTitle: true,
           actions: [
-            IconButton(
-                color: AppColor.black,
-                onPressed: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => const CartScreen(),
-                    ),
-                  );
-                },
-                icon: SvgPicture.asset('assets/Images/Icons/cart.svg',
-                    height: 24, width: 24)),
+            AppBarButtonPush(
+              aimRoute: const CartScreen(),
+              icon: SvgPicture.asset(
+                'assets/Images/Icons/cart.svg',
+                height: 24,
+                width: 24,
+              ),
+            ),
           ],
           bottom: PreferredSize(
             preferredSize: const Size(100, 100),

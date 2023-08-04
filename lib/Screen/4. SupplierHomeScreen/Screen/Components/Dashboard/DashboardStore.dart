@@ -1,19 +1,21 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/cupertino.dart';
-import 'package:furniture_shop/Constants/Colors.dart';
 import 'package:furniture_shop/Widgets/AppBarButton.dart';
+import 'package:furniture_shop/Widgets/AppBarTitle.dart';
 
-class SearchScreen extends StatelessWidget {
-  const SearchScreen({super.key});
+import '../../../../../Constants/Colors.dart';
+
+class StoreDashboard extends StatelessWidget {
+  const StoreDashboard({super.key});
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const CupertinoSearchTextField(),
         elevation: 0,
         backgroundColor: AppColor.white,
         leading: const AppBarBackButtonPop(),
+        title: const AppBarTitle(label: 'Store'),
+        centerTitle: true,
       ),
     );
   }

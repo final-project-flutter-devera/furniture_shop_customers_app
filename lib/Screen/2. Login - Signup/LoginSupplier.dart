@@ -5,7 +5,7 @@ import 'package:furniture_shop/Screen/2.%20Login%20-%20Signup/Signup.dart';
 import 'package:google_fonts/google_fonts.dart';
 import '../../Constants/Colors.dart';
 import '../3.CustomerHomeScreen/Screen/CustomerHomeScreen.dart';
-import '../3.CustomerHomeScreen/Screen/SupplierHomeScreen.dart';
+import '../4. SupplierHomeScreen/Screen/SupplierHomeScreen.dart';
 
 class LoginSupplier extends StatefulWidget {
   const LoginSupplier({super.key});

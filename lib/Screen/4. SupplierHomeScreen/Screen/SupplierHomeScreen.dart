@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
-
+import '../../3.CustomerHomeScreen/Screen/Components/HomeScreen.dart';
+import '../../3.CustomerHomeScreen/Screen/Components/NotificationScreen.dart';
 import 'Components/DashboardScreen.dart';
-import 'Components/HomeScreen.dart';
-import 'Components/NotificationScreen.dart';
 import 'Components/UploadScreen.dart';
 
 class SupplierHomeScreen extends StatefulWidget {
