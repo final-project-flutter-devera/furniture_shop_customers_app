@@ -14,4 +14,8 @@ class AppStyle {
     fontWeight: FontWeight.w600,
     color: Colors.white,
   );
+
+  static const List<BoxShadow> white_container_shadow_on_white_background = [
+    BoxShadow(color: Color.fromRGBO(138, 149, 158, 0.2), blurRadius: 2)
+  ];
 }
