@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 import 'package:furniture_shop/Screen/2.%20Login%20-%20Signup/Signup.dart';
 import 'package:google_fonts/google_fonts.dart';
 import '../../Constants/Colors.dart';
 import '../3.CustomerHomeScreen/Screen/CustomerHomeScreen.dart';
 import 'LoginSupplier.dart';
+import 'Widgets/LogoLoginSignup.dart';
+import 'Widgets/TextLoginWidget.dart';
 
 class Login extends StatefulWidget {
   const Login({super.key});
@@ -15,65 +16,20 @@ class Login extends StatefulWidget {
 
 class _LoginState extends State<Login> {
   bool visiblePassword = false;
+
   @override
   Widget build(BuildContext context) {
     double wMQ = MediaQuery.of(context).size.width;
-
-
     return Scaffold(
       resizeToAvoidBottomInset: false,
       body: SafeArea(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Padding(
-              padding: const EdgeInsets.all(20),
-              child: Column(
-                children: [
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    children: [
-                      Container(
-                          color: Colors.black, height: 1, width: wMQ * 0.25),
-                      SvgPicture.asset(
-                        'assets/Images/Icons/SofaLogin.svg',
-                        height: 100,
-                        width: 100,
-                      ),
-                      Container(
-                          color: Colors.black, height: 1, width: wMQ * 0.25),
-                    ],
-                  ),
-                ],
-              ),
-            ),
-            Padding(
-              padding: const EdgeInsets.all(20),
-              child: Text.rich(
-                TextSpan(
-                  children: [
-                    TextSpan(
-                      text: 'Hello !\n',
-                      style: GoogleFonts.merriweather(
-                        color: const Color(0xFF909090),
-                        fontSize: 30,
-                        fontWeight: FontWeight.w400,
-                        height: 1.50,
-                      ),
-                    ),
-                    TextSpan(
-                      text: 'WELCOME BACK',
-                      style: GoogleFonts.merriweather(
-                        color: const Color(0xFF303030),
-                        fontSize: 24,
-                        fontWeight: FontWeight.w700,
-                        height: 1.88,
-                        letterSpacing: 1.20,
-                      ),
-                    ),
-                  ],
-                ),
-              ),
+            LogoLoginSignup(wMQ: wMQ),
+            const TextLoginSignup(
+              label: 'Hello \n',
+              label2: 'WELCOME BACK',
             ),
             Expanded(
               child: Padding(
@@ -90,9 +46,16 @@ class _LoginState extends State<Login> {
                           child: Column(
                             children: [
                               TextFormField(
-                                controller: TextEditingController(),
+                                validator: (value) {
+                                  if (value!.isEmpty) {
+                                    return 'Please enter your email';
+                                  }
+                                  return null;
+                                },
+                                textCapitalization:
+                                    TextCapitalization.characters,
                                 decoration: InputDecoration(
-                                  labelText: 'Email',
+                                  labelText: 'Name',
                                   labelStyle: GoogleFonts.nunito(
                                     fontSize: 14,
                                     fontWeight: FontWeight.w400,
