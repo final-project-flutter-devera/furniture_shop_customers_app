@@ -13,9 +13,13 @@ class AppStyle {
   static TextStyle text_style_on_black_button = GoogleFonts.nunito(
     fontSize: 18,
     fontWeight: FontWeight.w600,
-    color: Colors.white,
+    color: AppColor.white,
   );
-
+  static TextStyle text_style_on_white_button = GoogleFonts.nunito(
+    fontSize: 18,
+    fontWeight: FontWeight.w600,
+    color: AppColor.black,
+  );
   static const List<BoxShadow> white_container_shadow_on_white_background = [
     BoxShadow(color: Color.fromRGBO(138, 149, 158, 0.2), blurRadius: 2)
   ];

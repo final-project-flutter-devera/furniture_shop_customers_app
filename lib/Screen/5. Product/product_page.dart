@@ -76,7 +76,7 @@ class _ProductPageState extends State<ProductPage> {
                               image: AssetImage(
                                 'assets/Images/Images/minimal_stand.png',
                               ),
-                              fit: BoxFit.fill),
+                              fit: BoxFit.cover),
                         ),
                       ),
                     ),
