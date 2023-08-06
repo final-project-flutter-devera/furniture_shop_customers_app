@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import '../../../Constants/Colors.dart';
+import '../Constants/Colors.dart';
 
 class MyMessageHandler{
   static void showSnackBar(var _scaffoldKey, String massage) {

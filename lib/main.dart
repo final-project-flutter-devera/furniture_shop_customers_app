@@ -1,15 +1,15 @@
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'Screen/1. Boarding/BoardingScreen.dart';
 
-void main() {
-  WidgetsFlutterBinding.ensureInitialized();
+void main() async {
   SystemChrome.setPreferredOrientations([
     DeviceOrientation.portraitDown,
     DeviceOrientation.portraitUp,
-  ]).then((value) {
-    return const MyApp();
-  });
+  ]).then((value) => const MyApp());
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp();
   runApp(const MyApp());
 }
 
