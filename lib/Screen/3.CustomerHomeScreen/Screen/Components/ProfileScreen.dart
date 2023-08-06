@@ -5,7 +5,7 @@ import 'package:furniture_shop/Constants/Colors.dart';
 import 'package:furniture_shop/Screen/1.%20Boarding/BoardingScreen.dart';
 import 'package:furniture_shop/Widgets/AppBarButton.dart';
 import 'package:furniture_shop/Widgets/AppBarTitle.dart';
-import '../../../../Widgets/ShowAlerDialog.dart';
+import '../../../../Widgets/ShowAlertDialog.dart';
 import 'SearchScreen.dart';
 
 class ProfileScreen extends StatefulWidget {
