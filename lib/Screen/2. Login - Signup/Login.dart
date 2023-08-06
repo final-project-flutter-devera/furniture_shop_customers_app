@@ -1,11 +1,13 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:furniture_shop/Screen/2.%20Login%20-%20Signup/Signup.dart';
 import 'package:google_fonts/google_fonts.dart';
 import '../../Constants/Colors.dart';
+import '../../Widgets/LogoLoginSignup.dart';
+import '../../Widgets/SocialLogin.dart';
+import '../../Widgets/TextLoginWidget.dart';
 import '../3.CustomerHomeScreen/Screen/CustomerHomeScreen.dart';
 import 'LoginSupplier.dart';
-import 'Widgets/LogoLoginSignup.dart';
-import 'Widgets/TextLoginWidget.dart';
 
 class Login extends StatefulWidget {
   const Login({super.key});
@@ -16,6 +18,7 @@ class Login extends StatefulWidget {
 
 class _LoginState extends State<Login> {
   bool visiblePassword = false;
+  bool processing = false;
 
   @override
   Widget build(BuildContext context) {
@@ -90,7 +93,7 @@ class _LoginState extends State<Login> {
                           ),
                         ),
                         Padding(
-                          padding: const EdgeInsets.all(20),
+                          padding: const EdgeInsets.all(10),
                           child: GestureDetector(
                             onTap: () {},
                             child: Text(
@@ -104,16 +107,9 @@ class _LoginState extends State<Login> {
                           ),
                         ),
                         Padding(
-                          padding: const EdgeInsets.all(20),
+                          padding: const EdgeInsets.all(10),
                           child: GestureDetector(
-                            onTap: () {
-                              Navigator.pushReplacement(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (_) => const CustomerHomeScreen(),
-                                ),
-                              );
-                            },
+                            onTap: () {},
                             child: Container(
                               height: 50,
                               width: wMQ * 0.65,
@@ -134,8 +130,45 @@ class _LoginState extends State<Login> {
                             ),
                           ),
                         ),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                          children: [
+                            SocialLogin(
+                              image: 'assets/Images/Icons/google.jpg',
+                              label: 'Google',
+                              onPressed: () {},
+                            ),
+                            SocialLogin(
+                              image: 'assets/Images/Icons/fb.png',
+                              label: 'Facebook',
+                              onPressed: () {},
+                            ),
+                            processing == true
+                                ? const CircularProgressIndicator()
+                                : SocialLogin(
+                                    image: 'assets/Images/Icons/guest.png',
+                                    label: 'Guest',
+                                    onPressed: () async {
+                                      setState(() {
+                                        processing = true;
+                                      });
+                                      await FirebaseAuth.instance
+                                          .signInAnonymously();
+                                      if (context.mounted) {
+                                        Navigator.pushReplacement(
+                                          context,
+                                          MaterialPageRoute(
+                                            builder: (context) =>
+                                                const CustomerHomeScreen(),
+                                          ),
+                                        );
+                                      }
+                                    },
+                                  ),
+                          ],
+                        ),
                         Padding(
-                          padding: const EdgeInsets.all(20),
+                          padding: const EdgeInsets.all(10),
                           child: GestureDetector(
                             onTap: () {
                               Navigator.pushReplacement(

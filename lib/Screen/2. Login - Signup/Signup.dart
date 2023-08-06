@@ -1,17 +1,13 @@
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:furniture_shop/Screen/2.%20Login%20-%20Signup/Login.dart';
-import 'package:furniture_shop/Screen/2.%20Login%20-%20Signup/Widgets/CheckValidation.dart';
-import 'package:furniture_shop/Screen/2.%20Login%20-%20Signup/Widgets/MyMessageHandler.dart';
-import 'package:furniture_shop/Screen/2.%20Login%20-%20Signup/Widgets/TextLoginWidget.dart';
+import 'package:furniture_shop/Widgets/ButtonRoute.dart';
+import 'package:furniture_shop/Widgets/CheckValidation.dart';
+import 'package:furniture_shop/Widgets/MyMessageHandler.dart';
 import 'package:google_fonts/google_fonts.dart';
-
-import '../../Constants/Colors.dart';
-
-final TextEditingController _nameController = TextEditingController();
-final TextEditingController _emailController = TextEditingController();
-final TextEditingController _passwordController = TextEditingController();
-final TextEditingController _repasswordController = TextEditingController();
+import '../../Widgets/TextLoginWidget.dart';
 
 class Signup extends StatefulWidget {
   const Signup({super.key});
@@ -25,10 +21,56 @@ class _SignupState extends State<Signup> {
   late String email;
   late String pass;
   late String repass;
+  late String _uid;
+  bool processing = false;
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   final GlobalKey<ScaffoldMessengerState> _scaffoldKey =
       GlobalKey<ScaffoldMessengerState>();
   bool visiblePassword = false;
+  CollectionReference customers =
+      FirebaseFirestore.instance.collection('customers');
+
+  void signUp() async {
+    setState(() {
+      processing = true;
+    });
+    if (_formKey.currentState!.validate()) {
+      if (pass == repass) {
+        try {
+          await FirebaseAuth.instance.createUserWithEmailAndPassword(
+            email: email,
+            password: pass,
+          );
+          _uid = FirebaseAuth.instance.currentUser!.uid;
+          await customers.doc(_uid).set({
+            'name': name,
+            'email': email,
+            'phone': '',
+            'address': '',
+            'cid': _uid,
+          });
+          _formKey.currentState!.reset();
+          if (context.mounted) {
+            Navigator.pushReplacement(context,
+                MaterialPageRoute(builder: (context) => const Login()));
+          }
+        } on FirebaseAuthException catch (e) {
+          if (e.code == 'weak-password') {
+            MyMessageHandler.showSnackBar(
+                _scaffoldKey, 'The password provided is too week');
+          } else if (e.code == 'email-already-in-use') {
+            MyMessageHandler.showSnackBar(
+                _scaffoldKey, 'The account already exists for that email.');
+          }
+        }
+      } else {
+        MyMessageHandler.showSnackBar(
+          _scaffoldKey,
+          'Please fill re-confirm password match password',
+        );
+      }
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -96,7 +138,9 @@ class _SignupState extends State<Signup> {
                                       }
                                       return null;
                                     },
-                                    controller: _nameController,
+                                    onChanged: (value) {
+                                      name = value;
+                                    },
                                     textCapitalization:
                                         TextCapitalization.characters,
                                     decoration: InputDecoration(
@@ -127,7 +171,9 @@ class _SignupState extends State<Signup> {
                                       }
                                       return null;
                                     },
-                                    controller: _emailController,
+                                    onChanged: (value) {
+                                      email = value;
+                                    },
                                     textCapitalization:
                                         TextCapitalization.characters,
                                     decoration: InputDecoration(
@@ -141,9 +187,8 @@ class _SignupState extends State<Signup> {
                                   ),
                                   const SizedBox(height: 10),
                                   TextFormField(
-                                    controller: _passwordController,
-                                    onChanged: (valuepass) {
-                                      repass = valuepass;
+                                    onChanged: (value) {
+                                      pass = value;
                                     },
                                     validator: (value) {
                                       if (value!.isEmpty) {
@@ -185,16 +230,17 @@ class _SignupState extends State<Signup> {
                                           'Please enter your re - password',
                                         );
                                       }
-                                      if (value != repass) {
+                                      if (pass != repass) {
                                         MyMessageHandler.showSnackBar(
-                                          _scaffoldKey,
-                                          're - password does not match',
-                                        );
+                                            _scaffoldKey,
+                                            'Re-confirm pass does not match');
                                       }
                                       return null;
                                     },
                                     obscureText: !visiblePassword,
-                                    controller: _repasswordController,
+                                    onChanged: (value) {
+                                      repass = value;
+                                    },
                                     textCapitalization:
                                         TextCapitalization.characters,
                                     decoration: InputDecoration(
@@ -221,41 +267,30 @@ class _SignupState extends State<Signup> {
                             ),
                             Padding(
                               padding: const EdgeInsets.all(20),
-                              child: GestureDetector(
-                                onTap: () {
-                                  if (_formKey.currentState!.validate()) {
-                                    setState(() {
-                                      name = _nameController.text;
-                                      email = _emailController.text;
-                                      pass = _passwordController.text;
-                                      repass = _repasswordController.text;
-                                    });
-                                  } else {
-                                    MyMessageHandler.showSnackBar(
-                                      _scaffoldKey,
-                                      'Please fill all fields',
-                                    );
-                                  }
-                                },
-                                child: Container(
-                                  height: 50,
-                                  width: wMQ * 0.65,
-                                  decoration: BoxDecoration(
-                                    color: Colors.black,
-                                    borderRadius: BorderRadius.circular(8),
-                                  ),
-                                  child: Center(
-                                    child: Text(
-                                      'Sign up',
-                                      style: GoogleFonts.nunito(
-                                        fontSize: 18,
-                                        fontWeight: FontWeight.w600,
-                                        color: Colors.white,
+                              child: processing == true
+                                  ? const CircularProgressIndicator()
+                                  : GestureDetector(
+                                      onTap: signUp,
+                                      child: Container(
+                                        height: 50,
+                                        width: wMQ * 0.65,
+                                        decoration: BoxDecoration(
+                                          color: Colors.black,
+                                          borderRadius:
+                                              BorderRadius.circular(8),
+                                        ),
+                                        child: Center(
+                                          child: Text(
+                                            'Sign up',
+                                            style: GoogleFonts.nunito(
+                                              fontSize: 18,
+                                              fontWeight: FontWeight.w600,
+                                              color: Colors.white,
+                                            ),
+                                          ),
+                                        ),
                                       ),
                                     ),
-                                  ),
-                                ),
-                              ),
                             ),
                             Padding(
                               padding: const EdgeInsets.all(20),
