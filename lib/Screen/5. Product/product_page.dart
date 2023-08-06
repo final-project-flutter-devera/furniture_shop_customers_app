@@ -4,14 +4,45 @@ import 'package:furniture_shop/Constants/Colors.dart';
 import 'package:furniture_shop/Constants/style.dart';
 import 'package:furniture_shop/Screen/5.%20Product/Components/product_color_icon.dart';
 import 'package:furniture_shop/Widgets/action_button.dart';
+import 'package:google_fonts/google_fonts.dart';
 
-class ProductPage extends StatelessWidget {
+class ProductPageStyle {
+  static TextStyle item_title_text_style = GoogleFonts.gelasio(
+    fontSize: 24,
+    fontWeight: FontWeight.w500,
+    color: Colors.black,
+  );
+  static TextStyle item_price_text_style = GoogleFonts.nunitoSans(
+      fontSize: 30, fontWeight: FontWeight.bold, color: Colors.black);
+
+  static TextStyle item_rating_text_style = GoogleFonts.nunitoSans(
+      fontSize: 18, fontWeight: FontWeight.bold, color: Colors.black);
+  static TextStyle purchase_amount_text_style = GoogleFonts.nunitoSans(
+      fontSize: 18, fontWeight: FontWeight.w500, color: Colors.black);
+
+  static TextStyle item_description_text_style = GoogleFonts.nunitoSans(
+      fontSize: 14,
+      fontWeight: FontWeight.bold,
+      wordSpacing: 2,
+      color: Color.fromARGB(255, 96, 96, 96));
+
+  static TextStyle add_to_cart_button_text_style = GoogleFonts.nunitoSans(
+      fontSize: 20, fontWeight: FontWeight.bold, color: Colors.white);
+}
+
+class ProductPage extends StatefulWidget {
   //TODO: Pass a product to display
   //final Product product;
   const ProductPage({
     super.key,
     //required this.product,
   });
+
+  @override
+  State<ProductPage> createState() => _ProductPageState();
+}
+
+class _ProductPageState extends State<ProductPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -45,7 +76,7 @@ class ProductPage extends StatelessWidget {
                               image: AssetImage(
                                 'assets/Images/Images/minimal_stand.png',
                               ),
-                              fit: BoxFit.fill),
+                              fit: BoxFit.cover),
                         ),
                       ),
                     ),
@@ -85,9 +116,11 @@ class ProductPage extends StatelessWidget {
                                     .white_container_shadow_on_white_background),
                             child: Column(
                               children: [
-                                ProductColorIcon(color: Colors.red),
-                                ProductColorIcon(color: Colors.green),
-                                ProductColorIcon(color: Colors.blue),
+                                ProductColorIcon(color: Colors.white),
+                                ProductColorIcon(
+                                    color: Color.fromARGB(255, 180, 145, 108)),
+                                ProductColorIcon(
+                                    color: Color.fromARGB(255, 228, 203, 173)),
                               ],
                             ))),
                   ],
@@ -104,12 +137,16 @@ class ProductPage extends StatelessWidget {
                       Text(
                         "Minimal Stand",
                         textAlign: TextAlign.start,
+                        style: ProductPageStyle.item_title_text_style,
                       ),
                       const Padding(padding: EdgeInsets.all(5)),
                       //Price and purchase amount
                       Row(
                         children: [
-                          Text("\$ 50"),
+                          Text(
+                            "\$ 50",
+                            style: ProductPageStyle.item_price_text_style,
+                          ),
                           Spacer(),
                           ActionButton(
                               boxShadow: [],
@@ -117,9 +154,12 @@ class ProductPage extends StatelessWidget {
                               size: Size(30, 30),
                               color: AppColor.grey5,
                               onPressed: () {}),
+                          Padding(padding: EdgeInsets.only(left: 15)),
                           Text(
                             '01',
+                            style: ProductPageStyle.purchase_amount_text_style,
                           ),
+                          Padding(padding: EdgeInsets.only(left: 15)),
                           ActionButton(
                               boxShadow: [],
                               content: Icon(Icons.remove),
@@ -128,23 +168,38 @@ class ProductPage extends StatelessWidget {
                               onPressed: () {})
                         ],
                       ),
-                      const Padding(padding: EdgeInsets.only(top: 15)),
+                      const Padding(padding: EdgeInsets.only(top: 10)),
                       //TODO: Change to actual ratings
+                      //TODO: Make every elements in this row TextButton that will show product's review
                       Row(
                         children: [
                           Icon(
                             Icons.star,
-                            color: Colors.yellow,
+                            color: Color.fromARGB(255, 242, 201, 76),
+                            size: 25,
                           ),
+                          Padding(padding: EdgeInsets.only(left: 10)),
+                          Text(
+                            '4.5',
+                            style: ProductPageStyle.item_rating_text_style,
+                          ),
+                          Padding(padding: EdgeInsets.only(left: 20)),
+                          Text(
+                            "(50 reviews)",
+                            style: ProductPageStyle.item_description_text_style,
+                          )
                         ],
                       ),
                       const Padding(padding: EdgeInsets.only(top: 10)),
                       //TODO: Change to actual item description
-                      const Flexible(
+                      Flexible(
                         fit: FlexFit.loose,
-                        child: Text(
-                          'Minimal Stand is made of by natural wood. The design that is very simple and minimal. This is truly one of the best furnitures in any family for now. With 3 different colors, you can easily select the best match for your home. Minimal Stand is made of by natural wood. The design that is very simple and minimal. This is truly one of the best furnitures in any family for now. With 3 different colors, you can easily select the best match for your home. Minimal Stand is made of by natural wood. The design that is very simple and minimal. This is truly one of the best furnitures in any family for now. With 3 different colors, you can easily select the best match for your home. ',
-                          overflow: TextOverflow.clip,
+                        child: SingleChildScrollView(
+                          child: Text(
+                            'Minimal Stand is made of by natural wood. The design that is very simple and minimal. This is truly one of the best furnitures in any family for now. With 3 different colors, you can easily select the best match for your home.',
+                            textAlign: TextAlign.justify,
+                            style: ProductPageStyle.item_description_text_style,
+                          ),
                         ),
                       ),
                       const Padding(padding: EdgeInsets.only(top: 20)),
@@ -155,7 +210,21 @@ class ProductPage extends StatelessWidget {
                           children: [
                             ActionButton(
                                 boxShadow: [],
-                                content: Icon(Icons.bookmark, size: 24),
+                                content: const Stack(
+                                  alignment: Alignment.center,
+                                  children: [
+                                    Icon(
+                                      Icons.bookmark,
+                                      size: 26,
+                                      color: AppColor.black,
+                                    ),
+                                    Icon(
+                                      Icons.bookmark,
+                                      size: 20,
+                                      color: AppColor.grey5,
+                                    ),
+                                  ],
+                                ),
                                 size: Size(60, 60),
                                 color: AppColor.grey5,
                                 onPressed: () {}),
@@ -165,6 +234,8 @@ class ProductPage extends StatelessWidget {
                                   boxShadow: [],
                                   content: Text(
                                     "Add to cart",
+                                    style: ProductPageStyle
+                                        .add_to_cart_button_text_style,
                                   ),
                                   size: Size(60, 60),
                                   color: AppColor.primary,
