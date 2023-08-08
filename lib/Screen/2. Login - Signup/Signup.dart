@@ -30,11 +30,11 @@ class _SignupState extends State<Signup> {
       FirebaseFirestore.instance.collection('customers');
 
   void signUp() async {
-    setState(() {
-      processing = true;
-    });
     if (_formKey.currentState!.validate()) {
       if (pass == repass) {
+        setState(() {
+          processing = true;
+        });
         try {
           await FirebaseAuth.instance.createUserWithEmailAndPassword(
             email: email,
@@ -50,16 +50,21 @@ class _SignupState extends State<Signup> {
           });
           _formKey.currentState!.reset();
           if (context.mounted) {
-            Navigator.pushReplacement(context,
-                MaterialPageRoute(builder: (context) => const Login()));
+            Navigator.pushReplacementNamed(context, '/Login_cus');
           }
         } on FirebaseAuthException catch (e) {
           if (e.code == 'weak-password') {
-            MyMessageHandler.showSnackBar(
-                _scaffoldKey, 'The password provided is too week');
+            MyMessageHandler.showSnackBar(_scaffoldKey,
+                'The password provided is too week \n (at least 6 words)');
+            setState(() {
+              processing = false;
+            });
           } else if (e.code == 'email-already-in-use') {
             MyMessageHandler.showSnackBar(
                 _scaffoldKey, 'The account already exists for that email.');
+            setState(() {
+              processing = false;
+            });
           }
         }
       } else {
@@ -305,10 +310,8 @@ class _SignupState extends State<Signup> {
                                   const SizedBox(width: 5),
                                   GestureDetector(
                                     onTap: () {
-                                      Navigator.pushReplacement(
-                                          context,
-                                          MaterialPageRoute(
-                                              builder: (_) => const Login()));
+                                      Navigator.pushReplacementNamed(
+                                          context, '/Login_cus');
                                     },
                                     child: Text(
                                       'SIGN IN',

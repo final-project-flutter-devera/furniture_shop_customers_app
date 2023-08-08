@@ -8,10 +8,10 @@ class SupplierHomeScreen extends StatefulWidget {
   const SupplierHomeScreen({super.key});
 
   @override
-  State<SupplierHomeScreen> createState() => _CustomerHomeScreen();
+  State<SupplierHomeScreen> createState() => _SupplierHomeScreen();
 }
 
-class _CustomerHomeScreen extends State<SupplierHomeScreen> {
+class _SupplierHomeScreen extends State<SupplierHomeScreen> {
   int _selectIndex = 0;
   final List<Widget> _tabs = const [
     HomeScreen(),

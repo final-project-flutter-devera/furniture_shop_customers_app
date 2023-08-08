@@ -29,7 +29,7 @@ class _FavoritesScreenState extends State<FavoritesScreen> {
             },
             icon: SvgPicture.asset('assets/Images/Icons/search.svg',
                 height: 24, width: 24)),
-        title: const AppBarTitle(label: 'favorite'),
+        title: const AppBarTitle(label: 'Favorite'),
         centerTitle: true,
         actions: [
           IconButton(

@@ -40,12 +40,7 @@ class _LoginState extends State<Login> {
         );
         _formKey.currentState!.reset();
         if (context.mounted) {
-          Navigator.pushReplacement(
-            context,
-            MaterialPageRoute(
-              builder: (context) => const CustomerHomeScreen(),
-            ),
-          );
+          Navigator.pushReplacementNamed(context, '/Customer_screen');
         }
       } on FirebaseAuthException catch (e) {
         if (e.code == 'user-not-found') {
@@ -53,11 +48,17 @@ class _LoginState extends State<Login> {
             _scaffoldKey,
             'User not found',
           );
+          setState(() {
+            processingAccountMail = false;
+          });
         } else if (e.code == 'wrong-password') {
           MyMessageHandler.showSnackBar(
             _scaffoldKey,
             'Your password provided is wrong',
           );
+          setState(() {
+            processingAccountMail = false;
+          });
         }
       }
     } else {
@@ -104,10 +105,17 @@ class _LoginState extends State<Login> {
                                   TextFormField(
                                     validator: (value) {
                                       if (value!.isEmpty) {
-                                        MyMessageHandler.showSnackBar(_scaffoldKey, 'please enter your email',);
+                                        MyMessageHandler.showSnackBar(
+                                          _scaffoldKey,
+                                          'please enter your email',
+                                        );
                                         return 'please enter your email';
-                                      } else if (value.isValidEmail() == false) {
-                                        MyMessageHandler.showSnackBar(_scaffoldKey, 'invalid email',);
+                                      } else if (value.isValidEmail() ==
+                                          false) {
+                                        MyMessageHandler.showSnackBar(
+                                          _scaffoldKey,
+                                          'invalid email',
+                                        );
                                         return 'invalid email';
                                       } else if (value.isValidEmail() == true) {
                                         return null;
@@ -232,13 +240,8 @@ class _LoginState extends State<Login> {
                                           await FirebaseAuth.instance
                                               .signInAnonymously();
                                           if (context.mounted) {
-                                            Navigator.pushReplacement(
-                                              context,
-                                              MaterialPageRoute(
-                                                builder: (context) =>
-                                                    const CustomerHomeScreen(),
-                                              ),
-                                            );
+                                            Navigator.pushReplacementNamed(
+                                                context, '/Customer_screen');
                                           }
                                         },
                                       ),
@@ -248,10 +251,7 @@ class _LoginState extends State<Login> {
                               padding: const EdgeInsets.all(10),
                               child: GestureDetector(
                                 onTap: () {
-                                  Navigator.pushReplacement(
-                                      context,
-                                      MaterialPageRoute(
-                                          builder: (_) => const Signup()));
+                                  Navigator.pushReplacementNamed(context, '/Signup_cus');
                                 },
                                 child: Text(
                                   'SIGN UP',
@@ -271,13 +271,7 @@ class _LoginState extends State<Login> {
                                   height: 50,
                                   color: AppColor.grey,
                                   onPressed: () {
-                                    Navigator.pushReplacement(
-                                      context,
-                                      MaterialPageRoute(
-                                        builder: (context) =>
-                                            const LoginSupplier(),
-                                      ),
-                                    );
+                                    Navigator.pushReplacementNamed(context, '/Login_sup');
                                   },
                                   child: Text(
                                     'SUPPLIER LOGIN',

@@ -19,8 +19,8 @@ class _BoardingScreenState extends State<BoardingScreen> {
 
     return Scaffold(
       body: Container(
-        width: MediaQuery.of(context).size.width,
-        height: MediaQuery.of(context).size.height,
+        width: wMQ,
+        height: hMQ,
         decoration: const BoxDecoration(
             image: DecorationImage(
                 alignment: Alignment.centerRight,
@@ -78,11 +78,7 @@ class _BoardingScreenState extends State<BoardingScreen> {
               left: wMQ * 0.3,
               child: GestureDetector(
                 onTap: () {
-                  Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (BuildContext context) =>
-                              const Login()));
+                  Navigator.pushNamed(context,'/Login_cus');
                 },
                 child: Container(
                   alignment: Alignment.center,

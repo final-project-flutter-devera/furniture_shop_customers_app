@@ -7,7 +7,6 @@ import 'package:furniture_shop/Widgets/CheckValidation.dart';
 import 'package:google_fonts/google_fonts.dart';
 import '../../Constants/Colors.dart';
 import '../../Widgets/MyMessageHandler.dart';
-import '../4. SupplierHomeScreen/Screen/SupplierHomeScreen.dart';
 
 class LoginSupplier extends StatefulWidget {
   const LoginSupplier({super.key});
@@ -40,12 +39,7 @@ class _LoginSupplierState extends State<LoginSupplier> {
             .then((DocumentSnapshot snapshot) {
           if (snapshot.exists) {
             if (snapshot.get('role') == "supplier") {
-              Navigator.pushReplacement(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => const SupplierHomeScreen(),
-                ),
-              );
+              Navigator.pushReplacementNamed(context, '/Supplier_screen');
             }
           }
         });
@@ -265,12 +259,7 @@ class _LoginSupplierState extends State<LoginSupplier> {
                                   height: 50,
                                   color: AppColor.grey,
                                   onPressed: () {
-                                    Navigator.pushReplacement(
-                                      context,
-                                      MaterialPageRoute(
-                                        builder: (context) => const Login(),
-                                      ),
-                                    );
+                                    Navigator.pushReplacementNamed(context, '/Login_cus');
                                   },
                                   child: Text(
                                     'CUSTOMER LOGIN',
