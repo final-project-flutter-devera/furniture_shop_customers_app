@@ -30,6 +30,11 @@ class AppStyle {
   static const List<BoxShadow> white_container_shadow_on_white_background = [
     BoxShadow(color: Color.fromRGBO(138, 149, 158, 0.2), blurRadius: 15)
   ];
+  static Decoration white_container_decoration = BoxDecoration(
+      color: AppColor.white,
+      borderRadius: BorderRadius.circular(5),
+      boxShadow: AppStyle.white_container_shadow_on_white_background);
+
   //Used for title in AppBar across screens
   static TextStyle app_bar_title_text_style = GoogleFonts.merriweather(
     color: AppColor.black,

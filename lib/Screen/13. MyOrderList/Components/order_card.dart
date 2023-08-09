@@ -11,10 +11,7 @@ class OrderCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      decoration: BoxDecoration(
-          color: AppColor.white,
-          borderRadius: BorderRadius.circular(5),
-          boxShadow: AppStyle.white_container_shadow_on_white_background),
+      decoration: AppStyle.white_container_decoration,
       child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           crossAxisAlignment: CrossAxisAlignment.center,

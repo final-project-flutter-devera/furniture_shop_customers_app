@@ -47,7 +47,13 @@ class _MyOrderState extends State<MyOrderList> {
           appBar: AppBar(
             backgroundColor: AppColor.blur_grey,
             foregroundColor: AppColor.black,
-            leading: const Icon(Icons.keyboard_arrow_left_sharp, size: 40),
+            leading: IconButton(
+              onPressed: () => Navigator.pop(context),
+              icon: const Icon(
+                Icons.keyboard_arrow_left,
+                size: 40,
+              ),
+            ),
             title: const Text(
               'My order',
             ),
