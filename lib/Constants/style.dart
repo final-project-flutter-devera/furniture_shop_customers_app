@@ -41,4 +41,9 @@ class AppStyle {
     fontSize: 16,
     fontWeight: FontWeight.bold,
   );
+
+  static TextStyle date_text_style = GoogleFonts.nunitoSans(
+    fontSize: 12,
+    color: AppColor.text_secondary,
+  );
 }
