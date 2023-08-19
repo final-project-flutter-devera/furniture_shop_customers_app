@@ -3,7 +3,6 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:furniture_shop/Constants/Colors.dart';
-import 'package:furniture_shop/Screen/1.%20Boarding/BoardingScreen.dart';
 import 'package:furniture_shop/Widgets/AppBarButton.dart';
 import 'package:furniture_shop/Widgets/AppBarTitle.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -23,12 +22,16 @@ class ProfileScreen extends StatefulWidget {
 class _ProfileScreenState extends State<ProfileScreen> {
   CollectionReference customers =
       FirebaseFirestore.instance.collection('customers');
+  CollectionReference anonymous =
+      FirebaseFirestore.instance.collection('anonymous');
 
   @override
   Widget build(BuildContext context) {
     final wMQ = MediaQuery.of(context).size.width;
     return FutureBuilder<DocumentSnapshot>(
-      future: customers.doc(widget.documentId).get(),
+      future: FirebaseAuth.instance.currentUser!.isAnonymous
+          ? anonymous.doc(widget.documentId).get()
+          : customers.doc(widget.documentId).get(),
       builder:
           (BuildContext context, AsyncSnapshot<DocumentSnapshot> snapshot) {
         if (snapshot.hasError) {
@@ -73,12 +76,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
                         await FirebaseAuth.instance.signOut();
                         if (context.mounted) {
                           Navigator.pop(context);
-                          Navigator.pushReplacement(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => const BoardingScreen(),
-                            ),
-                          );
+                          Navigator.pushReplacementNamed(
+                              context, '/Welcome_boarding');
                         }
                       },
                     );
@@ -87,47 +86,65 @@ class _ProfileScreenState extends State<ProfileScreen> {
               ],
             ),
             body: Padding(
-              padding: const EdgeInsets.all(20),
+              padding: const EdgeInsets.all(10),
               child: Column(
                 children: [
                   Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     children: [
                       Row(
                         children: [
                           CircleAvatar(
                             backgroundColor: AppColor.amber,
                             radius: 45,
-                            child: CircleAvatar(
-                              backgroundColor: AppColor.white,
-                              radius: 40,
-                              backgroundImage: NetworkImage(
-                                data['profileimage'],
-                              ),
-                            ),
+                            child: data['profileimage'] == ''
+                                ? const CircleAvatar(
+                                    backgroundColor: AppColor.white,
+                                    radius: 40,
+                                    backgroundImage: AssetImage(
+                                        'assets/Images/Images/avatarGuest.jpg'),
+                                  )
+                                : CircleAvatar(
+                                    backgroundColor: AppColor.white,
+                                    radius: 40,
+                                    backgroundImage: NetworkImage(
+                                      data['profileimage'],
+                                    ),
+                                  ),
                           ),
                           const SizedBox(
                             width: 20,
                           ),
-                          Text.rich(
-                            TextSpan(
-                              children: [
-                                TextSpan(
-                                  text: data['name'],
-                                  style: GoogleFonts.nunito(
-                                    fontSize: 20,
-                                    fontWeight: FontWeight.w700,
+                          SizedBox(
+                            width: wMQ * 0.5,
+                            child: Text.rich(
+                              overflow: TextOverflow.fade,
+                              softWrap: false,
+                              TextSpan(
+                                children: [
+                                  TextSpan(
+                                    text: data['name'] == ''
+                                        ? 'Guest'.toUpperCase()
+                                        : data['name'].toUpperCase(),
+                                    style: GoogleFonts.nunito(
+                                      fontSize: 20,
+                                      fontWeight: FontWeight.w700,
+                                      color: AppColor.black,
+                                    ),
                                   ),
-                                ),
-                                const TextSpan(text: '\n'),
-                                TextSpan(
-                                  text: data['email'],
-                                  style: GoogleFonts.nunito(
-                                    fontSize: 14,
-                                    fontWeight: FontWeight.w400,
+                                  const TextSpan(text: '\n'),
+                                  TextSpan(
+                                    text: data['email'] == ''
+                                        ? 'Anonymous'
+                                        : data['email'],
+                                    style: GoogleFonts.nunito(
+                                      fontSize: 14,
+                                      fontWeight: FontWeight.w400,
+                                      color: AppColor.black,
+                                    ),
                                   ),
-                                ),
-                              ],
+                                ],
+                              ),
                             ),
                           ),
                         ],
@@ -147,7 +164,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   const SizedBox(height: 20),
                   Flexible(
                     child: ListView.builder(
-                      itemCount: 5,
+                      itemCount: 50,
                       itemBuilder: (BuildContext context, index) {
                         return Padding(
                           padding: const EdgeInsets.symmetric(vertical: 10),

@@ -1,6 +1,7 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:furniture_shop/Screen/2.%20Login%20-%20Signup/Signup.dart';
+import 'package:furniture_shop/Screen/3.CustomerHomeScreen/Screen/CustomerHomeScreen.dart';
 import 'package:furniture_shop/Widgets/CheckValidation.dart';
 import 'package:furniture_shop/Widgets/MyMessageHandler.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -8,8 +9,6 @@ import '../../Constants/Colors.dart';
 import '../../Widgets/LogoLoginSignup.dart';
 import '../../Widgets/SocialLogin.dart';
 import '../../Widgets/TextLoginWidget.dart';
-import '../3.CustomerHomeScreen/Screen/CustomerHomeScreen.dart';
-import 'LoginSupplier.dart';
 
 class Login extends StatefulWidget {
   const Login({super.key});
@@ -28,6 +27,12 @@ class _LoginState extends State<Login> {
   bool processingGuest = false;
   bool processingAccountMail = false;
 
+  CollectionReference customers =
+      FirebaseFirestore.instance.collection('customers');
+  CollectionReference anonymous =
+      FirebaseFirestore.instance.collection('anonymous');
+  late String _uid;
+
   void signIn() async {
     if (_formKey.currentState!.validate()) {
       setState(() {
@@ -40,7 +45,10 @@ class _LoginState extends State<Login> {
         );
         _formKey.currentState!.reset();
         if (context.mounted) {
-          Navigator.pushReplacementNamed(context, '/Customer_screen');
+          Navigator.pushReplacement(
+              context,
+              MaterialPageRoute(
+                  builder: (context) => const CustomerHomeScreen()));
         }
       } on FirebaseAuthException catch (e) {
         if (e.code == 'user-not-found') {
@@ -174,6 +182,7 @@ class _LoginState extends State<Login> {
                                 ],
                               ),
                             ),
+                            const SizedBox(height: 10),
                             Padding(
                               padding: const EdgeInsets.all(10),
                               child: GestureDetector(
@@ -188,12 +197,15 @@ class _LoginState extends State<Login> {
                                 ),
                               ),
                             ),
+                            const SizedBox(height: 10),
                             Padding(
                               padding: const EdgeInsets.all(10),
                               child: processingAccountMail == true
                                   ? const CircularProgressIndicator()
                                   : GestureDetector(
-                                      onTap: signIn,
+                                      onTap: () {
+                                        signIn();
+                                      },
                                       child: Container(
                                         height: 50,
                                         width: wMQ * 0.65,
@@ -215,6 +227,7 @@ class _LoginState extends State<Login> {
                                       ),
                                     ),
                             ),
+                            const SizedBox(height: 10),
                             Row(
                               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                               children: [
@@ -238,7 +251,19 @@ class _LoginState extends State<Login> {
                                             processingGuest = true;
                                           });
                                           await FirebaseAuth.instance
-                                              .signInAnonymously();
+                                              .signInAnonymously()
+                                              .whenComplete(() async {
+                                            _uid = FirebaseAuth
+                                                .instance.currentUser!.uid;
+                                            await anonymous.doc(_uid).set({
+                                              'name': '',
+                                              'email': '',
+                                              'phone': '',
+                                              'address': '',
+                                              'profileimage': '',
+                                              'cid': _uid,
+                                            });
+                                          });
                                           if (context.mounted) {
                                             Navigator.pushReplacementNamed(
                                                 context, '/Customer_screen');
@@ -251,7 +276,8 @@ class _LoginState extends State<Login> {
                               padding: const EdgeInsets.all(10),
                               child: GestureDetector(
                                 onTap: () {
-                                  Navigator.pushReplacementNamed(context, '/Signup_cus');
+                                  Navigator.pushReplacementNamed(
+                                      context, '/Signup_cus');
                                 },
                                 child: Text(
                                   'SIGN UP',
@@ -271,7 +297,8 @@ class _LoginState extends State<Login> {
                                   height: 50,
                                   color: AppColor.grey,
                                   onPressed: () {
-                                    Navigator.pushReplacementNamed(context, '/Login_sup');
+                                    Navigator.pushReplacementNamed(
+                                        context, '/Login_sup');
                                   },
                                   child: Text(
                                     'SUPPLIER LOGIN',

@@ -2,7 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:furniture_shop/Constants/Colors.dart';
 import 'package:furniture_shop/Widgets/AppBarButton.dart';
-
+import '../../../Gallery/Gallery_armchair.dart';
+import '../../../Gallery/Gallery_bed.dart';
+import '../../../Gallery/Gallery_chair.dart';
+import '../../../Gallery/Gallery_lamp.dart';
+import '../../../Gallery/Gallery_popular.dart';
+import '../../../Gallery/Gallery_table.dart';
 import '../../Body/Body_Customer_HomeScreen.dart';
 import 'CartScreen.dart';
 import 'SearchScreen.dart';
@@ -20,14 +25,15 @@ class _HomeScreenState extends State<HomeScreen> {
     return DefaultTabController(
       length: 6,
       child: Scaffold(
+        backgroundColor: AppColor.white,
         body: const TabBarView(
           children: [
-            Center(child: Text('Popular Screen')),
-            Center(child: Text('Chair Screen')),
-            Center(child: Text('Table Screen')),
-            Center(child: Text('Armchair Screen')),
-            Center(child: Text('Bed Screen')),
-            Center(child: Text('Lamb Screen')),
+            GalleryPopular(),
+            GalleryChair(),
+            GalleryTable(),
+            GalleryArmchair(),
+            GalleryBed(),
+            GalleryLamp(),
           ],
         ),
         appBar: AppBar(
