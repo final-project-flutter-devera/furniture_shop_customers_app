@@ -1,18 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:furniture_shop/Constants/Colors.dart';
 import 'package:furniture_shop/Constants/style.dart';
+import 'package:furniture_shop/Widgets/star_ratings.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 class MyReviewCard extends StatelessWidget {
   const MyReviewCard({super.key});
-  Widget star(bool hasGoodRating) {
-    return Icon(
-      Icons.star,
-      color: (hasGoodRating) ? Color(0xFFF2C94C) : AppColor.grey,
-      size: 20,
-    );
-  }
-
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -63,11 +56,7 @@ class MyReviewCard extends StatelessWidget {
           Padding(
             padding: const EdgeInsets.only(top: 15, bottom: 15),
             child: Row(children: [
-              star(true),
-              star(true),
-              star(true),
-              star(true),
-              star(false),
+              StarRatings(ratings: 4),
               const Spacer(),
               Text(
                 "Date",
