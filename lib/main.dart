@@ -2,6 +2,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:furniture_shop/Providers/Cart_Provider.dart';
+import 'package:furniture_shop/Providers/Favorites_Provider.dart';
 import 'package:provider/provider.dart';
 import 'Screen/1. Boarding/BoardingScreen.dart';
 import 'Screen/2. Login - Signup/Login.dart';
@@ -31,6 +32,7 @@ void main() async {
     MultiProvider(
       providers: [
         ChangeNotifierProvider(create: (_) => Cart()),
+        ChangeNotifierProvider(create: (_) => Favorites()),
       ],
       child: const MyApp(),
     ),

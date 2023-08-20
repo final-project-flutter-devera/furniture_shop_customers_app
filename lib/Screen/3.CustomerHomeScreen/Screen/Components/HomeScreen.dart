@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:furniture_shop/Constants/Colors.dart';
 import 'package:furniture_shop/Widgets/AppBarButton.dart';
+import 'package:provider/provider.dart';
+import '../../../../Providers/Cart_Provider.dart';
 import '../../../Gallery/Gallery_armchair.dart';
 import '../../../Gallery/Gallery_bed.dart';
 import '../../../Gallery/Gallery_chair.dart';
@@ -11,6 +13,7 @@ import '../../../Gallery/Gallery_table.dart';
 import '../../Body/Body_Customer_HomeScreen.dart';
 import 'CartScreen.dart';
 import 'SearchScreen.dart';
+import 'package:badges/badges.dart' as badges;
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -52,10 +55,20 @@ class _HomeScreenState extends State<HomeScreen> {
           actions: [
             AppBarButtonPush(
               aimRoute: const CartScreen(),
-              icon: SvgPicture.asset(
-                'assets/Images/Icons/cart.svg',
-                height: 24,
-                width: 24,
+              icon: badges.Badge(
+                showBadge: context.read<Cart>().getItems.isEmpty ? false : true,
+                badgeContent: Text(
+                  context.watch<Cart>().getItems.length.toString(),
+                ),
+                badgeStyle: const badges.BadgeStyle(
+                  badgeColor: AppColor.amber,
+                ),
+                badgeAnimation: const badges.BadgeAnimation.fade(),
+                child: SvgPicture.asset(
+                  'assets/Images/Icons/cart.svg',
+                  height: 24,
+                  width: 24,
+                ),
               ),
             ),
           ],

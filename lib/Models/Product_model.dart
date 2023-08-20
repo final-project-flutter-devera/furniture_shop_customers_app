@@ -1,8 +1,10 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-
+import 'package:provider/provider.dart';
+import 'package:collection/collection.dart';
 import '../Constants/Colors.dart';
+import '../Providers/Favorites_Provider.dart';
 import '../Screen/5. Product/Products_Detail_Screen.dart';
 
 class ProductModel extends StatefulWidget {
@@ -83,11 +85,33 @@ class _ProductModelState extends State<ProductModel> {
                         )
                       : GestureDetector(
                           onTap: () {
-                            setState(() {
-                              favorite = !favorite;
-                            });
+                            context
+                                .read<Favorites>()
+                                .getFavoriteItems
+                                .firstWhereOrNull((product) =>
+                            product.documentID ==
+                                widget.products['proID']) !=
+                                null
+                                ? context
+                                .read<Favorites>()
+                                .removeThis(widget.products['proID'])
+                                : context.read<Favorites>().addFavoriteItems(
+                              widget.products['proName'],
+                              widget.products['price'],
+                              1,
+                              widget.products['inStock'],
+                              widget.products['proImages'],
+                              widget.products['proID'],
+                              widget.products['sid'],
+                            );
                           },
-                          child: favorite == true
+                          child: context
+                              .watch<Favorites>()
+                              .getFavoriteItems
+                              .firstWhereOrNull((product) =>
+                          product.documentID ==
+                              widget.products['proID']) !=
+                              null
                               ? const Icon(Icons.favorite)
                               : const Icon(Icons.favorite_border_outlined),
                         ),

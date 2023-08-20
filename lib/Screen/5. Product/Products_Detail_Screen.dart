@@ -5,6 +5,7 @@ import 'package:flutter_svg/svg.dart';
 import 'package:flutter_swiper_null_safety/flutter_swiper_null_safety.dart';
 import 'package:furniture_shop/Constants/Colors.dart';
 import 'package:furniture_shop/Providers/Cart_Provider.dart';
+import 'package:furniture_shop/Providers/Favorites_Provider.dart';
 import 'package:furniture_shop/Widgets/AppBarButton.dart';
 import 'package:furniture_shop/Widgets/MyMessageHandler.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -17,6 +18,7 @@ import '../3.CustomerHomeScreen/Screen/Components/SearchScreen.dart';
 import 'Full_Screen_View_Images.dart';
 import 'Visit_Store.dart';
 import 'package:collection/collection.dart';
+import 'package:badges/badges.dart' as badges;
 
 class ProductDetailScreen extends StatefulWidget {
   final dynamic proList;
@@ -48,6 +50,13 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
     CollectionReference customers =
         FirebaseFirestore.instance.collection('customers');
     final String supplierID = widget.proList['sid'];
+    var existingFavorites = context
+        .read<Favorites>()
+        .getFavoriteItems
+        .firstWhereOrNull(
+            (product) => product.documentID == widget.proList['proID']);
+    var existCart = context.read<Cart>().getItems.firstWhereOrNull(
+        (product) => product.documentID == widget.proList['proID']);
     return ScaffoldMessenger(
       key: _scaffoldKey,
       child: Scaffold(
@@ -101,7 +110,17 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                     MaterialPageRoute(
                         builder: (context) => const CartScreen()));
               },
-              icon: const Icon(Icons.shopping_cart_outlined),
+              icon: badges.Badge(
+                showBadge: context.read<Cart>().getItems.isEmpty ? false : true,
+                badgeContent: Text(
+                  context.watch<Cart>().getItems.length.toString(),
+                ),
+                badgeStyle: const badges.BadgeStyle(
+                  badgeColor: AppColor.amber,
+                ),
+                badgeAnimation: const badges.BadgeAnimation.fade(),
+                child: SvgPicture.asset('assets/Images/Icons/cart.svg'),
+              ),
             ),
             IconButton(
               onPressed: () {},
@@ -221,8 +240,31 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                           ),
                         ),
                         IconButton(
-                          onPressed: () {},
-                          icon: const Icon(Icons.favorite_border_outlined),
+                          onPressed: () {
+                           existingFavorites !=
+                                    null
+                                ? context
+                                    .read<Favorites>()
+                                    .removeThis(widget.proList['proID'])
+                                : context.read<Favorites>().addFavoriteItems(
+                                      widget.proList['proName'],
+                                      widget.proList['price'],
+                                      1,
+                                      widget.proList['inStock'],
+                                      widget.proList['proImages'],
+                                      widget.proList['proID'],
+                                      widget.proList['sid'],
+                                    );
+                          },
+                          icon: context
+                                      .watch<Favorites>()
+                                      .getFavoriteItems
+                                      .firstWhereOrNull((product) =>
+                                          product.documentID ==
+                                          widget.proList['proID']) !=
+                                  null
+                              ? const Icon(Icons.favorite)
+                              : const Icon(Icons.favorite_border_outlined),
                         ),
                       ],
                     ),
@@ -303,7 +345,9 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                             ],
                           );
                         }
-                        return const Scaffold();
+                        return const Scaffold(
+                          backgroundColor: Colors.transparent,
+                        );
                       },
                     ),
                     const SizedBox(height: 10),
@@ -364,23 +408,44 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: [
               GestureDetector(
-                onTap: () {},
+                onTap: () {
+                  existingFavorites != null
+                      ? context
+                          .read<Favorites>()
+                          .removeThis(widget.proList['proID'])
+                      : context.read<Favorites>().addFavoriteItems(
+                            widget.proList['proName'],
+                            widget.proList['price'],
+                            1,
+                            widget.proList['inStock'],
+                            widget.proList['proImages'],
+                            widget.proList['proID'],
+                            widget.proList['sid'],
+                          );
+                },
                 child: PhysicalModel(
                   elevation: 1,
                   color: AppColor.grey,
                   borderRadius: BorderRadius.circular(8),
                   child: Container(
-                    width: 60,
-                    height: 60,
-                    padding: const EdgeInsets.all(18),
-                    decoration: ShapeDecoration(
-                      color: AppColor.grey5,
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(8),
+                      width: 60,
+                      height: 60,
+                      padding: const EdgeInsets.all(18),
+                      decoration: ShapeDecoration(
+                        color: AppColor.grey5,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(8),
+                        ),
                       ),
-                    ),
-                    child: const Icon(Icons.bookmark_border_outlined),
-                  ),
+                      child: context
+                                  .watch<Favorites>()
+                                  .getFavoriteItems
+                                  .firstWhereOrNull((product) =>
+                                      product.documentID ==
+                                      widget.proList['proID']) !=
+                              null
+                          ? const Icon(Icons.bookmark)
+                          : const Icon(Icons.bookmark_border_outlined)),
                 ),
               ),
               GestureDetector(
@@ -407,9 +472,7 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
               ),
               GestureDetector(
                 onTap: () {
-                  context.read<Cart>().getItems.firstWhereOrNull((product) =>
-                              product.documentID == widget.proList['proID']) !=
-                          null
+                  existCart != null
                       ? MyMessageHandler.showSnackBar(
                           _scaffoldKey, 'This product already in your cart!')
                       : context.read<Cart>().addItems(
@@ -436,7 +499,7 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                           borderRadius: BorderRadius.circular(8)),
                     ),
                     child: Text(
-                      'Add to cart',
+                      existCart != null ? 'Added to cart':'Add to cart',
                       textAlign: TextAlign.center,
                       style: GoogleFonts.nunito(
                         color: Colors.white,
