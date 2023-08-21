@@ -2,11 +2,11 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:furniture_shop/Screen/2.%20Login%20-%20Signup/Login.dart';
 import 'package:furniture_shop/Widgets/CheckValidation.dart';
 import 'package:google_fonts/google_fonts.dart';
 import '../../Constants/Colors.dart';
 import '../../Widgets/MyMessageHandler.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class LoginSupplier extends StatefulWidget {
   const LoginSupplier({super.key});
@@ -16,6 +16,7 @@ class LoginSupplier extends StatefulWidget {
 }
 
 class _LoginSupplierState extends State<LoginSupplier> {
+  final Future<SharedPreferences> _prefs = SharedPreferences.getInstance();
   bool visiblePassword = false;
   late String email;
   late String pass;
@@ -31,10 +32,11 @@ class _LoginSupplierState extends State<LoginSupplier> {
           password: pass,
         );
         final User? user = FirebaseAuth.instance.currentUser;
-        final userID = user!.uid;
+        final SharedPreferences pref = await _prefs;
+        pref.setString('supplierID', user!.uid);
         await FirebaseFirestore.instance
             .collection('customers')
-            .doc(userID)
+            .doc(user.uid)
             .get()
             .then((DocumentSnapshot snapshot) {
           if (snapshot.exists) {

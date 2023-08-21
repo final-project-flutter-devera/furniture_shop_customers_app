@@ -1,16 +1,17 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:furniture_shop/Constants/Colors.dart';
 import 'package:furniture_shop/Screen/4.%20SupplierHomeScreen/Screen/Components/Dashboard/DashboardOrder.dart';
-import 'package:furniture_shop/Widgets/AppBarButton.dart';
+import 'package:furniture_shop/Screen/5.%20Product/Visit_Store.dart';
 import 'package:furniture_shop/Widgets/AppBarTitle.dart';
 import 'package:google_fonts/google_fonts.dart';
-import '../../../1. Boarding/BoardingScreen.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import '../../../../Widgets/ShowAlertDialog.dart';
 import 'Dashboard/DashboardAnalytics.dart';
 import 'Dashboard/DashboardBalance.dart';
 import 'Dashboard/DashboardProfile.dart';
 import 'Dashboard/DashboardStorage.dart';
-import 'Dashboard/DashboardStore.dart';
 
 List<String> label = [
   'Store',
@@ -29,17 +30,19 @@ List<IconData> icons = [
   Icons.account_balance_wallet,
   Icons.analytics,
 ];
-List<Widget> pages = const [
-  StoreDashboard(),
-  OrderDashboard(),
-  ProfileDashboard(),
-  StorageDashboard(),
-  BalanceDashboard(),
-  AnalyticsDashboard(),
+List<Widget> pages = [
+  VisitStore(supplierID: FirebaseAuth.instance.currentUser!.uid),
+  const OrderDashboard(),
+  const ProfileDashboard(),
+  const StorageDashboard(),
+  const BalanceDashboard(),
+  const AnalyticsDashboard(),
 ];
 
 class DashboardScreen extends StatelessWidget {
-  const DashboardScreen({super.key});
+  final Future<SharedPreferences> _prefs = SharedPreferences.getInstance();
+
+  DashboardScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -51,10 +54,30 @@ class DashboardScreen extends StatelessWidget {
         centerTitle: true,
         automaticallyImplyLeading: false,
         actions: [
-          AppBarButtonPushReplace(
-              aimRoute: const BoardingScreen(),
-              icon: SvgPicture.asset('assets/Images/Icons/Logout.svg',
-                  height: 24, width: 24)),
+          GestureDetector(
+            onTap: () {
+              MyAlertDialog.showMyDialog(
+                context: context,
+                title: 'Log out',
+                content: 'Are you sure log out?',
+                tabNo: () {
+                  Navigator.pop(context);
+                },
+                tabYes: () async {
+                  await FirebaseAuth.instance.signOut();
+                  final SharedPreferences pref = await _prefs;
+                  pref.setString('supplierID', '');
+                  if (context.mounted) {
+                    Navigator.pop(context);
+                    Navigator.pushReplacementNamed(
+                        context, '/Welcome_boarding');
+                  }
+                },
+              );
+            },
+            child: SvgPicture.asset('assets/Images/Icons/Logout.svg',
+                height: 24, width: 24),
+          ),
         ],
       ),
       body: Padding(

@@ -46,6 +46,7 @@ class _SignupState extends State<Signup> {
             'email': email,
             'phone': '',
             'address': '',
+            'profileimage': '',
             'cid': _uid,
           });
           _formKey.currentState!.reset();
@@ -274,7 +275,9 @@ class _SignupState extends State<Signup> {
                               child: processing == true
                                   ? const CircularProgressIndicator()
                                   : GestureDetector(
-                                      onTap: signUp,
+                                      onTap: (){
+                                        signUp();
+                                      },
                                       child: Container(
                                         height: 50,
                                         width: wMQ * 0.65,

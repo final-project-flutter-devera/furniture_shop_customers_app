@@ -1,20 +1,42 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:furniture_shop/Providers/Cart_Provider.dart';
+import 'package:furniture_shop/Providers/Favorites_Provider.dart';
+import 'package:provider/provider.dart';
 import 'Screen/1. Boarding/BoardingScreen.dart';
 import 'Screen/2. Login - Signup/Login.dart';
 import 'Screen/2. Login - Signup/LoginSupplier.dart';
 import 'Screen/2. Login - Signup/Signup.dart';
 import 'Screen/3.CustomerHomeScreen/Screen/CustomerHomeScreen.dart';
 import 'Screen/4. SupplierHomeScreen/Screen/SupplierHomeScreen.dart';
+import 'firebase_options.dart';
 
 void main() async {
-  SystemChrome.setPreferredOrientations(
-          [DeviceOrientation.portraitDown, DeviceOrientation.portraitUp])
-      .then((value) => const MyApp());
   WidgetsFlutterBinding.ensureInitialized();
-  await Firebase.initializeApp();
-  runApp(const MyApp());
+  await Firebase.initializeApp(
+    options: DefaultFirebaseOptions.currentPlatform,
+  );
+  SystemChrome.setSystemUIOverlayStyle(const SystemUiOverlayStyle(
+      statusBarColor: Colors.transparent,
+      statusBarIconBrightness: Brightness.dark,
+      systemNavigationBarIconBrightness: Brightness.dark,
+      systemNavigationBarDividerColor: Colors.transparent));
+  SystemChrome.setPreferredOrientations(
+    [
+      DeviceOrientation.portraitDown,
+      DeviceOrientation.portraitUp,
+    ],
+  ).then((value) => const MyApp());
+  runApp(
+    MultiProvider(
+      providers: [
+        ChangeNotifierProvider(create: (_) => Cart()),
+        ChangeNotifierProvider(create: (_) => Favorites()),
+      ],
+      child: const MyApp(),
+    ),
+  );
 }
 
 class MyApp extends StatelessWidget {
@@ -24,7 +46,6 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
         debugShowCheckedModeBanner: false,
-        // home: BoardingScreen(),
         initialRoute: '/Welcome_boarding',
         routes: {
           '/Welcome_boarding': (context) => const BoardingScreen(),
