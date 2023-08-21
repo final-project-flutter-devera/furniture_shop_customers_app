@@ -7,6 +7,7 @@ class AppColor {
   static const success = Color(0xFF27AE60);
   static const processing = Colors.blueGrey;
   static const canceled = Colors.red;
+  static const red = Color(0xFFEB5757);
 
   static const black = Color(0xFF232323);
   static const black3 = Color(0xFF606060);
