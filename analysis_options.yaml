@@ -8,7 +8,10 @@
 # The following line activates a set of recommended lints for Flutter apps,
 # packages, and plugins designed to encourage good coding practices.
 include: package:flutter_lints/flutter.yaml
+include: package:lint/analysis_options.yaml
 
+# Not happy with the default? Customize the rules depending on your needs.
+# Here are some examples:
 linter:
   # The lint rules applied to this project can be customized in the
   # section below to disable rules from the `package:flutter_lints/flutter.yaml`
@@ -22,6 +25,27 @@ linter:
   # `// ignore_for_file: name_of_lint` syntax on the line or in the file
   # producing the lint.
   rules:
+    # Make constructors the first thing in every class
+    sort_constructors_first: true
+
+    # The new tabs vs. spaces. Choose wisely
+    prefer_single_quotes: true
+    prefer_double_quotes: true
+
+    # Good packages document everything
+    public_member_api_docs: true
+
+    # Blindly follow the Flutter code style, which prefers types everywhere
+    always_specify_types: true
+
+    # Back to the 80s
+    lines_longer_than_80_chars: true
+
+    # Use parameter order as in json response
+    always_put_required_named_parameters_first: false
+
+    # Util classes are awesome!
+    avoid_classes_with_only_static_members: false
     # avoid_print: false  # Uncomment to disable the `avoid_print` rule
     # prefer_single_quotes: true  # Uncomment to enable the `prefer_single_quotes` rule
 

@@ -116,7 +116,7 @@ class FavoritesModel extends StatelessWidget {
                                 .firstWhereOrNull((element) =>
                             element.documentID ==
                                 product.documentID) !=
-                                null
+                                null || product.availableQuantity == 0
                                 ? const SizedBox()
                                 : IconButton(
                               onPressed: () {

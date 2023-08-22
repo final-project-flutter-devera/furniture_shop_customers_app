@@ -19,7 +19,7 @@ class AppBarBackButtonPop extends StatelessWidget {
 }
 
 class AppBarButtonPush extends StatelessWidget {
-  final dynamic aimRoute;
+  final Function() aimRoute;
   final dynamic icon;
 
   const AppBarButtonPush(
@@ -28,10 +28,7 @@ class AppBarButtonPush extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return IconButton(
-      onPressed: () {
-        Navigator.push(
-            context, MaterialPageRoute(builder: (context) => aimRoute));
-      },
+      onPressed: aimRoute,
       icon: icon,
     );
   }

@@ -19,7 +19,9 @@ class _NotificationScreenState extends State<NotificationScreen> {
         elevation: 0,
         backgroundColor: Colors.white,
         leading: AppBarButtonPush(
-          aimRoute: const SearchScreen(),
+          aimRoute: (){
+            Navigator.push(context, MaterialPageRoute(builder: (context)=>const SearchScreen()));
+          },
           icon: SvgPicture.asset(
             'assets/Images/Icons/search.svg',
             height: 24,

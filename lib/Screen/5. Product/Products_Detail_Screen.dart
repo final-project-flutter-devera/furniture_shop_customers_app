@@ -1,11 +1,13 @@
 import 'dart:async';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:flutter_swiper_null_safety/flutter_swiper_null_safety.dart';
 import 'package:furniture_shop/Constants/Colors.dart';
 import 'package:furniture_shop/Providers/Cart_Provider.dart';
 import 'package:furniture_shop/Providers/Favorites_Provider.dart';
+import 'package:furniture_shop/Screen/2.%20Login%20-%20Signup/Login.dart';
 import 'package:furniture_shop/Widgets/AppBarButton.dart';
 import 'package:furniture_shop/Widgets/MyMessageHandler.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -41,11 +43,13 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
   Widget build(BuildContext context) {
     double wMQ = MediaQuery.of(context).size.width;
     double hMQ = MediaQuery.of(context).size.height;
-    final Stream<QuerySnapshot> _productsStream = FirebaseFirestore.instance
+    Stream<QuerySnapshot> productsStream = FirebaseFirestore.instance
         .collection('products')
         .where('mainCategory', isEqualTo: widget.proList['mainCategory'])
         .where('subCategory', isEqualTo: widget.proList['subCategory'])
         .snapshots();
+    final _productsStream = productsStream;
+
     late List<dynamic> imagesList = widget.proList['proImages'];
     CollectionReference customers =
         FirebaseFirestore.instance.collection('customers');
@@ -57,6 +61,7 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
             (product) => product.documentID == widget.proList['proID']);
     var existCart = context.read<Cart>().getItems.firstWhereOrNull(
         (product) => product.documentID == widget.proList['proID']);
+    final _future = customers.doc(supplierID).get();
     return ScaffoldMessenger(
       key: _scaffoldKey,
       child: Scaffold(
@@ -104,12 +109,19 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
           ),
           actions: [
             IconButton(
-              onPressed: () {
-                Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                        builder: (context) => const CartScreen()));
-              },
+              onPressed: FirebaseAuth.instance.currentUser!.isAnonymous
+                  ? () {
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => const Login()));
+                    }
+                  : () {
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => const CartScreen()));
+                    },
               icon: badges.Badge(
                 showBadge: context.read<Cart>().getItems.isEmpty ? false : true,
                 badgeContent: Text(
@@ -218,7 +230,23 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                             ),
                           ],
                         ),
-                        Text('In stock: ${widget.proList['inStock']}'),
+                        widget.proList['inStock'] == 0
+                            ? Text(
+                                'Out of stock',
+                                style: GoogleFonts.nunito(
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.w700,
+                                  color: AppColor.red,
+                                ),
+                              )
+                            : Text(
+                                'In stock: ${widget.proList['inStock']}',
+                                style: GoogleFonts.nunito(
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.w700,
+                                  color: AppColor.black,
+                                ),
+                              ),
                       ],
                     ),
                     Row(
@@ -240,22 +268,31 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                           ),
                         ),
                         IconButton(
-                          onPressed: () {
-                           existingFavorites !=
-                                    null
-                                ? context
-                                    .read<Favorites>()
-                                    .removeThis(widget.proList['proID'])
-                                : context.read<Favorites>().addFavoriteItems(
-                                      widget.proList['proName'],
-                                      widget.proList['price'],
-                                      1,
-                                      widget.proList['inStock'],
-                                      widget.proList['proImages'],
-                                      widget.proList['proID'],
-                                      widget.proList['sid'],
-                                    );
-                          },
+                          onPressed: FirebaseAuth
+                                  .instance.currentUser!.isAnonymous
+                              ? () {
+                                  Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                          builder: (context) => const Login()));
+                                }
+                              : () {
+                                  existingFavorites != null
+                                      ? context
+                                          .read<Favorites>()
+                                          .removeThis(widget.proList['proID'])
+                                      : context
+                                          .read<Favorites>()
+                                          .addFavoriteItems(
+                                            widget.proList['proName'],
+                                            widget.proList['price'],
+                                            1,
+                                            widget.proList['inStock'],
+                                            widget.proList['proImages'],
+                                            widget.proList['proID'],
+                                            widget.proList['sid'],
+                                          );
+                                },
                           icon: context
                                       .watch<Favorites>()
                                       .getFavoriteItems
@@ -270,7 +307,7 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                     ),
                     const SizedBox(height: 10),
                     FutureBuilder<DocumentSnapshot>(
-                      future: customers.doc(supplierID).get(),
+                      future: _future,
                       builder: (BuildContext context,
                           AsyncSnapshot<DocumentSnapshot> snapshot) {
                         if (snapshot.hasError) {
@@ -287,36 +324,40 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                           return Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
-                              Row(
-                                children: [
-                                  CircleAvatar(
-                                    radius: 38,
-                                    backgroundColor: AppColor.black,
-                                    child: CircleAvatar(
-                                      radius: 35,
-                                      backgroundColor: AppColor.white,
-                                      backgroundImage: NetworkImage(
-                                        data['profileimage'],
+                              Flexible(
+                                child: Row(
+                                  children: [
+                                    CircleAvatar(
+                                      radius: 38,
+                                      backgroundColor: AppColor.black,
+                                      child: CircleAvatar(
+                                        radius: 35,
+                                        backgroundColor: AppColor.white,
+                                        backgroundImage: NetworkImage(
+                                          data['profileimage'],
+                                        ),
                                       ),
                                     ),
-                                  ),
-                                  const SizedBox(
-                                    width: 10,
-                                  ),
-                                  SizedBox(
-                                    width: wMQ * 0.4,
-                                    child: Text(
-                                      data['name'],
-                                      style: GoogleFonts.nunito(
-                                        fontSize: 16,
-                                        fontWeight: FontWeight.w700,
-                                        color: AppColor.grey,
-                                      ),
-                                      maxLines: 2,
-                                      overflow: TextOverflow.ellipsis,
+                                    const SizedBox(
+                                      width: 10,
                                     ),
-                                  ),
-                                ],
+                                    Flexible(
+                                      child: SizedBox(
+                                        width: wMQ * 0.4,
+                                        child: Text(
+                                          data['name'],
+                                          style: GoogleFonts.nunito(
+                                            fontSize: 16,
+                                            fontWeight: FontWeight.w700,
+                                            color: AppColor.grey,
+                                          ),
+                                          maxLines: 2,
+                                          overflow: TextOverflow.ellipsis,
+                                        ),
+                                      ),
+                                    ),
+                                  ],
+                                ),
                               ),
                               InkWell(
                                 onTap: () {
@@ -408,21 +449,28 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: [
               GestureDetector(
-                onTap: () {
-                  existingFavorites != null
-                      ? context
-                          .read<Favorites>()
-                          .removeThis(widget.proList['proID'])
-                      : context.read<Favorites>().addFavoriteItems(
-                            widget.proList['proName'],
-                            widget.proList['price'],
-                            1,
-                            widget.proList['inStock'],
-                            widget.proList['proImages'],
-                            widget.proList['proID'],
-                            widget.proList['sid'],
-                          );
-                },
+                onTap: FirebaseAuth.instance.currentUser!.isAnonymous
+                    ? () {
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => const Login()));
+                      }
+                    : () {
+                        existingFavorites != null
+                            ? context
+                                .read<Favorites>()
+                                .removeThis(widget.proList['proID'])
+                            : context.read<Favorites>().addFavoriteItems(
+                                  widget.proList['proName'],
+                                  widget.proList['price'],
+                                  1,
+                                  widget.proList['inStock'],
+                                  widget.proList['proImages'],
+                                  widget.proList['proID'],
+                                  widget.proList['sid'],
+                                );
+                      },
                 child: PhysicalModel(
                   elevation: 1,
                   color: AppColor.grey,
@@ -449,7 +497,14 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                 ),
               ),
               GestureDetector(
-                onTap: () {},
+                onTap: FirebaseAuth.instance.currentUser!.isAnonymous
+                    ? () {
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => const Login()));
+                      }
+                    : () {},
                 child: PhysicalModel(
                   elevation: 1,
                   color: AppColor.grey,
@@ -471,20 +526,32 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                 ),
               ),
               GestureDetector(
-                onTap: () {
-                  existCart != null
-                      ? MyMessageHandler.showSnackBar(
-                          _scaffoldKey, 'This product already in your cart!')
-                      : context.read<Cart>().addItems(
-                            widget.proList['proName'],
-                            widget.proList['price'],
-                            1,
-                            widget.proList['inStock'],
-                            widget.proList['proImages'],
-                            widget.proList['proID'],
-                            widget.proList['sid'],
-                          );
-                },
+                onTap: FirebaseAuth.instance.currentUser!.isAnonymous
+                    ? () {
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => const Login()));
+                      }
+                    : () {
+                        if (widget.proList['inStock'] == 0) {
+                          MyMessageHandler.showSnackBar(
+                              _scaffoldKey, 'This product out of stock');
+                        } else if (existCart != null) {
+                          MyMessageHandler.showSnackBar(_scaffoldKey,
+                              'This product already in your cart!');
+                        } else {
+                          context.read<Cart>().addItems(
+                                widget.proList['proName'],
+                                widget.proList['price'],
+                                1,
+                                widget.proList['inStock'],
+                                widget.proList['proImages'],
+                                widget.proList['proID'],
+                                widget.proList['sid'],
+                              );
+                        }
+                      },
                 child: PhysicalModel(
                   elevation: 1,
                   color: AppColor.grey,
@@ -499,7 +566,7 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                           borderRadius: BorderRadius.circular(8)),
                     ),
                     child: Text(
-                      existCart != null ? 'Added to cart':'Add to cart',
+                      existCart != null ? 'Added to cart' : 'Add to cart',
                       textAlign: TextAlign.center,
                       style: GoogleFonts.nunito(
                         color: Colors.white,

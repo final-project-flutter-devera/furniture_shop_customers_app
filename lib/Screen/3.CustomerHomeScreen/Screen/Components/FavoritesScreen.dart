@@ -1,3 +1,4 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:furniture_shop/Providers/Favorites_Provider.dart';
@@ -7,6 +8,7 @@ import '../../../../Constants/Colors.dart';
 import '../../../../Models/Favorites_model.dart';
 import '../../../../Providers/Cart_Provider.dart';
 import '../../../../Widgets/AppBarTitle.dart';
+import '../../../2. Login - Signup/Login.dart';
 import 'CartScreen.dart';
 import 'SearchScreen.dart';
 import 'package:badges/badges.dart' as badges;
@@ -41,16 +43,21 @@ class _FavoritesScreenState extends State<FavoritesScreen> {
         centerTitle: true,
         actions: [
           IconButton(
-            onPressed: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => const CartScreen(),
-                ),
-              );
-            },
+            onPressed: FirebaseAuth.instance.currentUser!.isAnonymous
+                ? () {
+                    Navigator.push(context,
+                        MaterialPageRoute(builder: (context) => const Login()));
+                  }
+                : () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => const CartScreen(),
+                      ),
+                    );
+                  },
             icon: badges.Badge(
-              showBadge: context.read<Cart>().getItems.isEmpty ? false :true,
+              showBadge: context.read<Cart>().getItems.isEmpty ? false : true,
               badgeContent: Text(
                 context.watch<Cart>().getItems.length.toString(),
               ),
