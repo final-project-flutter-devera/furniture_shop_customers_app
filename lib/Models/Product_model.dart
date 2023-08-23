@@ -5,6 +5,7 @@ import 'package:provider/provider.dart';
 import 'package:collection/collection.dart';
 import '../Constants/Colors.dart';
 import '../Providers/Favorites_Provider.dart';
+import '../Screen/2. Login - Signup/Login.dart';
 import '../Screen/5. Product/Products_Detail_Screen.dart';
 
 class ProductModel extends StatefulWidget {
@@ -17,8 +18,6 @@ class ProductModel extends StatefulWidget {
 }
 
 class _ProductModelState extends State<ProductModel> {
-  bool favorite = false;
-
   @override
   Widget build(BuildContext context) {
     return InkWell(
@@ -84,7 +83,14 @@ class _ProductModelState extends State<ProductModel> {
                           child: const Icon(Icons.edit),
                         )
                       : GestureDetector(
-                          onTap: () {
+                          onTap: FirebaseAuth.instance.currentUser!.isAnonymous
+                              ? () {
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => const Login()));
+                          }
+                              : () {
                             context
                                 .read<Favorites>()
                                 .getFavoriteItems

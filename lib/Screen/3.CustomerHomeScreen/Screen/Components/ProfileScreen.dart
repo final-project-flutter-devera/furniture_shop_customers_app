@@ -3,6 +3,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:furniture_shop/Constants/Colors.dart';
+import 'package:furniture_shop/Screen/13.%20MyOrderList/My_Order_Screen.dart';
 import 'package:furniture_shop/Widgets/AppBarButton.dart';
 import 'package:furniture_shop/Widgets/AppBarTitle.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -24,7 +25,16 @@ class _ProfileScreenState extends State<ProfileScreen> {
       FirebaseFirestore.instance.collection('customers');
   CollectionReference anonymous =
       FirebaseFirestore.instance.collection('anonymous');
-
+  List<String> tabName = [
+    'My Order',
+    'Shipping Address',
+    'Payment Method',
+    'My review',
+    'Settings',
+  ];
+  List tabRoute = [
+    MyOrderScreen(),
+  ];
   @override
   Widget build(BuildContext context) {
     final wMQ = MediaQuery.of(context).size.width;
@@ -51,7 +61,12 @@ class _ProfileScreenState extends State<ProfileScreen> {
               elevation: 0,
               backgroundColor: AppColor.white,
               leading: AppBarButtonPush(
-                aimRoute: const SearchScreen(),
+                aimRoute: () {
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => const SearchScreen()));
+                },
                 icon: SvgPicture.asset(
                   'assets/Images/Icons/search.svg',
                   height: 24,
@@ -158,67 +173,72 @@ class _ProfileScreenState extends State<ProfileScreen> {
                               ),
                             );
                           },
-                          icon: const Icon(Icons.edit)),
+                          icon:
+                              SvgPicture.asset('assets/Images/Icons/edit.svg')),
                     ],
                   ),
                   const SizedBox(height: 20),
                   Flexible(
                     child: ListView.builder(
-                      itemCount: 50,
+                      physics: NeverScrollableScrollPhysics(),
+                      shrinkWrap: true,
+                      itemCount: tabName.length,
                       itemBuilder: (BuildContext context, index) {
                         return Padding(
                           padding: const EdgeInsets.symmetric(vertical: 10),
                           child: GestureDetector(
-                            onTap: () {},
-                            child: Container(
-                              height: 80,
-                              width: wMQ,
-                              decoration: const BoxDecoration(
-                                color: AppColor.white,
-                                boxShadow: [
-                                  BoxShadow(
-                                    color: AppColor.grey,
-                                    blurRadius: 10,
-                                    spreadRadius: 0,
-                                    offset: Offset(0, 7),
-                                  )
-                                ],
-                              ),
-                              child: Padding(
-                                padding: const EdgeInsets.all(10),
-                                child: Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
-                                  children: [
-                                    Column(
+                            onTap: () {
+                              Navigator.push(context, MaterialPageRoute(builder: (context) => tabRoute[index]));
+                            },
+                            child: PhysicalModel(
+                              elevation: 3,
+                              borderRadius: BorderRadius.circular(10),
+                              color: AppColor.grey,
+                              child: ClipRRect(
+                                borderRadius: BorderRadius.circular(10),
+                                child: Container(
+                                  height: 80,
+                                  width: wMQ,
+                                  decoration: const BoxDecoration(
+                                    color: AppColor.white,
+                                  ),
+                                  child: Padding(
+                                    padding: const EdgeInsets.all(10),
+                                    child: Row(
                                       mainAxisAlignment:
-                                          MainAxisAlignment.center,
+                                          MainAxisAlignment.spaceBetween,
                                       children: [
-                                        Text.rich(
-                                          TextSpan(
-                                            children: [
+                                        Column(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.center,
+                                          children: [
+                                            Text.rich(
                                               TextSpan(
-                                                text: 'My order \n',
-                                                style: GoogleFonts.nunito(
-                                                  fontSize: 18,
-                                                  fontWeight: FontWeight.w700,
-                                                ),
+                                                children: [
+                                                  TextSpan(
+                                                    text: tabName[index] + '\n',
+                                                    style: GoogleFonts.nunito(
+                                                      fontSize: 18,
+                                                      fontWeight: FontWeight.w700,
+                                                    ),
+                                                  ),
+                                                  TextSpan(
+                                                    text:
+                                                        'Alreadyyyyyyyyyyyyyyyyyyy',
+                                                    style: GoogleFonts.nunito(
+                                                      fontSize: 12,
+                                                      fontWeight: FontWeight.w400,
+                                                    ),
+                                                  ),
+                                                ],
                                               ),
-                                              TextSpan(
-                                                text:
-                                                    'Alreadyyyyyyyyyyyyyyyyyyy',
-                                                style: GoogleFonts.nunito(
-                                                  fontSize: 12,
-                                                  fontWeight: FontWeight.w400,
-                                                ),
-                                              ),
-                                            ],
-                                          ),
+                                            ),
+                                          ],
                                         ),
+                                        const Icon(Icons.arrow_forward_ios),
                                       ],
                                     ),
-                                    const Icon(Icons.arrow_forward_ios),
-                                  ],
+                                  ),
                                 ),
                               ),
                             ),

@@ -1,9 +1,11 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:furniture_shop/Constants/Colors.dart';
 import 'package:furniture_shop/Widgets/AppBarButton.dart';
 import 'package:provider/provider.dart';
 import '../../../../Providers/Cart_Provider.dart';
+import '../../../2. Login - Signup/Login.dart';
 import '../../../Gallery/Gallery_armchair.dart';
 import '../../../Gallery/Gallery_bed.dart';
 import '../../../Gallery/Gallery_chair.dart';
@@ -43,7 +45,9 @@ class _HomeScreenState extends State<HomeScreen> {
           elevation: 0,
           backgroundColor: AppColor.white,
           leading: AppBarButtonPush(
-            aimRoute: const SearchScreen(),
+            aimRoute: (){
+              Navigator.push(context, MaterialPageRoute(builder: (context)=>const SearchScreen()));
+            },
             icon: SvgPicture.asset(
               'assets/Images/Icons/search.svg',
               height: 24,
@@ -54,7 +58,16 @@ class _HomeScreenState extends State<HomeScreen> {
           centerTitle: true,
           actions: [
             AppBarButtonPush(
-              aimRoute: const CartScreen(),
+              aimRoute: FirebaseAuth.instance.currentUser!.isAnonymous
+                  ? () {
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => const Login()));
+              }
+                  : (){
+                Navigator.push(context, MaterialPageRoute(builder: (context)=> const CartScreen()));
+              },
               icon: badges.Badge(
                 showBadge: context.read<Cart>().getItems.isEmpty ? false : true,
                 badgeContent: Text(

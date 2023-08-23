@@ -1,3 +1,4 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:furniture_shop/Constants/Colors.dart';
@@ -7,6 +8,8 @@ import 'package:furniture_shop/Widgets/AppBarTitle.dart';
 import 'package:google_fonts/google_fonts.dart';
 import '../../../../Models/Cart_model.dart';
 import '../../../../Widgets/ShowAlertDialog.dart';
+import '../../../2. Login - Signup/Login.dart';
+import '../../../8.CheckOut/Check_Out_Screen.dart';
 import '../CustomerHomeScreen.dart';
 import 'package:provider/provider.dart';
 
@@ -21,6 +24,7 @@ class _CartScreenState extends State<CartScreen> {
   @override
   Widget build(BuildContext context) {
     double wMQ = MediaQuery.of(context).size.width;
+    double total = context.watch<Cart>().totalPrice;
     return Scaffold(
       appBar: AppBar(
         backgroundColor: AppColor.white,
@@ -56,7 +60,7 @@ class _CartScreenState extends State<CartScreen> {
       body: context.watch<Cart>().getItems.isNotEmpty
           ? const CartProduct()
           : CartProductEmpty(wMQ: wMQ),
-      bottomSheet: Padding(
+      bottomSheet: total == 0.0 ? null :  Padding(
         padding: const EdgeInsets.all(20),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -69,7 +73,7 @@ class _CartScreenState extends State<CartScreen> {
                   color: AppColor.black),
             ),
             Text(
-              '\$ ${context.watch<Cart>().totalPrice.toStringAsFixed(2)}',
+              '\$ ${total.toStringAsFixed(2)}',
               style: GoogleFonts.nunito(
                   fontSize: 22,
                   fontWeight: FontWeight.w700,
@@ -79,14 +83,19 @@ class _CartScreenState extends State<CartScreen> {
         ),
       ),
       extendBody: true,
-      bottomNavigationBar: Padding(
+      bottomNavigationBar: total == 0.0 ? null : Padding(
         padding: const EdgeInsets.only(left: 40, right: 40, bottom: 20),
         child: ClipRRect(
           borderRadius: BorderRadius.circular(20),
           child: MaterialButton(
             height: 60,
             color: AppColor.black,
-            onPressed: () {},
+            onPressed: () {
+              Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) => CheckOutScreen()));
+            },
             child: Text(
               'Check Out',
               style: GoogleFonts.nunito(
@@ -175,4 +184,3 @@ class CartProduct extends StatelessWidget {
     );
   }
 }
-
