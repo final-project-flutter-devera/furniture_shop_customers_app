@@ -1,22 +1,28 @@
-// import 'package:furniture_shop/Objects/rating_and_review.dart';
+class Product {
+  final String id; //Primary key
+  String name;
+  String? desc;
+  double discount;
+  int inStock;
+  //Maybe category can be enum?
+  List<String>? mainCategory;
+  List<String>? subCategory;
+  double price;
+  List<String>? images;
 
-// class Product {
-//   //Product title
-//   String title;
+  final String supplierID; //Foreign keys
+  Product({
+    required this.id,
+    required this.name,
+    this.desc = '',
+    this.discount = 0,
+    this.inStock = 0,
+    this.mainCategory,
+    this.subCategory,
+    required this.price,
+    this.images,
+    required this.supplierID,
+  });
 
-//   double price;
-//   //Product description
-//   String description;
-
-//   //TODO: Maybe change into another variable type in the future???
-//   //First element is thumbnail
-//   List<String> photo;
-
-//   List<RatingAndReview> review;
-//   Product(
-//       {required this.title,
-//       required this.price,
-//       required this.description,
-//       required this.photo,
-//       required this.review});
-// }
+  //TODO: toJSON and fromJSON function
+}

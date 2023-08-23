@@ -1,14 +1,14 @@
 class RatingAndReview {
-  //TODO: change user variable into user object
-  String user;
+  final String id;
+  late int rating;
+  String? review;
+  RatingAndReview({required this.id, required int rating, this.review}) {
+    if (1 <= rating && rating <= 5) {
+      this.rating = rating;
+    } else {
+      throw 'Rating must be between 1 and 5';
+    }
+  }
 
-  //Rating value from 1 to 5
-  int rating;
-  DateTime reviewDate;
-  String description;
-  RatingAndReview(
-      {required this.user,
-      required this.rating,
-      required this.reviewDate,
-      required this.description});
+  //TODO: toJSON and fromJSON function
 }
