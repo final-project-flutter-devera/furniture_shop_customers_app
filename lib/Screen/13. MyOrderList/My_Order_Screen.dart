@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:furniture_shop/Constants/Colors.dart';
-import 'package:furniture_shop/Constants/style.dart';
-import 'package:furniture_shop/Screen/13.%20MyOrderList/Components/order_card.dart';
 import 'package:furniture_shop/Widgets/AppBarTitle.dart';
 import 'package:google_fonts/google_fonts.dart';
 

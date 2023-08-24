@@ -59,8 +59,6 @@ class BalanceDashboard extends StatelessWidget {
                   ClipRRect(
                     borderRadius: BorderRadius.circular(15),
                     child: MaterialButton(
-                      height: 30,
-                      minWidth: wMQ *0.5,
                       onPressed: () {},
                       color: AppColor.green,
                       child: Text(
@@ -87,9 +85,9 @@ class AnalysisMode extends StatelessWidget {
 
   const AnalysisMode(
       {super.key,
-      required this.label,
-      required this.value,
-      required this.decimal});
+        required this.label,
+        required this.value,
+        required this.decimal});
 
   @override
   Widget build(BuildContext context) {

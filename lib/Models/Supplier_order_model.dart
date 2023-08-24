@@ -5,11 +5,12 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
 import '../Constants/Colors.dart';
 import '../Widgets/ShowAlertDialog.dart';
+import 'package:flutter_datetime_picker_plus/flutter_datetime_picker_plus.dart';
 
-class CustomerOrderModel extends StatelessWidget {
+class SupplierOrderModel extends StatelessWidget {
   final dynamic order;
 
-  const CustomerOrderModel({super.key, this.order});
+  const SupplierOrderModel({super.key, this.order});
 
   @override
   Widget build(BuildContext context) {
@@ -162,7 +163,7 @@ class CustomerOrderModel extends StatelessWidget {
                         : Row(
                             children: [
                               Text(
-                                'Payment method:   ',
+                                'Payment Method:   ',
                                 style: GoogleFonts.nunito(
                                     fontSize: 16, fontWeight: FontWeight.w400),
                               ),
@@ -205,76 +206,70 @@ class CustomerOrderModel extends StatelessWidget {
                                 style: GoogleFonts.nunito(
                                     fontSize: 16,
                                     fontWeight: FontWeight.w700,
-                                    color: AppColor.green),
+                                    color: AppColor.blue),
                               ),
                             ],
                           ),
-                    order['deliveryStatus'] == 'Shipping'
-                        ? Text(
-                            'Estimated Pick date:    ' +
-                                DateFormat('dd/MM/yyyy - HH:mm')
-                                    .format(order['deliveryDate'].toDate())
-                                    .toString(),
-                            style: GoogleFonts.nunito(
-                                fontSize: 16, fontWeight: FontWeight.w400),
-                          )
-                        : Text(''),
                     Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        order['deliveryStatus'] == 'Delivered' &&
-                                order['orderReview'] == false
-                            ? MaterialButton(
-                                onPressed: () {},
-                                elevation: 1,
-                                height: 30,
-                                color: AppColor.amber,
-                                textColor: AppColor.black,
-                                child: Text('Review'),
-                              )
-                            : Text(''),
-                        order['deliveryStatus'] == 'Delivered' &&
-                                order['orderReview'] == true
-                            ? Row(
-                                children: [
-                                  Icon(Icons.sticky_note_2),
-                                  Text('Review Added')
-                                ],
-                              )
-                            : Text(''),
-                        order['cancelStatus'] == true ||
-                                order['sid'] ==
-                                    FirebaseAuth.instance.currentUser!.uid
-                            ? Text('')
-                            : MaterialButton(
-                                onPressed: () {
-                                  MyAlertDialog.showMyDialog(
-                                    context: context,
-                                    title: 'Cancel Order',
-                                    content: 'Are you sure?',
-                                    tabNo: () {
-                                      Navigator.pop(context);
-                                    },
-                                    tabYes: () {
-                                      CollectionReference orderRef =
-                                          FirebaseFirestore.instance
-                                              .collection('orders');
-                                      orderRef.doc(order['orderID']).update({
-                                        'cancelDate': DateTime.now(),
-                                        'cancelStatus': true,
-                                      });
-                                      Navigator.pop(context);
-                                    },
-                                  );
-                                },
-                                elevation: 1,
-                                height: 30,
-                                color: AppColor.red,
-                                textColor: AppColor.white,
-                                child: Text('Cancel'),
-                              )
+                        Text(
+                          'Order Date:   ',
+                          style: GoogleFonts.nunito(
+                              fontSize: 16, fontWeight: FontWeight.w400),
+                        ),
+                        Text(
+                          DateFormat('dd/MM/yyyy - HH:mm')
+                              .format(order['orderDate'].toDate())
+                              .toString(),
+                          style: GoogleFonts.nunito(
+                              fontSize: 16,
+                              fontWeight: FontWeight.w700,
+                              color: AppColor.blue),
+                        ),
                       ],
-                    )
+                    ),
+                    order['deliveryStatus'] == 'Delivered'
+                        ? Text('This order has been already delivered')
+                        : Row(
+                            children: [
+                              Text(
+                                'Change Delivery Status To:   ',
+                                style: GoogleFonts.nunito(
+                                    fontSize: 16, fontWeight: FontWeight.w400),
+                              ),
+                              order['deliveryStatus'] == 'Preparing'
+                                  ? TextButton(
+                                      onPressed: () {
+                                        var today = DateTime.now();
+                                        DatePicker.showDatePicker(context,
+                                            minTime: today.subtract(Duration(days: 1)) ,
+                                            maxTime: DateTime.now().add(
+                                              const Duration(days: 2),
+                                            ), onConfirm: (date) async {
+                                          await FirebaseFirestore.instance
+                                              .collection('orders')
+                                              .doc(order['orderID'])
+                                              .update({
+                                            'deliveryStatus': 'Shipping',
+                                            'deliveryDate': date,
+                                          });
+                                        });
+                                      },
+                                      child: Text('Shipping ?'),
+                                    )
+                                  : TextButton(
+                                      onPressed: () async {
+                                        await FirebaseFirestore.instance
+                                            .collection('orders')
+                                            .doc(order['orderID'])
+                                            .update({
+                                          'deliveryStatus': 'Delivered',
+                                        });
+                                      },
+                                      child: Text('Delivered ?'),
+                                    ),
+                            ],
+                          ),
                   ],
                 ),
               ),

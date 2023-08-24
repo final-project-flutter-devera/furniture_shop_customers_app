@@ -3,6 +3,7 @@ import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:furniture_shop/Constants/Colors.dart';
+import 'package:furniture_shop/Widgets/CheckValidation.dart';
 import 'package:furniture_shop/Widgets/MyMessageHandler.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:image_picker/image_picker.dart';
@@ -28,6 +29,7 @@ class _UploadScreenState extends State<UploadScreen> {
   late String proName;
   late String proDesc;
   late String proID;
+  int? discount = 0;
   String mainValue = 'Select Main Category';
   String subValue = 'Select Sub Category';
   List<String> subCategory = [];
@@ -41,7 +43,7 @@ class _UploadScreenState extends State<UploadScreen> {
   void pickProductImage() async {
     try {
       final pickedImages = await _picker.pickMultiImage(
-          maxHeight: 300, maxWidth: 300, imageQuality: 95);
+          maxHeight: 1000, maxWidth: 1000, imageQuality: 100);
       setState(() {
         imagesFileList = pickedImages!;
       });
@@ -100,7 +102,7 @@ class _UploadScreenState extends State<UploadScreen> {
   }
 
   void uploadData() async {
-    if (imagesUrlList!.isNotEmpty) {
+    if (imagesUrlList.isNotEmpty) {
       CollectionReference productRef =
           FirebaseFirestore.instance.collection('products');
       proID = const Uuid().v4();
@@ -113,16 +115,18 @@ class _UploadScreenState extends State<UploadScreen> {
         'proName': proName,
         'prodesc': proDesc,
         'sid': FirebaseAuth.instance.currentUser!.uid,
-        'proImages': imagesUrlList,
-        'discount': 0,
+        'proImages': imagesUrlList!,
+        'discount': discount,
+      }).whenComplete(() {
+        setState(() {
+          processing = false;
+          imagesUrlList = [];
+          imagesFileList = [];
+          mainValue = 'Select Main Category';
+          subCategory = [];
+        });
       });
-      setState(() {
-        processing = false;
-        imagesUrlList = [];
-        imagesFileList = [];
-        mainValue = 'Select Main Category';
-        subCategory = [];
-      });
+
       _formKey.currentState!.reset();
     } else {
       print('No images');
@@ -264,6 +268,8 @@ class _UploadScreenState extends State<UploadScreen> {
                             validator: (value) {
                               if (value!.isEmpty) {
                                 return 'Please enter price';
+                              } else if(value.isValidPrice() != true){
+                                return 'invalid Price';
                               }
                               return null;
                             },
@@ -278,26 +284,29 @@ class _UploadScreenState extends State<UploadScreen> {
                             ),
                           ),
                         ),
-                        // SizedBox(
-                        //   width: wMQ * 0.45,
-                        //   child: TextFormField(
-                        //     validator: (value) {
-                        //       if (value!.isEmpty) {
-                        //         return 'Please enter discount';
-                        //       }
-                        //       return null;
-                        //     },
-                        //     onSaved: (value) {
-                        //       discount = double.parse(value!);
-                        //     },
-                        //     keyboardType: const TextInputType.numberWithOptions(
-                        //         decimal: true),
-                        //     decoration: decorTextForm.copyWith(
-                        //       labelText: 'Discount',
-                        //       hintText: 'Set discount ...\%',
-                        //     ),
-                        //   ),
-                        // ),
+                        SizedBox(
+                          width: wMQ * 0.45,
+                          child: TextFormField(
+                            maxLength: 2,
+                            validator: (value) {
+                              if (value!.isEmpty) {
+                                return null;
+                              }else if(value.isValidDiscount() != true){
+                                return 'invalid Discount';
+                              }
+                              return null;
+                            },
+                            onSaved: (value) {
+                              discount = int.parse(value!);
+                            },
+                            keyboardType: const TextInputType.numberWithOptions(
+                                decimal: true),
+                            decoration: decorTextForm.copyWith(
+                              labelText: 'Discount',
+                              hintText: 'Set discount ...\%',
+                            ),
+                          ),
+                        ),
                       ],
                     ),
                   ),
@@ -309,6 +318,8 @@ class _UploadScreenState extends State<UploadScreen> {
                         validator: (value) {
                           if (value!.isEmpty) {
                             return 'Please enter quantity';
+                          } else if(value.isValidQuantity() != true){
+                            return 'invalid Quantity';
                           }
                           return null;
                         },
@@ -451,14 +462,3 @@ var decorTextForm = InputDecoration(
   ),
 );
 
-extension QuantityValidator on String {
-  bool isValidQuantity() {
-    return RegExp(r'^[1-9][0-9]*$').hasMatch(this);
-  }
-}
-
-extension PriceValidator on String {
-  bool isValidPrice() {
-    return RegExp(r'^((([1-9][0-9]*.)|(0.))([0-9]{1,2}))$').hasMatch(this);
-  }
-}
