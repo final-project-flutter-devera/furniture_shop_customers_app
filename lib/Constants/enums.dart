@@ -1,16 +1,20 @@
-enum OrderStatus {
-  completed,
-  canceled,
-  delivering,
-  processing,
-}
+const List<String> OrderStatus = [
+  'Processing',
+  'Delivering',
+  'Completed',
+  'Canceled',
+];
 
-enum PaymentMethod {
-  cod,
-  banking,
-}
+const List<String> PaymentMethod = ['Cash on Demand', 'Banking'];
 
-enum Role {
-  customer,
-  supplier,
-}
+/// 0 for Anonymous,
+/// 1 for Customer,
+/// 2 for Vendor,
+const List<String> Role = [
+  'Anonymous', //User who has not logged in
+  'Customer',
+  'Vendor',
+];
+
+const List<String> MainCategory = [];
+const List<String> SubCategory = [];
