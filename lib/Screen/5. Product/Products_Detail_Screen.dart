@@ -41,6 +41,7 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
 
   @override
   Widget build(BuildContext context) {
+    var onSale = widget.proList['discount'];
     double wMQ = MediaQuery.of(context).size.width;
     double hMQ = MediaQuery.of(context).size.height;
     Stream<QuerySnapshot> productsStream = FirebaseFirestore.instance
@@ -219,12 +220,37 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                                   Icons.attach_money,
                                   size: 39,
                                 ),
-                                Text(
-                                  widget.proList['price'].toStringAsFixed(2),
-                                  style: GoogleFonts.nunito(
-                                    fontSize: 30,
-                                    fontWeight: FontWeight.w700,
-                                  ),
+                                Row(
+                                  children: [
+                                    onSale != 0
+                                        ? Text(
+                                            ((1 - (onSale / 100)) *
+                                                    widget.proList['price'])
+                                                .toString(),
+                                            style: GoogleFonts.nunito(
+                                              fontSize: 30,
+                                              fontWeight: FontWeight.w700,
+                                            ),
+                                          )
+                                        : Text(''),
+                                    SizedBox(width: 10),
+                                    Text(
+                                      widget.proList['price']
+                                          .toStringAsFixed(2),
+                                      style: onSale != 0
+                                          ? GoogleFonts.nunito(
+                                              fontSize: 18,
+                                              color: AppColor.red,
+                                              decoration:
+                                                  TextDecoration.lineThrough,
+                                              fontWeight: FontWeight.w400,
+                                            )
+                                          : GoogleFonts.nunito(
+                                              fontSize: 30,
+                                              fontWeight: FontWeight.w700,
+                                            ),
+                                    ),
+                                  ],
                                 ),
                               ],
                             ),
@@ -285,7 +311,10 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                                           .read<Favorites>()
                                           .addFavoriteItems(
                                             widget.proList['proName'],
-                                            widget.proList['price'],
+                                            onSale != 0
+                                                ? ((1 - (onSale / 100)) *
+                                                    widget.proList['price'])
+                                                : widget.proList['price'],
                                             1,
                                             widget.proList['inStock'],
                                             widget.proList['proImages'],
@@ -463,7 +492,10 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                                 .removeThis(widget.proList['proID'])
                             : context.read<Favorites>().addFavoriteItems(
                                   widget.proList['proName'],
-                                  widget.proList['price'],
+                                  onSale != 0
+                                      ? ((1 - (onSale / 100)) *
+                                          widget.proList['price'])
+                                      : widget.proList['price'],
                                   1,
                                   widget.proList['inStock'],
                                   widget.proList['proImages'],
@@ -543,7 +575,10 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                         } else {
                           context.read<Cart>().addItems(
                                 widget.proList['proName'],
-                                widget.proList['price'],
+                                onSale != 0
+                                    ? ((1 - (onSale / 100)) *
+                                        widget.proList['price'])
+                                    : widget.proList['price'],
                                 1,
                                 widget.proList['inStock'],
                                 widget.proList['proImages'],

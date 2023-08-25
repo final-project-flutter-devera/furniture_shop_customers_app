@@ -1,6 +1,9 @@
+import 'dart:convert';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_stripe/flutter_stripe.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:furniture_shop/Constants/Colors.dart';
 import 'package:furniture_shop/Screen/3.CustomerHomeScreen/Screen/CustomerHomeScreen.dart';
@@ -10,10 +13,12 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 import 'package:uuid/uuid.dart';
 import '../../Providers/Cart_Provider.dart';
+import '../../Providers/Stripe_ID.dart';
 import 'Delivery_Method.dart';
 import 'Payment_Method_Screen.dart';
 import 'Shipping_Address.dart';
 import 'package:sn_progress_dialog/sn_progress_dialog.dart';
+import 'package:http/http.dart' as http;
 
 class CheckOutScreen extends StatefulWidget {
   late String? paymentMethod;
@@ -35,7 +40,10 @@ class _CheckOutScreenState extends State<CheckOutScreen> {
   void showProgress() {
     ProgressDialog progressDialog = ProgressDialog(context: context);
     progressDialog.show(
-        max: 100, msg: 'Please wait...', progressBgColor: AppColor.amber,progressValueColor: AppColor.black);
+        max: 100,
+        msg: 'Please wait...',
+        progressBgColor: AppColor.amber,
+        progressValueColor: AppColor.black);
   }
 
   @override
@@ -263,10 +271,10 @@ class _CheckOutScreenState extends State<CheckOutScreen> {
                       TitleMethod(
                         label: 'Payment method',
                         onTap: () {
-                          Navigator.pushReplacement(
+                          Navigator.push(
                               context,
                               MaterialPageRoute(
-                                  builder: (context) => PaymentMethod(
+                                  builder: (context) => PaymentMethodScreen(
                                         deliveryMethod:
                                             widget.deliveryMethod.toString(),
                                       )));
@@ -534,68 +542,79 @@ class _CheckOutScreenState extends State<CheckOutScreen> {
                                         height: 60,
                                         color: AppColor.black,
                                         onPressed: () async {
-                                          showProgress();
-                                          for (var item in context
-                                              .read<Cart>()
-                                              .getItems) {
-                                            CollectionReference orderRef =
-                                                FirebaseFirestore.instance
-                                                    .collection('orders');
-                                            orderID = const Uuid().v4();
-                                            await orderRef.doc(orderID).set({
-                                              'cid': data['cid'],
-                                              'cusName': data['name'],
-                                              'email': data['email'],
-                                              'address': data['address'],
-                                              'phone': data['phone'],
-                                              'profileImages':
-                                                  data['profileimage'],
-                                              'sid': item.supplierID,
-                                              'proID': item.documentID,
-                                              'orderID': orderID,
-                                              'orderName': item.name,
-                                              'orderImage':
-                                                  item.imageList.first,
-                                              'orderQuantity': item.quantity,
-                                              'orderPrice':
-                                                  item.quantity * item.price,
-                                              'deliveryStatus': 'Preparing',
-                                              'deliveryDate': '',
-                                              'orderDate': DateTime.now(),
-                                              'paymentStatus':
-                                                  widget.paymentMethod,
-                                              'cancelStatus': false,
-                                              'orderReview': false,
-                                            }).whenComplete(() async {
-                                              await FirebaseFirestore.instance
-                                                  .runTransaction(
-                                                      (transaction) async {
-                                                DocumentReference
-                                                    documentReference =
-                                                    FirebaseFirestore.instance
-                                                        .collection('products')
-                                                        .doc(item.documentID);
-                                                DocumentSnapshot snapshoot2 =
-                                                    await transaction
-                                                        .get(documentReference);
-                                                transaction.update(
-                                                    documentReference, {
-                                                  'inStock':
-                                                      snapshoot2['inStock'] -
-                                                          item.quantity
+                                          if (widget.paymentMethod ==
+                                              'Credit / Debit Card') {
+                                            int payment = totalPaid.round();
+                                            int pay = payment * 100;
+                                            makePayment(data, pay.toString());
+                                          } else if (widget.paymentMethod ==
+                                              'Cash on Delivery - COD') {
+                                            showProgress();
+                                            for (var item in context
+                                                .read<Cart>()
+                                                .getItems) {
+                                              CollectionReference orderRef =
+                                                  FirebaseFirestore.instance
+                                                      .collection('orders');
+                                              orderID = const Uuid().v4();
+                                              await orderRef.doc(orderID).set({
+                                                'cid': data['cid'],
+                                                'cusName': data['name'],
+                                                'email': data['email'],
+                                                'address': data['address'],
+                                                'phone': data['phone'],
+                                                'profileImages':
+                                                    data['profileimage'],
+                                                'sid': item.supplierID,
+                                                'proID': item.documentID,
+                                                'orderID': orderID,
+                                                'orderName': item.name,
+                                                'orderImage':
+                                                    item.imageList.first,
+                                                'orderQuantity': item.quantity,
+                                                'orderPrice':
+                                                    item.quantity * item.price,
+                                                'deliveryStatus': 'Preparing',
+                                                'deliveryDate': '',
+                                                'orderDate': DateTime.now(),
+                                                'paymentStatus':
+                                                    widget.paymentMethod,
+                                                'cancelStatus': false,
+                                                'cancelDate':
+                                                    DateTime.timestamp(),
+                                                'orderReview': false,
+                                              }).whenComplete(() async {
+                                                await FirebaseFirestore.instance
+                                                    .runTransaction(
+                                                        (transaction) async {
+                                                  DocumentReference
+                                                      documentReference =
+                                                      FirebaseFirestore.instance
+                                                          .collection(
+                                                              'products')
+                                                          .doc(item.documentID);
+                                                  DocumentSnapshot snapshoot2 =
+                                                      await transaction.get(
+                                                          documentReference);
+                                                  transaction.update(
+                                                      documentReference, {
+                                                    'inStock':
+                                                        snapshoot2['inStock'] -
+                                                            item.quantity
+                                                  });
                                                 });
                                               });
-                                            });
+                                              context
+                                                  .read<Cart>()
+                                                  .clearAllProduct();
+                                              Navigator.pushAndRemoveUntil(
+                                                  context,
+                                                  MaterialPageRoute(
+                                                      builder: (context) =>
+                                                          const CustomerHomeScreen()),
+                                                  (route) => route.isFirst);
+                                            }
                                           }
-                                          context
-                                              .read<Cart>()
-                                              .clearAllProduct();
-                                          Navigator.pushAndRemoveUntil(
-                                              context,
-                                              MaterialPageRoute(
-                                                  builder: (context) =>
-                                                      const CustomerHomeScreen()),
-                                              (route) => route.isFirst);
                                         },
                                         child: Text(
                                           'Confirm',
@@ -636,6 +655,106 @@ class _CheckOutScreenState extends State<CheckOutScreen> {
         );
       },
     );
+  }
+
+  Map<String, dynamic>? paymentIntentData;
+
+  void makePayment(dynamic data, String total) async {
+    paymentIntentData = await createPaymentInit(total);
+    var GooglePay = const PaymentSheetGooglePay(
+      merchantCountryCode: 'US',
+      currencyCode: 'USD',
+      testEnv: true,
+    );
+    var ApplePay = const PaymentSheetApplePay(
+      merchantCountryCode: 'US',
+    );
+    await Stripe.instance.initPaymentSheet(
+      paymentSheetParameters: SetupPaymentSheetParameters(
+        paymentIntentClientSecret: paymentIntentData!['client_secret'],
+        style: ThemeMode.system,
+        merchantDisplayName: 'DevEra',
+        googlePay: GooglePay,
+        applePay: ApplePay,
+        allowsDelayedPaymentMethods: true,
+      ),
+    );
+    await displayPaymentSheet(data);
+  }
+
+  createPaymentInit(String total) async {
+    try {
+      Map<String, dynamic> body = {
+        'amount': total,
+        'currency': 'USD',
+      };
+      http.Response response = await http.post(
+          Uri.parse('https://api.stripe.com/v1/payment_intents'),
+          body: body,
+          headers: {
+            'Authorization': 'Bearer $stripeSecretKey',
+            'Content_Type': 'application/x-www-form-urlencoded'
+          });
+      return jsonDecode(response.body);
+    } catch (e) {
+      throw Exception(e.toString());
+    }
+  }
+
+  displayPaymentSheet(dynamic data) async {
+    try {
+      await Stripe.instance.presentPaymentSheet().then((value) async {
+        paymentIntentData = null;
+        showProgress();
+        for (var item in context.read<Cart>().getItems) {
+          CollectionReference orderRef =
+              FirebaseFirestore.instance.collection('orders');
+          orderID = const Uuid().v4();
+          await orderRef.doc(orderID).set({
+            'cid': data['cid'],
+            'cusName': data['name'],
+            'email': data['email'],
+            'address': data['address'],
+            'phone': data['phone'],
+            'profileImages': data['profileimage'],
+            'sid': item.supplierID,
+            'proID': item.documentID,
+            'orderID': orderID,
+            'orderName': item.name,
+            'orderImage': item.imageList.first,
+            'orderQuantity': item.quantity,
+            'orderPrice': item.quantity * item.price,
+            'deliveryStatus': 'Preparing',
+            'deliveryDate': '',
+            'orderDate': DateTime.now(),
+            'paymentStatus': 'Paid online',
+            'cancelStatus': false,
+            'cancelDate': DateTime.timestamp(),
+            'orderReview': false,
+          }).whenComplete(() async {
+            await FirebaseFirestore.instance
+                .runTransaction((transaction) async {
+              DocumentReference documentReference = FirebaseFirestore.instance
+                  .collection('products')
+                  .doc(item.documentID);
+              DocumentSnapshot snapshoot2 =
+                  await transaction.get(documentReference);
+              transaction.update(documentReference,
+                  {'inStock': snapshoot2['inStock'] - item.quantity});
+            });
+          });
+          context.read<Cart>().clearAllProduct();
+          Navigator.pushAndRemoveUntil(
+              context,
+              MaterialPageRoute(
+                  builder: (context) => const CustomerHomeScreen()),
+              (route) => route.isFirst);
+        }
+      });
+      print('done');
+    } catch (e) {
+      print('failed');
+    }
   }
 }
 

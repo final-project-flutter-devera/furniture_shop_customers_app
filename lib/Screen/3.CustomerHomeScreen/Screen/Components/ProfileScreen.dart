@@ -203,38 +203,12 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                     color: AppColor.white,
                                   ),
                                   child: Padding(
-                                    padding: const EdgeInsets.all(10),
+                                    padding: const EdgeInsets.only(left: 20,right: 20),
                                     child: Row(
                                       mainAxisAlignment:
                                           MainAxisAlignment.spaceBetween,
                                       children: [
-                                        Column(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.center,
-                                          children: [
-                                            Text.rich(
-                                              TextSpan(
-                                                children: [
-                                                  TextSpan(
-                                                    text: tabName[index] + '\n',
-                                                    style: GoogleFonts.nunito(
-                                                      fontSize: 18,
-                                                      fontWeight: FontWeight.w700,
-                                                    ),
-                                                  ),
-                                                  TextSpan(
-                                                    text:
-                                                        'Alreadyyyyyyyyyyyyyyyyyyy',
-                                                    style: GoogleFonts.nunito(
-                                                      fontSize: 12,
-                                                      fontWeight: FontWeight.w400,
-                                                    ),
-                                                  ),
-                                                ],
-                                              ),
-                                            ),
-                                          ],
-                                        ),
+                                        Text(tabName[index],style: GoogleFonts.nunito(fontWeight: FontWeight.w700,fontSize: 18),),
                                         const Icon(Icons.arrow_forward_ios),
                                       ],
                                     ),
