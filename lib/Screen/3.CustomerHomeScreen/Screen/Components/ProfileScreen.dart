@@ -3,11 +3,11 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:furniture_shop/Constants/Colors.dart';
-import 'package:furniture_shop/Screen/13.%20MyOrderList/My_Order_Screen.dart';
 import 'package:furniture_shop/Widgets/AppBarButton.dart';
 import 'package:furniture_shop/Widgets/AppBarTitle.dart';
 import 'package:google_fonts/google_fonts.dart';
 import '../../../../Widgets/ShowAlertDialog.dart';
+import '../../../13. MyOrderScreen/My_Order_Screen.dart';
 import 'Profile/EditInfo.dart';
 import 'SearchScreen.dart';
 
@@ -35,6 +35,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
   List tabRoute = [
     MyOrderScreen(),
   ];
+
   @override
   Widget build(BuildContext context) {
     final wMQ = MediaQuery.of(context).size.width;
@@ -188,7 +189,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
                           padding: const EdgeInsets.symmetric(vertical: 10),
                           child: GestureDetector(
                             onTap: () {
-                              Navigator.push(context, MaterialPageRoute(builder: (context) => tabRoute[index]));
+                              Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) => tabRoute[index]));
                             },
                             child: PhysicalModel(
                               elevation: 3,
@@ -203,12 +207,18 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                     color: AppColor.white,
                                   ),
                                   child: Padding(
-                                    padding: const EdgeInsets.only(left: 20,right: 20),
+                                    padding: const EdgeInsets.only(
+                                        left: 20, right: 20),
                                     child: Row(
                                       mainAxisAlignment:
                                           MainAxisAlignment.spaceBetween,
                                       children: [
-                                        Text(tabName[index],style: GoogleFonts.nunito(fontWeight: FontWeight.w700,fontSize: 18),),
+                                        Text(
+                                          tabName[index],
+                                          style: GoogleFonts.nunito(
+                                              fontWeight: FontWeight.w700,
+                                              fontSize: 18),
+                                        ),
                                         const Icon(Icons.arrow_forward_ios),
                                       ],
                                     ),
