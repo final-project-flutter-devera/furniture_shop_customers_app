@@ -1,9 +1,11 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_stripe/flutter_stripe.dart';
 import 'package:furniture_shop/Providers/Cart_Provider.dart';
 import 'package:furniture_shop/Providers/Favorites_Provider.dart';
 import 'package:provider/provider.dart';
+import 'Providers/Stripe_ID.dart';
 import 'Screen/1. Boarding/BoardingScreen.dart';
 import 'Screen/2. Login - Signup/Login.dart';
 import 'Screen/2. Login - Signup/LoginSupplier.dart';
@@ -13,6 +15,12 @@ import 'Screen/4. SupplierHomeScreen/Screen/SupplierHomeScreen.dart';
 import 'firebase_options.dart';
 
 void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  Stripe.publishableKey = stripePublishableKey;
+  Stripe.merchantIdentifier = 'merchant.flutter.stripe.test';
+  Stripe.urlScheme = 'flutterstripe';
+  await Stripe.instance.applySettings();
+
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,

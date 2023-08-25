@@ -20,6 +20,7 @@ class ProductModel extends StatefulWidget {
 class _ProductModelState extends State<ProductModel> {
   @override
   Widget build(BuildContext context) {
+    var onSale = widget.products['discount'];
     return InkWell(
       onTap: () {
         Navigator.push(
@@ -73,11 +74,9 @@ class _ProductModelState extends State<ProductModel> {
                           ),
                           Row(
                             children: [
-                              widget.products['discount'] != 0
+                              onSale != 0
                                   ? Text(
-                                      ((1 -
-                                                  (widget.products['discount'] /
-                                                      100)) *
+                                      ((1 - (onSale / 100)) *
                                               widget.products['price'])
                                           .toString(),
                                       style: GoogleFonts.nunito(
@@ -89,7 +88,7 @@ class _ProductModelState extends State<ProductModel> {
                               SizedBox(width: 5),
                               Text(
                                 widget.products['price'].toStringAsFixed(2),
-                                style: widget.products['discount'] != 0
+                                style: onSale != 0
                                     ? GoogleFonts.nunito(
                                         fontSize: 11,
                                         color: AppColor.red,
@@ -160,7 +159,7 @@ class _ProductModelState extends State<ProductModel> {
                 ],
               ),
             ),
-            widget.products['discount'] != 0
+            onSale != 0
                 ? Positioned(
                     top: 17,
                     child: Container(
@@ -175,7 +174,7 @@ class _ProductModelState extends State<ProductModel> {
                       ),
                       child: Center(
                         child: Text(
-                          'Save ${widget.products['discount'].toString()}%',
+                          'Save ${onSale.toString()}%',
                           style: GoogleFonts.nunito(
                               fontSize: 17,
                               fontWeight: FontWeight.w700,
