@@ -45,8 +45,11 @@ class _HomeScreenState extends State<HomeScreen> {
           elevation: 0,
           backgroundColor: AppColor.white,
           leading: AppBarButtonPush(
-            aimRoute: (){
-              Navigator.push(context, MaterialPageRoute(builder: (context)=>const SearchScreen()));
+            aimRoute: () {
+              Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) => const SearchScreen()));
             },
             icon: SvgPicture.asset(
               'assets/Images/Icons/search.svg',
@@ -60,14 +63,17 @@ class _HomeScreenState extends State<HomeScreen> {
             AppBarButtonPush(
               aimRoute: FirebaseAuth.instance.currentUser!.isAnonymous
                   ? () {
-                Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                        builder: (context) => const Login()));
-              }
-                  : (){
-                Navigator.push(context, MaterialPageRoute(builder: (context)=> const CartScreen()));
-              },
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => const Login()));
+                    }
+                  : () {
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => const CartScreen()));
+                    },
               icon: badges.Badge(
                 showBadge: context.read<Cart>().getItems.isEmpty ? false : true,
                 badgeContent: Text(
