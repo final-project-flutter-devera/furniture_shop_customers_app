@@ -4,10 +4,11 @@ import 'package:furniture_shop/Widgets/AppBarTitle.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 import 'Canceled_Screen.dart';
-import 'Delivered.dart';
+import 'Delivered_Screen.dart';
 import 'Processing_Screen.dart';
+import 'Shipping_Screen.dart';
 
-//TODO: Pass list of order to display
+
 class MyOrderScreen extends StatefulWidget {
   const MyOrderScreen({super.key});
 
@@ -19,12 +20,13 @@ class _MyOrderState extends State<MyOrderScreen> {
   @override
   Widget build(BuildContext context) {
     return DefaultTabController(
-      length: 3,
+      length: 4,
       child: Scaffold(
         backgroundColor: AppColor.white,
         body: TabBarView(
           children: [
             Processing(),
+            Shipping(),
             Delivered(),
             Canceled(),
           ],
@@ -43,6 +45,8 @@ class _MyOrderState extends State<MyOrderScreen> {
           centerTitle: true,
           elevation: 0,
           bottom: TabBar(
+            isScrollable: true,
+            labelPadding: EdgeInsets.symmetric(horizontal: 30),
             labelColor: AppColor.black,
             indicatorColor: AppColor.black,
             unselectedLabelColor: AppColor.disabled_button,
@@ -54,6 +58,10 @@ class _MyOrderState extends State<MyOrderScreen> {
             tabs: [
               Tab(
                   child: Text('Processing',
+                      style: GoogleFonts.nunito(
+                          fontWeight: FontWeight.w700, fontSize: 18))),
+              Tab(
+                  child: Text('Shipping',
                       style: GoogleFonts.nunito(
                           fontWeight: FontWeight.w700, fontSize: 18))),
               Tab(

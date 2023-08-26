@@ -14,7 +14,6 @@ class Processing extends StatefulWidget {
 }
 
 class _ProcessingState extends State<Processing> {
-
   @override
   Widget build(BuildContext context) {
     var wMQ = MediaQuery.of(context).size.width;
@@ -24,6 +23,7 @@ class _ProcessingState extends State<Processing> {
             .collection('orders')
             .where('cid', isEqualTo: FirebaseAuth.instance.currentUser!.uid)
             .where('cancelStatus', isEqualTo: false)
+            .where('deliveryStatus', isEqualTo: 'Preparing')
             .snapshots(),
         builder: (BuildContext context,
             AsyncSnapshot<QuerySnapshot<Object?>> snapshot) {
