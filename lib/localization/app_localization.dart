@@ -36,6 +36,10 @@ class AppLocalization {
       'label_forgot_password': "Forgot Password",
       'label_login': 'Log in',
       'label_signup': 'SIGN UP',
+      'check_verify_mail': 'Please check inbox & verify mail',
+      'user-not-found': 'User not found',
+      'wrong-password': 'Your password provided is wrong',
+      'check_fill_all': 'Please fill al fields',
 
       ///Sign up
       'welcome': 'WELCOME',
@@ -80,7 +84,7 @@ class AppLocalization {
       'label_order_price': 'Order',
       'label_delivery_fee': 'Delivery',
       'label_total_price': 'Total',
-      'label_sumbit_order': 'SUBMIT ORDER',
+      'label_submit_order': 'SUBMIT ORDER',
 
       ///Notification
       'notification_app_bar_title': 'Notification',
@@ -143,7 +147,7 @@ class AppLocalization {
       'add_shipping_address_app_bar_title': 'Add shipping address',
       'label_full_name': 'Full name',
       'place_holder_full_name': 'Ex: Bruno Pham',
-      'label_addressl': 'Address',
+      'label_address': 'Address',
       'place_holder_address': 'Ex: 25 Robert Latouche Street',
       'label_zipcode': 'Zipcode (Postal Code)',
       'place_holder_zipcode': '900000',
@@ -174,7 +178,7 @@ class AppLocalization {
       'label_faq': 'FAQ',
       'label_contact': 'Contact us',
     },
-    'vi': {
+    'vi': <String, String>{
       ///Boarding
       'boarding_title_1': 'TRANG TRÍ',
       'boarding_title_2': 'NGÔI NHÀ CỦA BẠN',
@@ -190,6 +194,11 @@ class AppLocalization {
       'label_forgot_password': "Quên mật khẩu",
       'label_login': 'Đăng nhập',
       'label_signup': 'ĐĂNG KÝ',
+      'check_verify_mail': 'Vui lòng kiểm tra email để xác nhận',
+      'user-not-found': 'Người dùng không tồn tại',
+      'wrong-password': 'Mật khẩu được cung cấp không chính xác',
+      'check_fill_all': 'Vui lòng điền hết chỗ trống',
+
 
       ///Sign up
       'welcome': 'CHÀO MỪNG',
@@ -298,7 +307,7 @@ class AppLocalization {
       'add_shipping_address_app_bar_title': 'Thêm địa chỉ giao hàng',
       'label_full_name': 'Tên đầy đủ',
       'place_holder_full_name': 'VD: Phạm Văn A',
-      'label_addressl': 'Địa Chỉ',
+      'label_address': 'Địa Chỉ',
       'place_holder_address': 'VD: 25 Lê Văn Việt',
       'label_zipcode': 'Mã Zip (Mã bưu chính)',
       'place_holder_zipcode': '700000',

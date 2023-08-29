@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:furniture_shop/Providers/Auth_reponse.dart';
 import 'package:furniture_shop/Screen/3.CustomerHomeScreen/Screen/CustomerHomeScreen.dart';
 import 'package:furniture_shop/Widgets/CheckValidation.dart';
 import 'package:furniture_shop/Widgets/MyMessageHandler.dart';
@@ -21,7 +22,7 @@ class _LoginState extends State<Login> {
   bool visiblePassword = false;
   bool resendVerification = false;
   late String email;
-  late String pass;
+  late String password;
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   final GlobalKey<ScaffoldMessengerState> _scaffoldKey =
       GlobalKey<ScaffoldMessengerState>();
@@ -39,10 +40,10 @@ class _LoginState extends State<Login> {
         processingAccountMail = true;
       });
       try {
-        await FirebaseAuth.instance
-            .signInWithEmailAndPassword(email: email, password: pass);
-        await FirebaseAuth.instance.currentUser!.reload();
-        if (FirebaseAuth.instance.currentUser!.emailVerified) {
+        AuthRepo.signInWithEmailAndPassword(email, password);
+        AuthRepo.reloadUser();
+
+        if (await AuthRepo.checkVerifiedMail()) {
           _formKey.currentState!.reset();
 
           await Future.delayed(const Duration(microseconds: 100)).whenComplete(
@@ -99,7 +100,7 @@ class _LoginState extends State<Login> {
                 children: [
                   LogoLoginSignup(wMQ: wMQ),
                   const TextLoginSignup(
-                    label: 'Hello \n',
+                    label: 'Hello' + '\n',
                     label2: 'WELCOME BACK',
                   ),
                   Padding(
@@ -161,7 +162,7 @@ class _LoginState extends State<Login> {
                                     },
                                     onChanged: (value) {
                                       setState(() {
-                                        pass = value;
+                                        password = value;
                                       });
                                     },
                                     obscureText: !visiblePassword,

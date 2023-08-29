@@ -2,6 +2,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:furniture_shop/Providers/Auth_reponse.dart';
 import 'package:furniture_shop/Widgets/CheckValidation.dart';
 import 'package:furniture_shop/Widgets/MyMessageHandler.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -17,8 +18,8 @@ class SignupSupplier extends StatefulWidget {
 class _SignupSupplierState extends State<SignupSupplier> {
   late String name;
   late String email;
-  late String pass;
-  late String repass;
+  late String password;
+  late String rePassword;
   late String _uid;
   bool processing = false;
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
@@ -30,17 +31,14 @@ class _SignupSupplierState extends State<SignupSupplier> {
 
   void signUp() async {
     if (_formKey.currentState!.validate()) {
-      if (pass == repass) {
+      if (password == rePassword) {
         setState(() {
           processing = true;
         });
         try {
-          await FirebaseAuth.instance
-              .createUserWithEmailAndPassword(email: email, password: pass);
-          await FirebaseAuth.instance.currentUser!.updateDisplayName(name);
-          await FirebaseAuth.instance.currentUser!.sendEmailVerification();
-
-          _uid = FirebaseAuth.instance.currentUser!.uid;
+          AuthRepo.signUpWithEmailAndPassword(email, password);
+          AuthRepo.sendVerificationEmail();
+          _uid = AuthRepo.uid;
           await users.doc(_uid).set({
             'name': name,
             'email': email,
@@ -197,7 +195,7 @@ class _SignupSupplierState extends State<SignupSupplier> {
                                   const SizedBox(height: 10),
                                   TextFormField(
                                     onChanged: (value) {
-                                      pass = value;
+                                      password = value;
                                     },
                                     validator: (value) {
                                       if (value!.isEmpty) {
@@ -239,7 +237,7 @@ class _SignupSupplierState extends State<SignupSupplier> {
                                           'Please enter your re - password',
                                         );
                                       }
-                                      if (pass != repass) {
+                                      if (password != rePassword) {
                                         MyMessageHandler.showSnackBar(
                                             _scaffoldKey,
                                             'Re-confirm pass does not match');
@@ -248,7 +246,7 @@ class _SignupSupplierState extends State<SignupSupplier> {
                                     },
                                     obscureText: !visiblePassword,
                                     onChanged: (value) {
-                                      repass = value;
+                                      rePassword = value;
                                     },
                                     textCapitalization:
                                         TextCapitalization.characters,
