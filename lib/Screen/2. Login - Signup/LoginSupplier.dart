@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:furniture_shop/Providers/Auth_reponse.dart';
 import 'package:furniture_shop/Widgets/CheckValidation.dart';
 import 'package:google_fonts/google_fonts.dart';
 import '../../Constants/Colors.dart';
@@ -19,7 +20,7 @@ class _LoginSupplierState extends State<LoginSupplier> {
   final Future<SharedPreferences> _prefs = SharedPreferences.getInstance();
   bool visiblePassword = false;
   late String email;
-  late String pass;
+  late String password;
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   final GlobalKey<ScaffoldMessengerState> _scaffoldKey =
       GlobalKey<ScaffoldMessengerState>();
@@ -32,14 +33,14 @@ class _LoginSupplierState extends State<LoginSupplier> {
         setState(() {
           processing = true;
         });
-        await FirebaseAuth.instance
-            .signInWithEmailAndPassword(email: email, password: pass);
-        await FirebaseAuth.instance.currentUser!.reload();
-        if (FirebaseAuth.instance.currentUser!.emailVerified) {
-          final User? user = FirebaseAuth.instance.currentUser;
+        AuthRepo.signInWithEmailAndPassword(email, password);
+        AuthRepo.reloadUser();
+        var user = AuthRepo.uid;
+        if (await AuthRepo.checkVerifiedMail()) {
+
           await FirebaseFirestore.instance
               .collection('users')
-              .doc(user!.uid)
+              .doc(user)
               .get()
               .then((DocumentSnapshot snapshot) {
             if (snapshot.exists) {
@@ -200,7 +201,7 @@ class _LoginSupplierState extends State<LoginSupplier> {
                                     },
                                     onChanged: (value) {
                                       setState(() {
-                                        pass = value;
+                                        password = value;
                                       });
                                     },
                                     obscureText: !visiblePassword,
