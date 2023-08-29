@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:furniture_shop/localization/app_localization.dart';
 import 'package:google_fonts/google_fonts.dart';
-
-
 
 class BoardingScreen extends StatefulWidget {
   const BoardingScreen({super.key});
@@ -34,7 +33,7 @@ class _BoardingScreenState extends State<BoardingScreen> {
                   alignment: Alignment.centerLeft,
                   child: Column(
                     children: [
-                      Text('MAKE YOUR',
+                      Text(context.localize('boarding_title_1'),
                           style: GoogleFonts.gelasio(
                               fontSize: 24,
                               fontWeight: FontWeight.w600,
@@ -48,7 +47,7 @@ class _BoardingScreenState extends State<BoardingScreen> {
               top: hMQ * 0.35,
               child: Container(
                   alignment: Alignment.centerLeft,
-                  child: Text('HOME BEAUTIFUL',
+                  child: Text(context.localize('boarding_title_2'),
                       style: GoogleFonts.gelasio(
                           fontSize: 30,
                           fontWeight: FontWeight.w700,
@@ -62,8 +61,7 @@ class _BoardingScreenState extends State<BoardingScreen> {
                 width: 286,
                 alignment: Alignment.centerLeft,
                 child: Text(
-                  'The best simple place where you discover most '
-                  'wonderful furnitures and make your home beautiful',
+                  context.localize('boarding_description'),
                   style: GoogleFonts.nunito(
                       fontSize: 18,
                       fontWeight: FontWeight.w400,
@@ -77,7 +75,7 @@ class _BoardingScreenState extends State<BoardingScreen> {
               left: wMQ * 0.3,
               child: GestureDetector(
                 onTap: () {
-                  Navigator.pushNamed(context,'/Login_cus');
+                  Navigator.pushNamed(context, '/Login_cus');
                 },
                 child: Container(
                   alignment: Alignment.center,
@@ -103,7 +101,7 @@ class _BoardingScreenState extends State<BoardingScreen> {
                         ),
                       ),
                       Center(
-                        child: Text('Get Started',
+                        child: Text(context.localize('label_get_started'),
                             style: GoogleFonts.gelasio(
                                 fontSize: 18,
                                 fontWeight: FontWeight.w600,

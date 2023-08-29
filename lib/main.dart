@@ -1,9 +1,13 @@
+import 'dart:io';
+
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_stripe/flutter_stripe.dart';
 import 'package:furniture_shop/Providers/Cart_Provider.dart';
 import 'package:furniture_shop/Providers/Favorites_Provider.dart';
+import 'package:furniture_shop/localization/localization_delegate.dart';
 import 'package:provider/provider.dart';
 import 'Providers/Stripe_ID.dart';
 import 'Screen/1. Boarding/BoardingScreen.dart';
@@ -50,6 +54,17 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
         debugShowCheckedModeBanner: false,
+        locale: Locale(Platform.localeName),
+        localizationsDelegates: const [
+          AppLocalizationDelegate(),
+          GlobalCupertinoLocalizations.delegate,
+          GlobalMaterialLocalizations.delegate,
+          GlobalWidgetsLocalizations.delegate,
+        ],
+        supportedLocales: const [
+          Locale.fromSubtags(languageCode: 'vi'),
+          Locale.fromSubtags(languageCode: 'en'),
+        ],
         initialRoute: '/Welcome_boarding',
         routes: {
           '/Welcome_boarding': (context) => const BoardingScreen(),
