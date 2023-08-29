@@ -36,8 +36,8 @@ class _LoginSupplierState extends State<LoginSupplier> {
         AuthRepo.signInWithEmailAndPassword(email, password);
         AuthRepo.reloadUser();
         var user = AuthRepo.uid;
-        if (await AuthRepo.checkVerifiedMail()) {
 
+        if (await AuthRepo.checkVerifiedMail()) {
           await FirebaseFirestore.instance
               .collection('users')
               .doc(user)
