@@ -7,14 +7,14 @@ import 'package:furniture_shop/Widgets/MyMessageHandler.dart';
 import 'package:google_fonts/google_fonts.dart';
 import '../../Widgets/TextLoginWidget.dart';
 
-class Signup extends StatefulWidget {
-  const Signup({super.key});
+class SignupSupplier extends StatefulWidget {
+  const SignupSupplier({super.key});
 
   @override
-  State<Signup> createState() => _SignupState();
+  State<SignupSupplier> createState() => _SignupSupplierState();
 }
 
-class _SignupState extends State<Signup> {
+class _SignupSupplierState extends State<SignupSupplier> {
   late String name;
   late String email;
   late String pass;
@@ -25,7 +25,8 @@ class _SignupState extends State<Signup> {
   final GlobalKey<ScaffoldMessengerState> _scaffoldKey =
       GlobalKey<ScaffoldMessengerState>();
   bool visiblePassword = false;
-  CollectionReference users = FirebaseFirestore.instance.collection('users');
+  CollectionReference users =
+      FirebaseFirestore.instance.collection('users');
 
   void signUp() async {
     if (_formKey.currentState!.validate()) {
@@ -38,6 +39,7 @@ class _SignupState extends State<Signup> {
               .createUserWithEmailAndPassword(email: email, password: pass);
           await FirebaseAuth.instance.currentUser!.updateDisplayName(name);
           await FirebaseAuth.instance.currentUser!.sendEmailVerification();
+
           _uid = FirebaseAuth.instance.currentUser!.uid;
           await users.doc(_uid).set({
             'name': name,
@@ -48,11 +50,12 @@ class _SignupState extends State<Signup> {
             'storeLogo': '',
             'storeCoverImage': '',
             'storeName': '',
-            'cid': _uid,
+            'sid': _uid,
+            'role': 'supplier'
           });
           _formKey.currentState!.reset();
           if (context.mounted) {
-            Navigator.pushReplacementNamed(context, '/Login_cus');
+            Navigator.pushReplacementNamed(context, '/Login_sup');
           }
         } on FirebaseAuthException catch (e) {
           if (e.code == 'weak-password') {
@@ -315,7 +318,7 @@ class _SignupState extends State<Signup> {
                                   GestureDetector(
                                     onTap: () {
                                       Navigator.pushReplacementNamed(
-                                          context, '/Login_cus');
+                                          context, '/Login_sup');
                                     },
                                     child: Text(
                                       'SIGN IN',

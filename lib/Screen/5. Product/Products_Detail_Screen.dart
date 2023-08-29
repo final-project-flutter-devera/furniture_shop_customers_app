@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:expandable/expandable.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
@@ -44,13 +45,16 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
     var onSale = widget.proList['discount'];
     double wMQ = MediaQuery.of(context).size.width;
     double hMQ = MediaQuery.of(context).size.height;
-    Stream<QuerySnapshot> productsStream = FirebaseFirestore.instance
+    Stream<QuerySnapshot> _productsStream = FirebaseFirestore.instance
         .collection('products')
         .where('mainCategory', isEqualTo: widget.proList['mainCategory'])
         .where('subCategory', isEqualTo: widget.proList['subCategory'])
         .snapshots();
-    final _productsStream = productsStream;
-
+    Stream<QuerySnapshot> reviewStream = FirebaseFirestore.instance
+        .collection('products')
+        .doc(widget.proList['proID'])
+        .collection('reviews')
+        .snapshots();
     late List<dynamic> imagesList = widget.proList['proImages'];
     CollectionReference customers =
         FirebaseFirestore.instance.collection('customers');
@@ -434,6 +438,16 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                       ),
                     ),
                     const SizedBox(height: 10),
+                    ExpandableTheme(
+                      data: ExpandableThemeData(
+                          iconColor: AppColor.black,
+                          iconSize: 30,
+                          tapBodyToCollapse: true,
+                          tapBodyToExpand: true,
+                          tapHeaderToExpand: true),
+                      child: Review(reviewStream),
+                    ),
+                    const SizedBox(height: 10),
                     const TitleDivider(
                       label: '  Similar product  ',
                     ),
@@ -659,4 +673,90 @@ class TitleDivider extends StatelessWidget {
       ],
     );
   }
+}
+
+Widget Review(var reviewStream) {
+  return ExpandablePanel(
+    header: Padding(
+      padding: EdgeInsets.all(10),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          const SizedBox(
+            height: 40,
+            width: 70,
+            child: Divider(
+              thickness: 1,
+              color: AppColor.black,
+            ),
+          ),
+          Text(
+            '   Review  ',
+            style: GoogleFonts.gelasio(
+              fontSize: 24,
+              fontWeight: FontWeight.w300,
+            ),
+          ),
+          const SizedBox(
+            height: 40,
+            width: 50,
+            child: Divider(
+              thickness: 1,
+              color: AppColor.black,
+            ),
+          ),
+        ],
+      ),
+    ),
+    collapsed: SizedBox(
+      height: 230,
+      child: reviewAll(reviewStream),
+    ),
+    expanded: reviewAll(reviewStream),
+  );
+}
+
+Widget reviewAll(var reviewStream) {
+  return StreamBuilder<QuerySnapshot>(
+    stream: reviewStream,
+    builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot3) {
+      if (snapshot3.hasError) {
+        return const Text('Something went wrong');
+      }
+
+      if (snapshot3.connectionState == ConnectionState.waiting) {
+        return const CircularProgressIndicator();
+      }
+
+      return ListView.builder(
+          physics: const NeverScrollableScrollPhysics(),
+          shrinkWrap: true,
+          itemCount: snapshot3.data!.docs.length,
+          itemBuilder: (context, index) {
+            return ListTile(
+              leading: CircleAvatar(
+                backgroundImage:
+                    NetworkImage(snapshot3.data!.docs[index]['profileImages']),
+                backgroundColor: AppColor.white,
+              ),
+              title: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text(snapshot3.data!.docs[index]['name']),
+                  Row(
+                    children: [
+                      Text(snapshot3.data!.docs[index]['rate'].toString()),
+                      Icon(
+                        Icons.star,
+                        color: AppColor.amber,
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+              subtitle: Text(snapshot3.data!.docs[index]['comment']),
+            );
+          });
+    },
+  );
 }

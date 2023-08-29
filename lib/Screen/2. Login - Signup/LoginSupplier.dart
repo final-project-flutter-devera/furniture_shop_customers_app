@@ -23,28 +23,39 @@ class _LoginSupplierState extends State<LoginSupplier> {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   final GlobalKey<ScaffoldMessengerState> _scaffoldKey =
       GlobalKey<ScaffoldMessengerState>();
+  bool processing = false;
+  bool resendVerification = false;
 
   void signIn() async {
     try {
       if (_formKey.currentState!.validate()) {
-        await FirebaseAuth.instance.signInWithEmailAndPassword(
-          email: email,
-          password: pass,
-        );
-        final User? user = FirebaseAuth.instance.currentUser;
-        final SharedPreferences pref = await _prefs;
-        pref.setString('supplierID', user!.uid);
-        await FirebaseFirestore.instance
-            .collection('customers')
-            .doc(user.uid)
-            .get()
-            .then((DocumentSnapshot snapshot) {
-          if (snapshot.exists) {
-            if (snapshot.get('role') == "supplier") {
-              Navigator.pushReplacementNamed(context, '/Supplier_screen');
-            }
-          }
+        setState(() {
+          processing = true;
         });
+        await FirebaseAuth.instance
+            .signInWithEmailAndPassword(email: email, password: pass);
+        await FirebaseAuth.instance.currentUser!.reload();
+        if (FirebaseAuth.instance.currentUser!.emailVerified) {
+          final User? user = FirebaseAuth.instance.currentUser;
+          await FirebaseFirestore.instance
+              .collection('users')
+              .doc(user!.uid)
+              .get()
+              .then((DocumentSnapshot snapshot) {
+            if (snapshot.exists) {
+              if (snapshot.get('role') == "supplier") {
+                Navigator.pushReplacementNamed(context, '/Supplier_screen');
+              }
+            }
+          });
+        } else {
+          MyMessageHandler.showSnackBar(
+              _scaffoldKey, 'Please check inbox & verify mail');
+          setState(() {
+            processing = false;
+            resendVerification = true;
+          });
+        }
       } else {
         MyMessageHandler.showSnackBar(_scaffoldKey, 'Please fill all fields');
       }
@@ -215,6 +226,39 @@ class _LoginSupplierState extends State<LoginSupplier> {
                                 ],
                               ),
                             ),
+                            Container(
+                              constraints: BoxConstraints(minHeight: 10),
+                              child: resendVerification == true
+                                  ? ClipRRect(
+                                      borderRadius: BorderRadius.circular(50),
+                                      child: MaterialButton(
+                                        color: AppColor.amber,
+                                        onPressed: () async {
+                                          try {
+                                            await FirebaseAuth
+                                                .instance.currentUser!
+                                                .sendEmailVerification();
+                                            Future.delayed(
+                                                    const Duration(seconds: 3))
+                                                .whenComplete(() {
+                                              setState(() {
+                                                resendVerification = false;
+                                              });
+                                            });
+                                          } catch (e) {
+                                            print(e);
+                                          }
+                                        },
+                                        child: Text(
+                                          'Resend verification mail (click)',
+                                          style: GoogleFonts.nunito(
+                                              fontSize: 16,
+                                              color: AppColor.black),
+                                        ),
+                                      ),
+                                    )
+                                  : SizedBox(),
+                            ),
                             Padding(
                               padding: const EdgeInsets.all(10),
                               child: GestureDetector(
@@ -241,14 +285,33 @@ class _LoginSupplierState extends State<LoginSupplier> {
                                     borderRadius: BorderRadius.circular(8),
                                   ),
                                   child: Center(
-                                    child: Text(
-                                      'Log in',
-                                      style: GoogleFonts.nunito(
-                                        fontSize: 18,
-                                        fontWeight: FontWeight.w600,
-                                        color: Colors.white,
-                                      ),
-                                    ),
+                                    child: processing == true
+                                        ? CircularProgressIndicator()
+                                        : Text(
+                                            'Log in',
+                                            style: GoogleFonts.nunito(
+                                              fontSize: 18,
+                                              fontWeight: FontWeight.w600,
+                                              color: Colors.white,
+                                            ),
+                                          ),
+                                  ),
+                                ),
+                              ),
+                            ),
+                            Padding(
+                              padding: const EdgeInsets.all(10),
+                              child: GestureDetector(
+                                onTap: () {
+                                  Navigator.pushReplacementNamed(
+                                      context, '/Signup_sup');
+                                },
+                                child: Text(
+                                  'Become a supplier'.toUpperCase(),
+                                  style: GoogleFonts.nunito(
+                                    fontSize: 18,
+                                    fontWeight: FontWeight.w600,
+                                    color: const Color(0xFF303030),
                                   ),
                                 ),
                               ),
@@ -261,7 +324,8 @@ class _LoginSupplierState extends State<LoginSupplier> {
                                   height: 50,
                                   color: AppColor.grey,
                                   onPressed: () {
-                                    Navigator.pushReplacementNamed(context, '/Login_cus');
+                                    Navigator.pushReplacementNamed(
+                                        context, '/Login_cus');
                                   },
                                   child: Text(
                                     'CUSTOMER LOGIN',

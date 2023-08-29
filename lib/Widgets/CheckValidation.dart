@@ -14,7 +14,7 @@ extension QuantityValidator on String {
 
 extension PriceValidator on String {
   bool isValidPrice() {
-    return RegExp(r'^((([1-9][0-9]*)|(0.))([0-9]{1,2}))$').hasMatch(this);
+    return RegExp(r'^((([1-9][0-9]*.*)|(0.))([0-9]{1,2}))$').hasMatch(this);
   }
 }
 

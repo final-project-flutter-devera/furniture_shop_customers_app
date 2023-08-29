@@ -21,8 +21,8 @@ class ProfileScreen extends StatefulWidget {
 }
 
 class _ProfileScreenState extends State<ProfileScreen> {
-  CollectionReference customers =
-      FirebaseFirestore.instance.collection('customers');
+  CollectionReference users =
+      FirebaseFirestore.instance.collection('users');
   CollectionReference anonymous =
       FirebaseFirestore.instance.collection('anonymous');
   List<String> tabName = [
@@ -42,7 +42,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
     return FutureBuilder<DocumentSnapshot>(
       future: FirebaseAuth.instance.currentUser!.isAnonymous
           ? anonymous.doc(widget.documentId).get()
-          : customers.doc(widget.documentId).get(),
+          : users.doc(widget.documentId).get(),
       builder:
           (BuildContext context, AsyncSnapshot<DocumentSnapshot> snapshot) {
         if (snapshot.hasError) {
@@ -170,7 +170,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                             Navigator.push(
                               context,
                               MaterialPageRoute(
-                                builder: (context) => const EditInfo(),
+                                builder: (context) => EditInfo(data: data,),
                               ),
                             );
                           },

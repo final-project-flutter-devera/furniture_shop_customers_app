@@ -58,6 +58,7 @@ dependencies:
   http: ^1.1.0
   provider: ^6.0.5
   flutter_rating_bar: ^4.0.1
+  expandable: ^5.0.1
 
 dev_dependencies:
   flutter_test:

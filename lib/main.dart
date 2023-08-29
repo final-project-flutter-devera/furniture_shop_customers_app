@@ -10,6 +10,7 @@ import 'Screen/1. Boarding/BoardingScreen.dart';
 import 'Screen/2. Login - Signup/Login.dart';
 import 'Screen/2. Login - Signup/LoginSupplier.dart';
 import 'Screen/2. Login - Signup/Signup.dart';
+import 'Screen/2. Login - Signup/SignupSupplier.dart';
 import 'Screen/3.CustomerHomeScreen/Screen/CustomerHomeScreen.dart';
 import 'Screen/4. SupplierHomeScreen/Screen/SupplierHomeScreen.dart';
 import 'firebase_options.dart';
@@ -22,20 +23,15 @@ void main() async {
   await Stripe.instance.applySettings();
 
   WidgetsFlutterBinding.ensureInitialized();
-  await Firebase.initializeApp(
-    options: DefaultFirebaseOptions.currentPlatform,
-  );
+  await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
   SystemChrome.setSystemUIOverlayStyle(const SystemUiOverlayStyle(
       statusBarColor: Colors.transparent,
       statusBarIconBrightness: Brightness.dark,
       systemNavigationBarIconBrightness: Brightness.dark,
       systemNavigationBarDividerColor: Colors.transparent));
   SystemChrome.setPreferredOrientations(
-    [
-      DeviceOrientation.portraitDown,
-      DeviceOrientation.portraitUp,
-    ],
-  ).then((value) => const MyApp());
+          [DeviceOrientation.portraitDown, DeviceOrientation.portraitUp])
+      .then((value) => const MyApp());
   runApp(
     MultiProvider(
       providers: [
@@ -62,6 +58,7 @@ class MyApp extends StatelessWidget {
           '/Login_cus': (context) => const Login(),
           '/Login_sup': (context) => const LoginSupplier(),
           '/Signup_cus': (context) => const Signup(),
+          '/Signup_sup': (context) => const SignupSupplier(),
         });
   }
 }

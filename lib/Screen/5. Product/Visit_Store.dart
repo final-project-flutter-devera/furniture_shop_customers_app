@@ -8,6 +8,7 @@ import 'package:staggered_grid_view_flutter/widgets/staggered_grid_view.dart';
 import 'package:staggered_grid_view_flutter/widgets/staggered_tile.dart';
 
 import '../../Models/Product_model.dart';
+import '../4. SupplierHomeScreen/Screen/Components/Dashboard/SupStore/Edit_Store_Screen.dart';
 
 class VisitStore extends StatefulWidget {
   final String supplierID;
@@ -54,10 +55,12 @@ class _VisitStoreState extends State<VisitStore> {
               flexibleSpace: Stack(
                 fit: StackFit.expand,
                 children: [
-                  Image.asset(
-                    'assets/Images/Images/boarding.png',
-                    fit: BoxFit.cover,
-                  ),
+                  data['storeCoverImage'] == ''
+                      ? Image.asset(
+                          'assets/Images/Images/boarding.png',
+                          fit: BoxFit.cover,
+                        )
+                      : Image.network(data['storeCoverImage'],fit: BoxFit.cover,),
                   Container(
                     decoration: const BoxDecoration(
                       gradient: LinearGradient(
@@ -81,7 +84,7 @@ class _VisitStoreState extends State<VisitStore> {
                         backgroundColor: AppColor.white,
                         child: CircleAvatar(
                           radius: 35,
-                          backgroundImage: NetworkImage(data['profileimage']),
+                          backgroundImage: NetworkImage(data['storeLogo']),
                           backgroundColor: AppColor.white,
                         ),
                       ),
@@ -127,20 +130,30 @@ class _VisitStoreState extends State<VisitStore> {
                           ),
                         ],
                       ),
-                      widget.supplierID == FirebaseAuth.instance.currentUser!.uid
-                          ? GestureDetector(
-                              onTap: () {},
-                              child: Container(
-                                width: 110,
-                                height: 35,
-                                margin: const EdgeInsets.all(10),
-                                decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(15),
-                                  border: Border.all(
-                                      width: 2, color: AppColor.white),
-                                ),
+                      widget.supplierID ==
+                              FirebaseAuth.instance.currentUser!.uid
+                          ? Container(
+                              width: 110,
+                              height: 35,
+                              margin: const EdgeInsets.all(10),
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(15),
+                                border:
+                                    Border.all(width: 2, color: AppColor.white),
+                              ),
+                              child: InkWell(
+                                borderRadius: BorderRadius.circular(15),
+                                onTap: () {
+                                  Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                          builder: (context) => EditStore(
+                                                data: data,
+                                              )));
+                                },
                                 child: const Row(
-                                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceEvenly,
                                   children: [
                                     Text('Edit'),
                                     Icon(Icons.edit),

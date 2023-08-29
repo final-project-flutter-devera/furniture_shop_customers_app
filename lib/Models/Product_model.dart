@@ -6,6 +6,7 @@ import 'package:collection/collection.dart';
 import '../Constants/Colors.dart';
 import '../Providers/Favorites_Provider.dart';
 import '../Screen/2. Login - Signup/Login.dart';
+import '../Screen/4. SupplierHomeScreen/Screen/Components/Dashboard/SupStore/Edit_Product_Screen.dart';
 import '../Screen/5. Product/Products_Detail_Screen.dart';
 
 class ProductModel extends StatefulWidget {
@@ -105,11 +106,13 @@ class _ProductModelState extends State<ProductModel> {
                       ),
                       widget.products['sid'] ==
                               FirebaseAuth.instance.currentUser!.uid
-                          ? GestureDetector(
-                              onTap: () {},
+                          ? InkWell(
+                              onTap: () {
+                                Navigator.push(context, MaterialPageRoute(builder: (context)=> EditProduct(items: widget.products,)));
+                              },
                               child: const Icon(Icons.edit),
                             )
-                          : GestureDetector(
+                          : InkWell(
                               onTap: FirebaseAuth
                                       .instance.currentUser!.isAnonymous
                                   ? () {

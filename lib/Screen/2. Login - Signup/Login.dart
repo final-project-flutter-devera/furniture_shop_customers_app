@@ -19,6 +19,7 @@ class Login extends StatefulWidget {
 
 class _LoginState extends State<Login> {
   bool visiblePassword = false;
+  bool resendVerification = false;
   late String email;
   late String pass;
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
@@ -27,8 +28,7 @@ class _LoginState extends State<Login> {
   bool processingGuest = false;
   bool processingAccountMail = false;
 
-  CollectionReference customers =
-      FirebaseFirestore.instance.collection('customers');
+  CollectionReference users = FirebaseFirestore.instance.collection('users');
   CollectionReference anonymous =
       FirebaseFirestore.instance.collection('anonymous');
   late String _uid;
@@ -39,16 +39,24 @@ class _LoginState extends State<Login> {
         processingAccountMail = true;
       });
       try {
-        await FirebaseAuth.instance.signInWithEmailAndPassword(
-          email: email,
-          password: pass,
-        );
-        _formKey.currentState!.reset();
-        if (context.mounted) {
-          Navigator.pushReplacement(
-              context,
-              MaterialPageRoute(
-                  builder: (context) => const CustomerHomeScreen()));
+        await FirebaseAuth.instance
+            .signInWithEmailAndPassword(email: email, password: pass);
+        await FirebaseAuth.instance.currentUser!.reload();
+        if (FirebaseAuth.instance.currentUser!.emailVerified) {
+          _formKey.currentState!.reset();
+
+          await Future.delayed(const Duration(microseconds: 100)).whenComplete(
+              () => Navigator.pushReplacement(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) => const CustomerHomeScreen())));
+        } else {
+          MyMessageHandler.showSnackBar(
+              _scaffoldKey, 'Please check inbox & verify mail');
+          setState(() {
+            processingAccountMail = false;
+            resendVerification = true;
+          });
         }
       } on FirebaseAuthException catch (e) {
         if (e.code == 'user-not-found') {
@@ -70,10 +78,7 @@ class _LoginState extends State<Login> {
         }
       }
     } else {
-      MyMessageHandler.showSnackBar(
-        _scaffoldKey,
-        'Please fill al fields',
-      );
+      MyMessageHandler.showSnackBar(_scaffoldKey, 'Please fill al fields');
     }
   }
 
@@ -182,7 +187,39 @@ class _LoginState extends State<Login> {
                                 ],
                               ),
                             ),
-                            const SizedBox(height: 10),
+                            Container(
+                              constraints: BoxConstraints(minHeight: 10),
+                              child: resendVerification == true
+                                  ? ClipRRect(
+                                      borderRadius: BorderRadius.circular(50),
+                                      child: MaterialButton(
+                                        color: AppColor.amber,
+                                        onPressed: () async {
+                                          try {
+                                            await FirebaseAuth
+                                                .instance.currentUser!
+                                                .sendEmailVerification();
+                                            Future.delayed(
+                                                    const Duration(seconds: 3))
+                                                .whenComplete(() {
+                                              setState(() {
+                                                resendVerification = false;
+                                              });
+                                            });
+                                          } catch (e) {
+                                            print(e);
+                                          }
+                                        },
+                                        child: Text(
+                                          'Resend verification mail (click)',
+                                          style: GoogleFonts.nunito(
+                                              fontSize: 16,
+                                              color: AppColor.black),
+                                        ),
+                                      ),
+                                    )
+                                  : SizedBox(),
+                            ),
                             Padding(
                               padding: const EdgeInsets.all(10),
                               child: GestureDetector(
@@ -202,7 +239,7 @@ class _LoginState extends State<Login> {
                               padding: const EdgeInsets.all(10),
                               child: processingAccountMail == true
                                   ? const CircularProgressIndicator()
-                                  : GestureDetector(
+                                  : InkWell(
                                       onTap: () {
                                         signIn();
                                       },
@@ -262,6 +299,7 @@ class _LoginState extends State<Login> {
                                               'address': '',
                                               'profileimage': '',
                                               'cid': _uid,
+                                              'role': 'Supplier'
                                             });
                                           });
                                           if (context.mounted) {

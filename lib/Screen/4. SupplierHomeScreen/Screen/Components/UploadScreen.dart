@@ -299,6 +299,7 @@ class _UploadScreenState extends State<UploadScreen> {
                             onSaved: (value) {
                               discount = int.parse(value!);
                             },
+                            initialValue: discount.toString(),
                             keyboardType: const TextInputType.numberWithOptions(
                                 decimal: true),
                             decoration: decorTextForm.copyWith(
