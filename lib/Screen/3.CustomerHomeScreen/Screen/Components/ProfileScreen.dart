@@ -21,8 +21,7 @@ class ProfileScreen extends StatefulWidget {
 }
 
 class _ProfileScreenState extends State<ProfileScreen> {
-  CollectionReference users =
-      FirebaseFirestore.instance.collection('users');
+  CollectionReference users = FirebaseFirestore.instance.collection('users');
   CollectionReference anonymous =
       FirebaseFirestore.instance.collection('anonymous');
   List<String> tabName = [
@@ -170,7 +169,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
                             Navigator.push(
                               context,
                               MaterialPageRoute(
-                                builder: (context) => EditInfo(data: data,),
+                                builder: (context) => EditInfo(
+                                  data: data,
+                                ),
                               ),
                             );
                           },

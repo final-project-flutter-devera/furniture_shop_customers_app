@@ -42,7 +42,6 @@ class _LoginState extends State<Login> {
       try {
         AuthRepo.signInWithEmailAndPassword(email, password);
         AuthRepo.reloadUser();
-
         if (await AuthRepo.checkVerifiedMail()) {
           _formKey.currentState!.reset();
 

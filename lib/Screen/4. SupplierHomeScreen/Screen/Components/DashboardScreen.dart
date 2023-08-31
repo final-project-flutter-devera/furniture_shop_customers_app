@@ -8,6 +8,7 @@ import 'package:furniture_shop/Widgets/AppBarTitle.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../../../../Widgets/ShowAlertDialog.dart';
+import '../../../3.CustomerHomeScreen/Screen/Components/ProfileScreen.dart';
 import 'Dashboard/DashboardAnalytics.dart';
 import 'Dashboard/DashboardBalance.dart';
 import 'Dashboard/DashboardProfile.dart';
@@ -33,7 +34,7 @@ List<IconData> icons = [
 List<Widget> pages = [
   VisitStore(supplierID: FirebaseAuth.instance.currentUser!.uid),
   const OrderDashboard(),
-  const ProfileDashboard(),
+  ProfileScreen(documentId: FirebaseAuth.instance.currentUser!.uid),
   const StorageDashboard(),
   const BalanceDashboard(),
   const AnalyticsDashboard(),

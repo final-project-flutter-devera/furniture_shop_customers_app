@@ -19,7 +19,7 @@ class _SignupState extends State<Signup> {
   late String name;
   late String email;
   late String password;
-  late String rePassword;
+  late String repass;
   late String _uid;
   bool processing = false;
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
@@ -30,14 +30,16 @@ class _SignupState extends State<Signup> {
 
   void signUp() async {
     if (_formKey.currentState!.validate()) {
-      if (password == rePassword) {
+      if (password == repass) {
         setState(() {
           processing = true;
         });
         try {
-          AuthRepo.signUpWithEmailAndPassword(email,password);
-          AuthRepo.sendVerificationEmail();
+          AuthRepo.signUpWithEmailAndPassword(email, password)
+              .whenComplete(() => AuthRepo.updateDisplayName(name))
+              .whenComplete(() => AuthRepo.sendVerificationEmail());
           _uid = AuthRepo.uid;
+
           await users.doc(_uid).set({
             'name': name,
             'email': email,
@@ -235,7 +237,7 @@ class _SignupState extends State<Signup> {
                                           'Please enter your re - password',
                                         );
                                       }
-                                      if (password != rePassword) {
+                                      if (password != repass) {
                                         MyMessageHandler.showSnackBar(
                                             _scaffoldKey,
                                             'Re-confirm pass does not match');
@@ -244,7 +246,7 @@ class _SignupState extends State<Signup> {
                                     },
                                     obscureText: !visiblePassword,
                                     onChanged: (value) {
-                                      rePassword = value;
+                                      repass = value;
                                     },
                                     textCapitalization:
                                         TextCapitalization.characters,

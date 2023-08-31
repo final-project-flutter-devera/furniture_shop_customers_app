@@ -17,7 +17,6 @@ class LoginSupplier extends StatefulWidget {
 }
 
 class _LoginSupplierState extends State<LoginSupplier> {
-  final Future<SharedPreferences> _prefs = SharedPreferences.getInstance();
   bool visiblePassword = false;
   late String email;
   late String password;
@@ -67,11 +66,17 @@ class _LoginSupplierState extends State<LoginSupplier> {
           _scaffoldKey,
           'Your email provided not found',
         );
+        setState(() {
+          processing = false;
+        });
       } else if (e.code == 'wrong-password') {
         MyMessageHandler.showSnackBar(
           _scaffoldKey,
           'Your password provided is wrong',
         );
+        setState(() {
+          processing = false;
+        });
       }
     }
   }

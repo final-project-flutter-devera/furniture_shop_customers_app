@@ -15,6 +15,10 @@ class AuthRepo {
     await FirebaseAuth.instance.currentUser!.reload();
   }
 
+  static Future<void> updateDisplayName(name) async {
+    await FirebaseAuth.instance.currentUser!.updateDisplayName(name);
+  }
+
   static Future<void> sendVerificationEmail() async {
     final User user = FirebaseAuth.instance.currentUser!;
     try {
@@ -25,12 +29,12 @@ class AuthRepo {
   }
 
   static Future<bool> checkVerifiedMail() async {
-    final User user = FirebaseAuth.instance.currentUser!;
+    User user = FirebaseAuth.instance.currentUser!;
     return user.emailVerified;
   }
 
   static get uid {
     final User user = FirebaseAuth.instance.currentUser!;
-    user.uid;
+    return user.uid;
   }
 }

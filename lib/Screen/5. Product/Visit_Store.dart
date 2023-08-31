@@ -26,7 +26,7 @@ class _VisitStoreState extends State<VisitStore> {
   Widget build(BuildContext context) {
     double wMQ = MediaQuery.of(context).size.width;
     CollectionReference users =
-        FirebaseFirestore.instance.collection('customers');
+        FirebaseFirestore.instance.collection('users');
     final Stream<QuerySnapshot> _productsStream = FirebaseFirestore.instance
         .collection('products')
         .where('sid', isEqualTo: widget.supplierID)
