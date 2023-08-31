@@ -40,8 +40,8 @@ class _LoginState extends State<Login> {
         processingAccountMail = true;
       });
       try {
-        AuthRepo.signInWithEmailAndPassword(email, password);
-        AuthRepo.reloadUser();
+        await AuthRepo.signInWithEmailAndPassword(email, password);
+        await AuthRepo.reloadUser();
         if (await AuthRepo.checkVerifiedMail()) {
           _formKey.currentState!.reset();
 

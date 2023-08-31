@@ -32,8 +32,8 @@ class _LoginSupplierState extends State<LoginSupplier> {
         setState(() {
           processing = true;
         });
-        AuthRepo.signInWithEmailAndPassword(email, password);
-        AuthRepo.reloadUser();
+        await AuthRepo.signInWithEmailAndPassword(email, password);
+        await AuthRepo.reloadUser();
         var user = AuthRepo.uid;
 
         if (await AuthRepo.checkVerifiedMail()) {

@@ -35,7 +35,7 @@ class _SignupState extends State<Signup> {
           processing = true;
         });
         try {
-          AuthRepo.signUpWithEmailAndPassword(email, password)
+          await AuthRepo.signUpWithEmailAndPassword(email, password)
               .whenComplete(() => AuthRepo.updateDisplayName(name))
               .whenComplete(() => AuthRepo.sendVerificationEmail());
           _uid = AuthRepo.uid;
