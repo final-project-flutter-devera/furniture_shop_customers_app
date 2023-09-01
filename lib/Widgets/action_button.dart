@@ -17,16 +17,19 @@ class ActionButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      height: size.height,
-      width: size.width,
-      decoration: BoxDecoration(
-        color: color,
-        borderRadius: BorderRadius.circular(8),
-        boxShadow: boxShadow,
-      ),
-      child: Center(
-        child: content,
+    return GestureDetector(
+      onTap: onPressed,
+      child: Container(
+        height: size.height,
+        width: size.width,
+        decoration: BoxDecoration(
+          color: color,
+          borderRadius: BorderRadius.circular(8),
+          boxShadow: boxShadow,
+        ),
+        child: Center(
+          child: content,
+        ),
       ),
     );
   }

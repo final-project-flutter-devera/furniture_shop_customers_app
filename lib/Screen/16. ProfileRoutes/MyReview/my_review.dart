@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:furniture_shop/Constants/Colors.dart';
 import 'package:furniture_shop/Constants/style.dart';
-import 'package:furniture_shop/Screen/16.%20MyReview/Components/my_review_card.dart';
+import 'package:furniture_shop/Screen/16.%20ProfileRoutes/MyReview/Components/my_review_card.dart';
 import 'package:furniture_shop/Widgets/AppBarTitle.dart';
+import 'package:furniture_shop/localization/app_localization.dart';
 
 class MyReview extends StatelessWidget {
   const MyReview({super.key});
@@ -32,7 +33,7 @@ class MyReview extends StatelessWidget {
           ],
           centerTitle: true,
           title: Text(
-            'My reviews',
+            context.localize('my_review_app_bar_title'),
             style: AppStyle.app_bar_title_text_style,
           ),
         ),
