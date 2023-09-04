@@ -62,6 +62,8 @@ dependencies:
   flutter_rating_bar: ^4.0.1
   expandable: ^5.0.1
   csc_picker: ^0.2.7
+  location: ^5.0.3
+  mapbox_maps_flutter: ^0.4.4
 
 dev_dependencies:
   flutter_test:
@@ -75,9 +77,6 @@ dev_dependencies:
   # rules and activating additional ones.
   flutter_lints: ^2.0.0
   lint: ^2.1.2
-
-  flutter_localizations:
-    sdk: flutter
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
@@ -96,8 +95,6 @@ flutter:
     - assets/Images/
     - assets/Images/Icons/
     - assets/Images/Images/
-  #   - images/a_dot_burr.jpeg
-  #   - images/a_dot_ham.jpeg
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware
@@ -105,10 +102,6 @@ flutter:
   # For details regarding adding assets from package dependencies, see
   # https://flutter.dev/assets-and-images/#from-packages
 
-  # To add custom fonts to your application, add a fonts section here,
-  # in this "flutter" section. Each entry in this list should have a
-  # "family" key with the font family name, and a "fonts" key with a
-  # list giving the asset and other descriptors for the font. For
   # example:
   # fonts:
   #   - family: Schyler

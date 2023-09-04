@@ -10,7 +10,7 @@ class ActionButton extends StatelessWidget {
     super.key,
     required this.boxShadow,
     required this.content,
-    required this.size,
+    this.size = const Size(double.infinity, 60),
     required this.color,
     required this.onPressed,
   });

@@ -3,10 +3,13 @@ import 'package:flutter/material.dart';
 import 'package:furniture_shop/Constants/Colors.dart';
 import 'package:furniture_shop/Constants/style.dart';
 import 'package:furniture_shop/Screen/16.%20ProfileRoutes/MyShippingAddress/Components/app_text_field.dart';
+import 'package:furniture_shop/Screen/16.%20ProfileRoutes/MyShippingAddress/pick_location.dart';
 import 'package:furniture_shop/Widgets/action_button.dart';
 import 'package:furniture_shop/Widgets/default_app_bar.dart';
 import 'package:furniture_shop/localization/app_localization.dart';
+import 'package:furniture_shop/main.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:location/location.dart';
 
 class AddShipingAddress extends StatefulWidget {
   @override
@@ -19,6 +22,30 @@ class _AddShippingAddressState extends State<AddShipingAddress> {
   String? cityValue = '';
   String? address = '';
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+
+  void initializeLocationAndSave() async {
+    Location _location = Location();
+    bool? _serviceEnabled;
+    PermissionStatus? _permissionGranted;
+
+    _serviceEnabled = await _location.serviceEnabled();
+    if (!_serviceEnabled) {
+      _serviceEnabled = await _location.requestService();
+    }
+
+    _permissionGranted = await _location.hasPermission();
+    if (_permissionGranted == PermissionStatus.denied) {
+      _permissionGranted = await _location.requestPermission();
+    }
+
+    print('Hello');
+    LocationData _locationData = await _location.getLocation();
+    print(
+        '${sharedPreferences.getDouble('latitude')}, ${sharedPreferences.getDouble('longitude')}');
+    sharedPreferences.setDouble('latitude', _locationData.latitude!);
+    sharedPreferences.setDouble('longitude', _locationData.longitude!);
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -90,6 +117,22 @@ class _AddShippingAddressState extends State<AddShipingAddress> {
             ),
           ),
           const Spacer(),
+          Padding(
+              padding: const EdgeInsets.only(left: 20, right: 20, bottom: 20),
+              child: ActionButton(
+                  boxShadow: [],
+                  content: Text(
+                    context.localize('label_pick_a_location'),
+                    style: AppStyle.text_style_on_black_button,
+                  ),
+                  size: Size(double.infinity, 60),
+                  color: AppColor.grey,
+                  onPressed: () {
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => PickLocation()));
+                  })),
           Padding(
               padding: const EdgeInsets.only(left: 20, right: 20, bottom: 35),
               child: ActionButton(

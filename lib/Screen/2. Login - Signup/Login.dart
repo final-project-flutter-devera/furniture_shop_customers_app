@@ -42,22 +42,26 @@ class _LoginState extends State<Login> {
       try {
         await AuthRepo.signInWithEmailAndPassword(email, password);
         await AuthRepo.reloadUser();
-        if (await AuthRepo.checkVerifiedMail()) {
-          _formKey.currentState!.reset();
+        Navigator.pushReplacement(
+            context,
+            MaterialPageRoute(
+                builder: (context) => const CustomerHomeScreen()));
+        // if (await AuthRepo.checkVerifiedMail()) {
+        //   _formKey.currentState!.reset();
 
-          await Future.delayed(const Duration(microseconds: 100)).whenComplete(
-              () => Navigator.pushReplacement(
-                  context,
-                  MaterialPageRoute(
-                      builder: (context) => const CustomerHomeScreen())));
-        } else {
-          MyMessageHandler.showSnackBar(
-              _scaffoldKey, 'Please check inbox & verify mail');
-          setState(() {
-            processingAccountMail = false;
-            resendVerification = true;
-          });
-        }
+        //   await Future.delayed(const Duration(microseconds: 100)).whenComplete(
+        //       () => Navigator.pushReplacement(
+        //           context,
+        //           MaterialPageRoute(
+        //               builder: (context) => const CustomerHomeScreen())));
+        // } else {
+        //   MyMessageHandler.showSnackBar(
+        //       _scaffoldKey, 'Please check inbox & verify mail');
+        //   setState(() {
+        //     processingAccountMail = false;
+        //     resendVerification = true;
+        //   });
+        // }
       } on FirebaseAuthException catch (e) {
         if (e.code == 'user-not-found') {
           MyMessageHandler.showSnackBar(

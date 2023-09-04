@@ -158,6 +158,7 @@ class AppLocalization {
       'label_district': 'District',
       'place_holder_district': 'Select District',
       'label_empty_field': "can't be empty",
+      'label_pick_a_location': 'Pick a location on the map',
       'label_save_button': 'SAVE ADDRESS',
 
       ///ADD PAYMENT
@@ -319,6 +320,7 @@ class AppLocalization {
       'label_district': 'Quận/Huyện',
       'place_holder_district': 'Chọn quận/huyện',
       'label_empty_field': "không thể trống",
+      'label_pick_a_location': 'Chọn vị trí trên bản đồ',
       'label_save_button': 'LƯU ĐỊA CHỈ',
 
       ///ADD PAYMENT
