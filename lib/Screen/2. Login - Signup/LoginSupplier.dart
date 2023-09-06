@@ -7,7 +7,6 @@ import 'package:furniture_shop/Widgets/CheckValidation.dart';
 import 'package:google_fonts/google_fonts.dart';
 import '../../Constants/Colors.dart';
 import '../../Widgets/MyMessageHandler.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 class LoginSupplier extends StatefulWidget {
   const LoginSupplier({super.key});

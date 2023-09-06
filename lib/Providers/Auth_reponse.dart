@@ -28,6 +28,14 @@ class AuthRepo {
     }
   }
 
+  static Future<void> sendEmailResetPassword(email) async {
+    try {
+      await FirebaseAuth.instance.sendPasswordResetEmail(email: email);
+    } catch (e) {
+      print(e);
+    }
+  }
+
   static Future<bool> checkVerifiedMail() async {
     User user = FirebaseAuth.instance.currentUser!;
     return user.emailVerified;

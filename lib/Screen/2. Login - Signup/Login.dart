@@ -1,15 +1,18 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_facebook_auth/flutter_facebook_auth.dart';
 import 'package:furniture_shop/Providers/Auth_reponse.dart';
 import 'package:furniture_shop/Screen/3.CustomerHomeScreen/Screen/CustomerHomeScreen.dart';
 import 'package:furniture_shop/Widgets/CheckValidation.dart';
 import 'package:furniture_shop/Widgets/MyMessageHandler.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:google_sign_in/google_sign_in.dart';
 import '../../Constants/Colors.dart';
 import '../../Widgets/LogoLoginSignup.dart';
 import '../../Widgets/SocialLogin.dart';
 import '../../Widgets/TextLoginWidget.dart';
+import 'Forgot_Pass.dart';
 
 class Login extends StatefulWidget {
   const Login({super.key});
@@ -32,7 +35,58 @@ class _LoginState extends State<Login> {
   CollectionReference users = FirebaseFirestore.instance.collection('users');
   CollectionReference anonymous =
       FirebaseFirestore.instance.collection('anonymous');
+
+  Future<bool> checkDocExist(String uid) async {
+    try {
+      var doc = await users.doc(uid).get();
+      return doc.exists;
+    } catch (e) {
+      return false;
+    }
+  }
+
+  bool docExist = false;
+
   late String _uid;
+
+  Future<UserCredential> signInWithGoogle() async {
+    final GoogleSignInAccount? googleUser = await GoogleSignIn().signIn();
+    final GoogleSignInAuthentication? googleAuth =
+        await googleUser?.authentication;
+    final credential = GoogleAuthProvider.credential(
+      accessToken: googleAuth?.accessToken,
+      idToken: googleAuth?.idToken,
+    );
+    return await FirebaseAuth.instance
+        .signInWithCredential(credential)
+        .whenComplete(() async {
+      _uid = AuthRepo.uid;
+      docExist = await checkDocExist(_uid);
+      docExist == false
+          ? await users.doc(_uid).set({
+              'name': googleUser!.displayName,
+              'email': googleUser.email,
+              'phone': '',
+              'address': '',
+              'profileimage': googleUser.photoUrl,
+              'storeLogo': '',
+              'storeCoverImage': '',
+              'storeName': '',
+              'cid': _uid,
+            }).then((value) => Navigator.pushReplacement(context,
+              MaterialPageRoute(builder: (context) => CustomerHomeScreen())))
+          : Navigator.pushReplacement(context,
+              MaterialPageRoute(builder: (context) => CustomerHomeScreen()));
+    });
+  }
+
+  Future<UserCredential> signInWithFacebook() async {
+    final LoginResult loginResult = await FacebookAuth.instance.login();
+    final OAuthCredential facebookAuthCredential =
+        FacebookAuthProvider.credential(loginResult.accessToken!.token);
+
+    return FirebaseAuth.instance.signInWithCredential(facebookAuthCredential);
+  }
 
   void signIn() async {
     if (_formKey.currentState!.validate()) {
@@ -222,10 +276,16 @@ class _LoginState extends State<Login> {
                             ),
                             Padding(
                               padding: const EdgeInsets.all(10),
-                              child: GestureDetector(
-                                onTap: () {},
+                              child: InkWell(
+                                onTap: () {
+                                  Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                          builder: (context) =>
+                                              const ForgotPass()));
+                                },
                                 child: Text(
-                                  'Forgot Password',
+                                  'Forgot Password? (click)',
                                   style: GoogleFonts.nunito(
                                     fontSize: 18,
                                     fontWeight: FontWeight.w600,
@@ -271,12 +331,53 @@ class _LoginState extends State<Login> {
                                 SocialLogin(
                                   image: 'assets/Images/Icons/google.jpg',
                                   label: 'Google',
-                                  onPressed: () {},
+                                  onPressed: () {
+                                    signInWithGoogle();
+                                  },
                                 ),
                                 SocialLogin(
                                   image: 'assets/Images/Icons/fb.png',
                                   label: 'Facebook',
-                                  onPressed: () {},
+                                  onPressed: () async {
+                                    try {
+                                      final UserCredential userCredential =
+                                          await signInWithFacebook();
+                                      _uid = AuthRepo.uid;
+                                      await users.doc(_uid).set(
+                                        {
+                                          'name':
+                                              userCredential.user!.displayName,
+                                          'email':
+                                              userCredential.user!.email ?? '',
+                                          'phone': userCredential
+                                                  .user!.phoneNumber ??
+                                              '',
+                                          'address': '',
+                                          'profileimage':
+                                              userCredential.user!.photoURL ??
+                                                  '',
+                                          'storeLogo': '',
+                                          'storeCoverImage': '',
+                                          'storeName': '',
+                                          'cid': _uid,
+                                        },
+                                      ).then((value) =>
+                                          Navigator.pushReplacement(
+                                              context,
+                                              MaterialPageRoute(
+                                                  builder: (context) =>
+                                                      CustomerHomeScreen())));
+                                    } on FirebaseAuthException catch (e) {
+                                      print(e);
+                                      if (e.code ==
+                                          'account-exists-with-different-credential') {
+                                        MyMessageHandler.showSnackBar(
+                                            _scaffoldKey,
+                                            'An account already exists with the same email address but different sign-in credentials. Sign in using a provider associated with this email address.');
+                                      }
+                                      ;
+                                    }
+                                  },
                                 ),
                                 processingGuest == true
                                     ? const CircularProgressIndicator()

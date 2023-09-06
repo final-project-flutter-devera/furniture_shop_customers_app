@@ -35,12 +35,11 @@ class _SignupState extends State<Signup> {
           processing = true;
         });
         try {
-          await AuthRepo.signUpWithEmailAndPassword(email, password)
-              .whenComplete(() => AuthRepo.updateDisplayName(name))
-              .whenComplete(() => AuthRepo.sendVerificationEmail());
-          _uid = AuthRepo.uid;
+          await AuthRepo.signUpWithEmailAndPassword(email, password);
+          await AuthRepo.updateDisplayName(name);
+          await AuthRepo.sendVerificationEmail();
 
-          await users.doc(_uid).set({
+          await users.doc(AuthRepo.uid).set({
             'name': name,
             'email': email,
             'phone': '',
@@ -49,7 +48,7 @@ class _SignupState extends State<Signup> {
             'storeLogo': '',
             'storeCoverImage': '',
             'storeName': '',
-            'cid': _uid,
+            'cid': AuthRepo.uid,
           });
           _formKey.currentState!.reset();
           if (context.mounted) {
