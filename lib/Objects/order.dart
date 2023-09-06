@@ -1,13 +1,31 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 
+class ProductDetail {
+  final String productID;
+  final int amount;
+  const ProductDetail({required this.productID, required this.amount});
+  Map<String, dynamic> toJson() {
+    return {
+      'productID': productID,
+      'amount': amount,
+    };
+  }
+
+  factory ProductDetail.fromJson(Map<String, dynamic> json) {
+    return ProductDetail(
+      productID: json['productID'] as String,
+      amount: json['amount'] as int,
+    );
+  }
+}
+
 class Order {
   final String id;
   final String buyerID;
   final String sellerID;
   String? ratingAndReviewID;
 
-  List<String> productID;
-  List<int> amount;
+  List<ProductDetail> productDetail;
 
   double totalPrice;
   late Timestamp? orderDate;
@@ -20,8 +38,7 @@ class Order {
     required this.id,
     required this.buyerID,
     required this.sellerID,
-    required this.productID,
-    required this.amount,
+    required this.productDetail,
     this.ratingAndReviewID,
     this.totalPrice = 0,
     this.status = 'Processing',
@@ -57,8 +74,8 @@ class Order {
       'buyerID': buyerID,
       'sellerID': sellerID,
       'ratingAndReviewID': ratingAndReviewID,
-      'productID': productID,
-      'amount': amount,
+      'productDetail': productDetail
+          .map((e) => {'productID': e.productID, 'amount': e.amount}),
       'totalPrice': totalPrice,
       'status': status,
       'orderDate': orderDate.toString(),
@@ -73,8 +90,9 @@ class Order {
       buyerID: json['buyerID'] as String,
       sellerID: json['sellerID'] as String,
       ratingAndReviewID: json['ratingAndReviewID'] as String?,
-      productID: json['productID'] as List<String>,
-      amount: json['amount'] as List<int>,
+      productDetail: (json['productDetail'] as List<dynamic>)
+          .map((e) => ProductDetail.fromJson(e))
+          .toList(),
       status: json['status'] as String,
       totalPrice: json['totalPrice'] as double,
       orderDate: json['orderDate'] as Timestamp,

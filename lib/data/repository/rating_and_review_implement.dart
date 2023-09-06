@@ -31,7 +31,17 @@ class RatingAndReviewRepositoryImpl implements RatingAndReviewRepository {
   }
 
   @override
-  Future<void> updateReview(RatingAndReview review) {
-    return _ratingAndReviewFirestoreService.updateReview(review);
+  Future<void> updateReview(
+    String reviewID, {
+    int? rating,
+    String? review,
+    bool? deleted,
+  }) {
+    return _ratingAndReviewFirestoreService.updateReview(
+      reviewID,
+      rating: rating,
+      review: review,
+      deleted: deleted,
+    );
   }
 }

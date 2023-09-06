@@ -10,23 +10,26 @@ class ActionButton extends StatelessWidget {
     super.key,
     required this.boxShadow,
     required this.content,
-    required this.size,
+    this.size = const Size(double.infinity, 60),
     required this.color,
     required this.onPressed,
   });
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      height: size.height,
-      width: size.width,
-      decoration: BoxDecoration(
-        color: color,
-        borderRadius: BorderRadius.circular(8),
-        boxShadow: boxShadow,
-      ),
-      child: Center(
-        child: content,
+    return GestureDetector(
+      onTap: onPressed,
+      child: Container(
+        height: size.height,
+        width: size.width,
+        decoration: BoxDecoration(
+          color: color,
+          borderRadius: BorderRadius.circular(8),
+          boxShadow: boxShadow,
+        ),
+        child: Center(
+          child: content,
+        ),
       ),
     );
   }

@@ -7,6 +7,8 @@ import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_stripe/flutter_stripe.dart';
 import 'package:furniture_shop/Providers/Cart_Provider.dart';
 import 'package:furniture_shop/Providers/Favorites_Provider.dart';
+import 'package:furniture_shop/Providers/user_provider.dart';
+import 'package:furniture_shop/Screen/16.%20ProfileRoutes/MyShippingAddress/my_shipping_address.dart';
 import 'package:furniture_shop/localization/localization_delegate.dart';
 import 'package:provider/provider.dart';
 import 'Providers/Stripe_ID.dart';
@@ -41,6 +43,7 @@ void main() async {
       providers: [
         ChangeNotifierProvider(create: (_) => Cart()),
         ChangeNotifierProvider(create: (_) => Favorites()),
+        ChangeNotifierProvider<UserProvider>(create: (_) => UserProvider()),
       ],
       child: const MyApp(),
     ),

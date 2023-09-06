@@ -145,7 +145,7 @@ class AppLocalization {
 
       ///Add Shipping Address
       'add_shipping_address_app_bar_title': 'Add shipping address',
-      'label_full_name': 'Full name',
+      'label_full_name': 'Recipient name',
       'place_holder_full_name': 'Ex: Bruno Pham',
       'label_address': 'Address',
       'place_holder_address': 'Ex: 25 Robert Latouche Street',
@@ -154,9 +154,12 @@ class AppLocalization {
       'label_country': 'Country',
       'place_holder_country': "Select Country",
       'label_city': 'City',
-      'place_holder_city': 'New York',
+      'place_holder_city': 'Select City',
       'label_district': 'District',
       'place_holder_district': 'Select District',
+      'label_empty_field': "can't be empty",
+      'label_pick_a_location': 'Pick a location on the map',
+      'label_save_button': 'SAVE ADDRESS',
 
       ///ADD PAYMENT
       'add_payment_app_bar_title': 'Add payment method',
@@ -198,7 +201,6 @@ class AppLocalization {
       'user-not-found': 'Người dùng không tồn tại',
       'wrong-password': 'Mật khẩu được cung cấp không chính xác',
       'check_fill_all': 'Vui lòng điền hết chỗ trống',
-
 
       ///Sign up
       'welcome': 'CHÀO MỪNG',
@@ -305,7 +307,7 @@ class AppLocalization {
 
       ///Add Shipping Address
       'add_shipping_address_app_bar_title': 'Thêm địa chỉ giao hàng',
-      'label_full_name': 'Tên đầy đủ',
+      'label_full_name': 'Tên người nhận',
       'place_holder_full_name': 'VD: Phạm Văn A',
       'label_address': 'Địa Chỉ',
       'place_holder_address': 'VD: 25 Lê Văn Việt',
@@ -314,9 +316,12 @@ class AppLocalization {
       'label_country': 'Quốc gia',
       'place_holder_country': "Chọn quốc gia",
       'label_city': 'Thành phố',
-      'place_holder_city': 'Hồ Chi Minh',
+      'place_holder_city': 'Chọn thành phố',
       'label_district': 'Quận/Huyện',
       'place_holder_district': 'Chọn quận/huyện',
+      'label_empty_field': "không thể trống",
+      'label_pick_a_location': 'Chọn vị trí trên bản đồ',
+      'label_save_button': 'LƯU ĐỊA CHỈ',
 
       ///ADD PAYMENT
       'add_payment_app_bar_title': 'Thêm phương thức thanh toán',

@@ -64,13 +64,28 @@ class RatingAndReviewFirestoreService implements RatingAndReviewDataService {
   }
 
   @override
-  Future<void> updateReview(RatingAndReview review) {
-    return reviews
-        .doc(review.id)
-        .set(review.toJson())
-        .then((value) =>
-            debugPrint('Updated a Rating and Review with ID: ${review.id}'))
-        .catchError((error) =>
-            debugPrint('Failed to update a Rating and Review: $error'));
+  Future<void> updateReview(
+    String reviewID, {
+    int? rating,
+    String? review,
+    bool? deleted,
+  }) {
+    final updates = {
+      if (rating != null) 'rating': rating,
+      if (review != null) 'review': review,
+      if (deleted != null) 'deleted': deleted,
+    };
+    if (updates.isNotEmpty) {
+      return reviews
+          .doc(reviewID)
+          .update(updates)
+          .then((value) =>
+              debugPrint('Updated a Rating and Review with ID: $reviewID'))
+          .catchError((error) =>
+              debugPrint('Failed to update a Rating and Review: $error'));
+    } else {
+      debugPrint('Nothing to update');
+      return Future.value(null);
+    }
   }
 }
