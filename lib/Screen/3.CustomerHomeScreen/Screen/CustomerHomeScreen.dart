@@ -18,7 +18,9 @@ class _CustomerHomeScreen extends State<CustomerHomeScreen> {
     const HomeScreen(),
     const FavoritesScreen(),
     const NotificationScreen(),
-    ProfileScreen(documentId: FirebaseAuth.instance.currentUser!.uid),
+    const ProfileScreen(
+        // documentId: FirebaseAuth.instance.currentUser!.uid
+        ),
   ];
 
   @override

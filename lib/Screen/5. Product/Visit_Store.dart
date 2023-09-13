@@ -8,7 +8,6 @@ import 'package:staggered_grid_view_flutter/widgets/staggered_grid_view.dart';
 import 'package:staggered_grid_view_flutter/widgets/staggered_tile.dart';
 
 import '../../Models/Product_model.dart';
-import '../4. SupplierHomeScreen/Screen/Components/Dashboard/SupStore/Edit_Store_Screen.dart';
 
 class VisitStore extends StatefulWidget {
   final String supplierID;
@@ -130,38 +129,7 @@ class _VisitStoreState extends State<VisitStore> {
                           ),
                         ],
                       ),
-                      widget.supplierID ==
-                              FirebaseAuth.instance.currentUser!.uid
-                          ? Container(
-                              width: 110,
-                              height: 35,
-                              margin: const EdgeInsets.all(10),
-                              decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(15),
-                                border:
-                                    Border.all(width: 2, color: AppColor.white),
-                              ),
-                              child: InkWell(
-                                borderRadius: BorderRadius.circular(15),
-                                onTap: () {
-                                  Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                          builder: (context) => EditStore(
-                                                data: data,
-                                              )));
-                                },
-                                child: const Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceEvenly,
-                                  children: [
-                                    Text('Edit'),
-                                    Icon(Icons.edit),
-                                  ],
-                                ),
-                              ),
-                            )
-                          : GestureDetector(
+                     GestureDetector(
                               onTap: () {
                                 setState(() {
                                   following = !following;

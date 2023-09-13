@@ -13,7 +13,7 @@ import 'dart:convert';
 import 'package:http/http.dart' as http;
 
 class PickLocation extends StatefulWidget {
-  PickLocation();
+  const PickLocation({super.key});
 
   @override
   State<PickLocation> createState() => _PickLocationState();
@@ -28,8 +28,9 @@ class _PickLocationState extends State<PickLocation> {
   double? x;
   double? y;
 
-  Location location = new Location();
+  Location location = Location();
   LocationData? _locationData;
+
   @override
   void initState() {
     super.initState();
@@ -81,10 +82,11 @@ class _PickLocationState extends State<PickLocation> {
         CameraOptions(
           zoom: (zoom! < 12) ? 12 : null,
           center: Point(
-                  coordinates: Position(
-                      sharedPreferences.getDouble('longitude') ?? 0,
-                      sharedPreferences.getDouble('latitude') ?? 0))
-              .toJson(),
+            coordinates: Position(
+              sharedPreferences.getDouble('longitude') ?? 0,
+              sharedPreferences.getDouble('latitude') ?? 0,
+            ),
+          ).toJson(),
         ),
         MapAnimationOptions(duration: 1, startDelay: 0));
   }
@@ -155,7 +157,7 @@ class _PickLocationState extends State<PickLocation> {
             ),
             Expanded(
                 child: Container(
-              padding: EdgeInsets.all(15),
+              padding: const EdgeInsets.all(15),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
@@ -164,7 +166,7 @@ class _PickLocationState extends State<PickLocation> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        "Your current location:\n",
+                        'Your current location:\n',
                         style: GoogleFonts.nunitoSans(
                             fontSize: 18,
                             fontWeight: FontWeight.bold,
@@ -182,7 +184,7 @@ class _PickLocationState extends State<PickLocation> {
                               y = sharedPreferences.getDouble('latitude');
                             });
                           },
-                          child: Text('Choose current location')),
+                          child: const Text('Choose current location')),
                     ],
                   ),
                   Text(
@@ -205,9 +207,9 @@ class _PickLocationState extends State<PickLocation> {
                   ),
                   const Spacer(),
                   ActionButton(
-                      boxShadow: [],
+                      boxShadow: const [],
                       content: Text(
-                        "Choose as your delivery address",
+                        'Choose as your delivery address',
                         style: AppStyle.text_style_on_black_button,
                       ),
                       color: AppColor.black,
@@ -224,7 +226,7 @@ class _PickLocationState extends State<PickLocation> {
               backgroundColor: AppColor.white,
               foregroundColor: AppColor.black,
               onPressed: _moveToCurrentLocation,
-              child: Icon(Icons.my_location),
+              child: const Icon(Icons.my_location),
             ),
           )
         ]));

@@ -47,7 +47,7 @@ class MyShippingAddressCard extends StatelessWidget {
                           color: AppColor.black),
                     ),
                     const Spacer(),
-                    Icon(
+                    const Icon(
                       Icons.edit,
                       color: AppColor.black,
                       size: 24,
@@ -55,7 +55,7 @@ class MyShippingAddressCard extends StatelessWidget {
                   ]),
                 ),
                 const Padding(
-                  padding: const EdgeInsets.only(top: 5, bottom: 10),
+                  padding: EdgeInsets.only(top: 5, bottom: 10),
                   child: Divider(
                     color: AppColor.blur_grey,
                     thickness: 3,

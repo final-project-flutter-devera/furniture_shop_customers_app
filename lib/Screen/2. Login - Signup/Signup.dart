@@ -1,6 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_pw_validator/flutter_pw_validator.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:furniture_shop/Providers/Auth_reponse.dart';
 import 'package:furniture_shop/Widgets/CheckValidation.dart';
@@ -22,57 +23,72 @@ class _SignupState extends State<Signup> {
   late String repass;
   late String _uid;
   bool processing = false;
+  bool strongPass = false;
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   final GlobalKey<ScaffoldMessengerState> _scaffoldKey =
       GlobalKey<ScaffoldMessengerState>();
+  final TextEditingController _pwController = TextEditingController();
   bool visiblePassword = false;
   CollectionReference users = FirebaseFirestore.instance.collection('users');
 
   void signUp() async {
     if (_formKey.currentState!.validate()) {
-      if (password == repass) {
-        setState(() {
-          processing = true;
-        });
-        try {
-          await AuthRepo.signUpWithEmailAndPassword(email, password);
-          await AuthRepo.updateDisplayName(name);
-          await AuthRepo.sendVerificationEmail();
-
-          await users.doc(AuthRepo.uid).set({
-            'name': name,
-            'email': email,
-            'phone': '',
-            'address': '',
-            'profileimage': '',
-            'storeLogo': '',
-            'storeCoverImage': '',
-            'storeName': '',
-            'cid': AuthRepo.uid,
+      if (strongPass == true) {
+        if (password == repass) {
+          setState(() {
+            processing = true;
           });
-          _formKey.currentState!.reset();
-          if (context.mounted) {
-            Navigator.pushReplacementNamed(context, '/Login_cus');
-          }
-        } on FirebaseAuthException catch (e) {
-          if (e.code == 'weak-password') {
-            MyMessageHandler.showSnackBar(_scaffoldKey,
-                'The password provided is too week \n (at least 6 words)');
-            setState(() {
-              processing = false;
+          try {
+            await AuthRepo.signUpWithEmailAndPassword(email, password);
+            await AuthRepo.updateDisplayName(name);
+            await AuthRepo.sendVerificationEmail();
+
+            await users.doc(AuthRepo.uid).set({
+              'name': name,
+              'email': email,
+              'phone': '',
+              'address': '',
+              'profileimage': '',
+              'storeLogo': '',
+              'storeCoverImage': '',
+              'storeName': '',
+              'cid': AuthRepo.uid,
             });
-          } else if (e.code == 'email-already-in-use') {
-            MyMessageHandler.showSnackBar(
-                _scaffoldKey, 'The account already exists for that email.');
-            setState(() {
-              processing = false;
-            });
+            _formKey.currentState!.reset();
+            if (context.mounted) {
+              Navigator.pushReplacementNamed(context, '/Login_cus');
+            }
+          } on FirebaseAuthException catch (e) {
+            if (e.code == 'weak-password') {
+              MyMessageHandler.showSnackBar(_scaffoldKey,
+                  'The password provided is too week \n (at least 6 words)');
+              setState(() {
+                processing = false;
+              });
+            } else if (e.code == 'email-already-in-use') {
+              MyMessageHandler.showSnackBar(
+                  _scaffoldKey, 'The account already exists for that email.');
+              setState(() {
+                processing = false;
+              });
+            }
           }
+        } else {
+          setState(() {
+            processing = false;
+          });
+          MyMessageHandler.showSnackBar(
+            _scaffoldKey,
+            'Please fill re-confirm password match password',
+          );
         }
       } else {
+        setState(() {
+          processing = false;
+        });
         MyMessageHandler.showSnackBar(
           _scaffoldKey,
-          'Please fill re-confirm password match password',
+          'Password so weak, please refill new strong password!',
         );
       }
     }
@@ -84,7 +100,7 @@ class _SignupState extends State<Signup> {
     return ScaffoldMessenger(
       key: _scaffoldKey,
       child: Scaffold(
-        resizeToAvoidBottomInset: false,
+        resizeToAvoidBottomInset: true,
         body: SafeArea(
           child: SingleChildScrollView(
             child: Form(
@@ -205,6 +221,7 @@ class _SignupState extends State<Signup> {
                                       }
                                       return null;
                                     },
+                                    controller: _pwController,
                                     obscureText: !visiblePassword,
                                     textCapitalization:
                                         TextCapitalization.characters,
@@ -227,6 +244,24 @@ class _SignupState extends State<Signup> {
                                           },
                                         )),
                                   ),
+                                  FlutterPwValidator(
+                                      width: MediaQuery.of(context).size.width,
+                                      height: 90,
+                                      minLength: 6,
+                                      uppercaseCharCount: 1,
+                                      specialCharCount: 1,
+                                      onSuccess: () {
+                                        print('Match');
+                                        setState(() {
+                                          strongPass = true;
+                                        });
+                                      },
+                                      onFail: () {
+                                        setState(() {
+                                          strongPass = false;
+                                        });
+                                      },
+                                      controller: _pwController),
                                   const SizedBox(height: 10),
                                   TextFormField(
                                     validator: (value) {

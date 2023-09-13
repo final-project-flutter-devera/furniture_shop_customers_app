@@ -39,14 +39,14 @@ class TitleAppBar extends StatelessWidget {
 
 //Custom Widget TabBar
 class HomeTabBar extends StatelessWidget {
-  final dynamic icon;
-  final String label;
 
   const HomeTabBar({
     super.key,
     required this.label,
     required this.icon,
   });
+  final dynamic icon;
+  final String label;
 
   @override
   Widget build(BuildContext context) {

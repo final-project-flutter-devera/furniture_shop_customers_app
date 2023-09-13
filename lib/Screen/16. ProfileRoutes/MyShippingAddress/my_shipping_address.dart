@@ -37,10 +37,10 @@ class _MyShippingAddressState extends State<MyShippingAddress> {
         onPressed: () {
           Navigator.push(
             context,
-            MaterialPageRoute(builder: (context) => AddShipingAddress()),
+            MaterialPageRoute(builder: (context) => const AddShippingAddress()),
           );
         },
-        child: Icon(
+        child: const Icon(
           Icons.add,
           size: 24,
         ),

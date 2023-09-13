@@ -10,18 +10,22 @@ import 'package:furniture_shop/localization/app_localization.dart';
 import 'package:furniture_shop/main.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:location/location.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
-class AddShipingAddress extends StatefulWidget {
+class AddShippingAddress extends StatefulWidget {
+  const AddShippingAddress({super.key});
+
   @override
-  State<AddShipingAddress> createState() => _AddShippingAddressState();
+  State<AddShippingAddress> createState() => _AddShippingAddressState();
 }
 
-class _AddShippingAddressState extends State<AddShipingAddress> {
+class _AddShippingAddressState extends State<AddShippingAddress> {
   String? countryValue = '';
   String? stateValue = '';
   String? cityValue = '';
   String? address = '';
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+
 
   void initializeLocationAndSave() async {
     Location _location = Location();
@@ -93,23 +97,26 @@ class _AddShippingAddressState extends State<AddShipingAddress> {
               countryDropdownLabel: context.localize('place_holder_country'),
               stateDropdownLabel: context.localize('place_holder_city'),
               cityDropdownLabel: context.localize('place_holder_district'),
-              countryFilter: [CscCountry.Vietnam, CscCountry.United_States],
+              countryFilter: const <CscCountry>[
+                CscCountry.Vietnam,
+                CscCountry.United_States
+              ],
               dropdownItemStyle: GoogleFonts.nunitoSans(
                 fontSize: 16,
                 fontWeight: FontWeight.w600,
                 color: AppColor.black,
               ),
-              onCountryChanged: (value) {
+              onCountryChanged: (dynamic value) {
                 setState(() {
                   countryValue = value;
                 });
               },
-              onStateChanged: (value) {
+              onStateChanged: (dynamic value) {
                 setState(() {
                   stateValue = value;
                 });
               },
-              onCityChanged: (value) {
+              onCityChanged: (dynamic value) {
                 setState(() {
                   cityValue = value;
                 });
@@ -120,28 +127,28 @@ class _AddShippingAddressState extends State<AddShipingAddress> {
           Padding(
               padding: const EdgeInsets.only(left: 20, right: 20, bottom: 20),
               child: ActionButton(
-                  boxShadow: [],
+                  boxShadow: const [],
                   content: Text(
                     context.localize('label_pick_a_location'),
                     style: AppStyle.text_style_on_black_button,
                   ),
-                  size: Size(double.infinity, 60),
+                  size: const Size(double.infinity, 60),
                   color: AppColor.grey,
                   onPressed: () {
                     Navigator.push(
                         context,
                         MaterialPageRoute(
-                            builder: (context) => PickLocation()));
+                            builder: (context) => const PickLocation()));
                   })),
           Padding(
               padding: const EdgeInsets.only(left: 20, right: 20, bottom: 35),
               child: ActionButton(
-                  boxShadow: [],
+                  boxShadow: const [],
                   content: Text(
                     context.localize('label_save_button'),
                     style: AppStyle.text_style_on_black_button,
                   ),
-                  size: Size(double.infinity, 60),
+                  size: const Size(double.infinity, 60),
                   color: AppColor.black,
                   onPressed: () {
                     if (_formKey.currentState!.validate()) {}

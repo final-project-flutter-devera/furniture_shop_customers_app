@@ -1,4 +1,4 @@
-# funiture_shop
+# furniture_shop_customers_app
 
 A new Flutter project.
 

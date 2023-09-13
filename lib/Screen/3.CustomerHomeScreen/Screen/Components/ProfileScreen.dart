@@ -13,9 +13,7 @@ import 'Profile/EditInfo.dart';
 import 'SearchScreen.dart';
 
 class ProfileScreen extends StatefulWidget {
-  final String documentId;
-
-  const ProfileScreen({super.key, required this.documentId});
+  const ProfileScreen({super.key});
 
   @override
   State<ProfileScreen> createState() => _ProfileScreenState();
@@ -33,18 +31,35 @@ class _ProfileScreenState extends State<ProfileScreen> {
     'Settings',
   ];
   List tabRoute = [
-    MyOrderScreen(),
+    const MyOrderScreen(),
     MyShippingAddress(),
   ];
 
+  String? documentId;
+
+  @override
+  void initState() {
+    FirebaseAuth.instance.authStateChanges().listen((User? user) {
+      if (user != null) {
+        print(user.uid);
+        setState(() {
+          documentId = user.uid;
+        });
+      }
+    });
+    super.initState();
+  }
+
+  var isAnonymous = FirebaseAuth.instance.currentUser!.isAnonymous;
+
   @override
   Widget build(BuildContext context) {
-    print('ID: ${widget.documentId}');
+    print('ID: $documentId');
     final wMQ = MediaQuery.of(context).size.width;
     return FutureBuilder<DocumentSnapshot>(
       future: FirebaseAuth.instance.currentUser!.isAnonymous
-          ? anonymous.doc(widget.documentId).get()
-          : users.doc(widget.documentId).get(),
+          ? anonymous.doc(documentId).get()
+          : users.doc(documentId).get(),
       builder:
           (BuildContext context, AsyncSnapshot<DocumentSnapshot> snapshot) {
         if (snapshot.hasError) {
@@ -169,14 +184,16 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       ),
                       IconButton(
                           onPressed: () {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) => EditInfo(
-                                  data: data,
-                                ),
-                              ),
-                            );
+                            isAnonymous
+                                ? Navigator.pushNamed(context, '/Login_cus')
+                                : Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (context) => EditInfo(
+                                        data: data,
+                                      ),
+                                    ),
+                                  );
                           },
                           icon:
                               SvgPicture.asset('assets/Images/Icons/edit.svg')),
@@ -185,7 +202,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   const SizedBox(height: 20),
                   Flexible(
                     child: ListView.builder(
-                      physics: NeverScrollableScrollPhysics(),
+                      physics: const NeverScrollableScrollPhysics(),
                       shrinkWrap: true,
                       itemCount: tabName.length,
                       itemBuilder: (BuildContext context, index) {
@@ -193,10 +210,13 @@ class _ProfileScreenState extends State<ProfileScreen> {
                           padding: const EdgeInsets.symmetric(vertical: 10),
                           child: GestureDetector(
                             onTap: () {
-                              Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                      builder: (context) => tabRoute[index]));
+                              isAnonymous
+                                  ? Navigator.pushNamed(context, '/Login_cus')
+                                  : Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                          builder: (context) =>
+                                              tabRoute[index]));
                             },
                             child: PhysicalModel(
                               elevation: 3,

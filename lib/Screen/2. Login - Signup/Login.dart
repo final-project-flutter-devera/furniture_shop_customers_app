@@ -96,26 +96,22 @@ class _LoginState extends State<Login> {
       try {
         await AuthRepo.signInWithEmailAndPassword(email, password);
         await AuthRepo.reloadUser();
-        Navigator.pushReplacement(
-            context,
-            MaterialPageRoute(
-                builder: (context) => const CustomerHomeScreen()));
-        // if (await AuthRepo.checkVerifiedMail()) {
-        //   _formKey.currentState!.reset();
+        if (await AuthRepo.checkVerifiedMail()) {
+          _formKey.currentState!.reset();
 
-        //   await Future.delayed(const Duration(microseconds: 100)).whenComplete(
-        //       () => Navigator.pushReplacement(
-        //           context,
-        //           MaterialPageRoute(
-        //               builder: (context) => const CustomerHomeScreen())));
-        // } else {
-        //   MyMessageHandler.showSnackBar(
-        //       _scaffoldKey, 'Please check inbox & verify mail');
-        //   setState(() {
-        //     processingAccountMail = false;
-        //     resendVerification = true;
-        //   });
-        // }
+          await Future.delayed(const Duration(microseconds: 100)).whenComplete(
+              () => Navigator.pushReplacement(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) => const CustomerHomeScreen())));
+        } else {
+          MyMessageHandler.showSnackBar(
+              _scaffoldKey, 'Please check inbox & verify mail');
+          setState(() {
+            processingAccountMail = false;
+            resendVerification = true;
+          });
+        }
       } on FirebaseAuthException catch (e) {
         if (e.code == 'user-not-found') {
           MyMessageHandler.showSnackBar(
@@ -370,7 +366,7 @@ class _LoginState extends State<Login> {
                                               context,
                                               MaterialPageRoute(
                                                   builder: (context) =>
-                                                      CustomerHomeScreen())));
+                                                      const CustomerHomeScreen())));
                                     } on FirebaseAuthException catch (e) {
                                       print(e);
                                       if (e.code ==
@@ -428,28 +424,6 @@ class _LoginState extends State<Login> {
                                     fontSize: 18,
                                     fontWeight: FontWeight.w600,
                                     color: const Color(0xFF303030),
-                                  ),
-                                ),
-                              ),
-                            ),
-                            Padding(
-                              padding: const EdgeInsets.all(10),
-                              child: ClipRRect(
-                                borderRadius: BorderRadius.circular(20),
-                                child: MaterialButton(
-                                  height: 50,
-                                  color: AppColor.grey,
-                                  onPressed: () {
-                                    Navigator.pushReplacementNamed(
-                                        context, '/Login_sup');
-                                  },
-                                  child: Text(
-                                    'SUPPLIER LOGIN',
-                                    style: GoogleFonts.nunito(
-                                      fontSize: 18,
-                                      fontWeight: FontWeight.w600,
-                                      color: AppColor.white,
-                                    ),
                                   ),
                                 ),
                               ),

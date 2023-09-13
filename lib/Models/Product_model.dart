@@ -6,7 +6,6 @@ import 'package:collection/collection.dart';
 import '../Constants/Colors.dart';
 import '../Providers/Favorites_Provider.dart';
 import '../Screen/2. Login - Signup/Login.dart';
-import '../Screen/4. SupplierHomeScreen/Screen/Components/Dashboard/SupStore/Edit_Product_Screen.dart';
 import '../Screen/5. Product/Products_Detail_Screen.dart';
 
 class ProductModel extends StatefulWidget {
@@ -85,8 +84,8 @@ class _ProductModelState extends State<ProductModel> {
                                         fontWeight: FontWeight.w700,
                                       ),
                                     )
-                                  : Text(''),
-                              SizedBox(width: 5),
+                                  : const Text(''),
+                              const SizedBox(width: 5),
                               Text(
                                 widget.products['price'].toStringAsFixed(2),
                                 style: onSale != 0
@@ -104,15 +103,7 @@ class _ProductModelState extends State<ProductModel> {
                           ),
                         ],
                       ),
-                      widget.products['sid'] ==
-                              FirebaseAuth.instance.currentUser!.uid
-                          ? InkWell(
-                              onTap: () {
-                                Navigator.push(context, MaterialPageRoute(builder: (context)=> EditProduct(items: widget.products,)));
-                              },
-                              child: const Icon(Icons.edit),
-                            )
-                          : InkWell(
+                      InkWell(
                               onTap: FirebaseAuth
                                       .instance.currentUser!.isAnonymous
                                   ? () {
@@ -168,7 +159,7 @@ class _ProductModelState extends State<ProductModel> {
                     child: Container(
                       height: 25,
                       width: 90,
-                      decoration: BoxDecoration(
+                      decoration: const BoxDecoration(
                         color: AppColor.red,
                         borderRadius: BorderRadius.only(
                           topRight: Radius.circular(5),
