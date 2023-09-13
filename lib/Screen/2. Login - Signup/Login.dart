@@ -33,11 +33,11 @@ class _LoginState extends State<Login> {
   bool processingGuest = false;
   bool processingAccountMail = false;
 
-  CollectionReference customers =
-      FirebaseFirestore.instance.collection('Customers');
+  CollectionReference customers = FirebaseFirestore.instance.collection('Customers');
   CollectionReference anonymous =
       FirebaseFirestore.instance.collection('anonymous');
   final Future<SharedPreferences> _prefs = SharedPreferences.getInstance();
+
 
   Future<bool> checkDocExist(String uid) async {
     try {
@@ -78,7 +78,9 @@ class _LoginState extends State<Login> {
               'phone': '',
               'address': '',
               'profileimage': googleUser.photoUrl,
-              'role': 'customer',
+              'storeLogo': '',
+              'storeCoverImage': '',
+              'storeName': '',
               'cid': _uid,
             }).then((value) => Navigator.pushReplacement(
               context,
@@ -115,20 +117,15 @@ class _LoginState extends State<Login> {
           prefs.setString('customerID', user);
 
           await FirebaseFirestore.instance
-              .collection('Customers')
+              .collection('Suppliers')
               .doc(user)
               .get()
-              .then((DocumentSnapshot snapshot) async {
+              .then((DocumentSnapshot snapshot) {
             if (snapshot.exists) {
-              if (snapshot.get('role') == "customer") {
-                final SharedPreferences prefs = await _prefs;
-                prefs.setString('customerID', '');
-                Navigator.pushReplacementNamed(context, '/Customer_screen');
+              if (snapshot.get('role') == "supplier") {
+                Navigator.pushReplacementNamed(context, '/Supplier_screen');
               }
             } else {
-              setState(() {
-                processingAccountMail = false;
-              });
               MyMessageHandler.showSnackBar(
                   _scaffoldKey, 'Please register account');
             }
@@ -431,8 +428,7 @@ class _LoginState extends State<Login> {
                                               'role': 'Supplier'
                                             });
                                             var user = AuthRepo.uid;
-                                            final SharedPreferences prefs =
-                                                await _prefs;
+                                            final SharedPreferences prefs = await _prefs;
                                             prefs.setString('customerID', user);
                                           });
                                           if (context.mounted) {
@@ -447,7 +443,7 @@ class _LoginState extends State<Login> {
                               padding: const EdgeInsets.all(10),
                               child: GestureDetector(
                                 onTap: () {
-                                  Navigator.pushNamed(
+                                  Navigator.pushReplacementNamed(
                                       context, '/Signup_cus');
                                 },
                                 child: Text(
