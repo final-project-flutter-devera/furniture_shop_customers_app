@@ -7,6 +7,7 @@ import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_stripe/flutter_stripe.dart';
 import 'package:furniture_shop/Providers/Cart_Provider.dart';
 import 'package:furniture_shop/Providers/Favorites_Provider.dart';
+import 'package:furniture_shop/Providers/SQL_helper.dart';
 import 'package:furniture_shop/Providers/user_provider.dart';
 import 'package:furniture_shop/localization/localization_delegate.dart';
 import 'package:provider/provider.dart';
@@ -28,6 +29,7 @@ void main() async {
   Stripe.merchantIdentifier = 'merchant.flutter.stripe.test';
   Stripe.urlScheme = 'flutterstripe';
   await Stripe.instance.applySettings();
+  SQLHelper.getDatabase;
 
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);

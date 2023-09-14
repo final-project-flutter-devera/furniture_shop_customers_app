@@ -1,5 +1,8 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:furniture_shop/Providers/Favorites_Provider.dart';
+import '../../../Providers/Cart_Provider.dart';
 import 'Components/HomeScreen.dart';
 import 'Components/ProfileScreen.dart';
 import 'Components/FavoritesScreen.dart';
@@ -22,6 +25,12 @@ class _CustomerHomeScreen extends State<CustomerHomeScreen> {
         // documentId: FirebaseAuth.instance.currentUser!.uid
         ),
   ];
+  @override
+  void initState() {
+    context.read<Cart>().loadCartItemsProvider();
+    context.read<Favorites>().loadWishItemsProvider();
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {

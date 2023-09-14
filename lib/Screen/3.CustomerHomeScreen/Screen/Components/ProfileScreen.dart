@@ -7,6 +7,7 @@ import 'package:furniture_shop/Screen/16.%20ProfileRoutes/MyShippingAddress/my_s
 import 'package:furniture_shop/Widgets/AppBarButton.dart';
 import 'package:furniture_shop/Widgets/AppBarTitle.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import '../../../../Widgets/ShowAlertDialog.dart';
 import '../../../13. MyOrderScreen/My_Order_Screen.dart';
 import 'Profile/EditInfo.dart';
@@ -20,9 +21,11 @@ class ProfileScreen extends StatefulWidget {
 }
 
 class _ProfileScreenState extends State<ProfileScreen> {
-  CollectionReference users = FirebaseFirestore.instance.collection('users');
+  CollectionReference customer = FirebaseFirestore.instance.collection('Customers');
   CollectionReference anonymous =
       FirebaseFirestore.instance.collection('anonymous');
+  final Future<SharedPreferences> _prefs = SharedPreferences.getInstance();
+
   List<String> tabName = [
     'My Order',
     'Shipping Address',
@@ -39,14 +42,22 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
   @override
   void initState() {
-    FirebaseAuth.instance.authStateChanges().listen((User? user) {
+    _prefs.then((SharedPreferences prefs) {
+      return prefs.getString('customerID') ?? '';
+    }).then((String value) {
+      setState(() {
+        documentId = value;
+      });
+      print( 'profile: $documentId');
+    });
+    /*FirebaseAuth.instance.authStateChanges().listen((User? user) {
       if (user != null) {
         print(user.uid);
         setState(() {
           documentId = user.uid;
         });
       }
-    });
+    });*/
     super.initState();
   }
 
@@ -59,7 +70,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
     return FutureBuilder<DocumentSnapshot>(
       future: FirebaseAuth.instance.currentUser!.isAnonymous
           ? anonymous.doc(documentId).get()
-          : users.doc(documentId).get(),
+          : customer.doc(documentId).get(),
       builder:
           (BuildContext context, AsyncSnapshot<DocumentSnapshot> snapshot) {
         if (snapshot.hasError) {
@@ -107,6 +118,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       },
                       tabYes: () async {
                         await FirebaseAuth.instance.signOut();
+                        final SharedPreferences prefs = await _prefs;
+                        prefs.setString('customerID', '');
                         if (context.mounted) {
                           Navigator.pop(context);
                           Navigator.pushReplacementNamed(

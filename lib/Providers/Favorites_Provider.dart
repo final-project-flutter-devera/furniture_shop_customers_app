@@ -1,9 +1,11 @@
 import 'package:flutter/foundation.dart';
+import 'package:furniture_shop/Providers/SQL_helper.dart';
 
 import 'Product_class.dart';
 
 class Favorites extends ChangeNotifier {
-  final List<Product> _list = [];
+  static List<Product> _list = [];
+
   List<Product> get getFavoriteItems {
     return _list;
   }
@@ -12,36 +14,42 @@ class Favorites extends ChangeNotifier {
     return _list.length;
   }
 
-  Future<void> addFavoriteItems(
-      String name,
-      double price,
-      int quantity,
-      int availableQuantity,
-      List imageList,
-      String documentID,
-      String supplierID,
-      ) async {
-    final product = Product(
-        name: name,
-        price: price,
-        quantity: quantity,
-        availableQuantity: availableQuantity,
-        imageList: imageList,
-        documentID: documentID,
-        supplierID: supplierID);
-    _list.add(product);
+  void addFavoriteItems(Product product) async {
+    await SQLHelper.insertWish(product).whenComplete(() => _list.add(product));
     notifyListeners();
   }
-  void removeProduct(Product product){
-    _list.remove(product);
+
+  loadWishItemsProvider() async {
+    List<Map> data = await SQLHelper.loadWishItems();
+    _list = data.map((product) {
+      return Product(
+        documentID: product['documentID'],
+        name: product['name'],
+        price: product['price'],
+        quantity: product['quantity'],
+        availableQuantity: product['availableQuantity'],
+        imageList: product['imageList'],
+        supplierID: product['supplierID'],
+      );
+    }).toList();
     notifyListeners();
   }
-  void clearFavoritesList(){
-    _list.clear();
+
+  void removeProduct(Product product) async {
+    await SQLHelper.deleteWishItem(product.documentID)
+        .whenComplete(() => _list.remove(product));
     notifyListeners();
   }
-  void removeThis(String id){
-    _list.removeWhere((element) => element.documentID == id);
+
+  void clearFavoritesList() async {
+    await SQLHelper.deleteAllWishItems().whenComplete(() => _list.clear());
+    notifyListeners();
+  }
+
+  void removeThis(String id) async {
+    await SQLHelper.deleteWishItem(id).whenComplete(() => _list
+        .removeWhere((element) => element.documentID == id));
+
     notifyListeners();
   }
 }

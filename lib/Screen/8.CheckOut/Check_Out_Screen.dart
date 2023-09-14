@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_stripe/flutter_stripe.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:furniture_shop/Constants/Colors.dart';
+import 'package:furniture_shop/Screen/13.%20MyOrderScreen/My_Order_Screen.dart';
 import 'package:furniture_shop/Screen/3.CustomerHomeScreen/Screen/CustomerHomeScreen.dart';
 import 'package:furniture_shop/Widgets/AppBarButton.dart';
 import 'package:furniture_shop/Widgets/MyMessageHandler.dart';
@@ -32,7 +33,7 @@ class CheckOutScreen extends StatefulWidget {
 
 class _CheckOutScreenState extends State<CheckOutScreen> {
   CollectionReference customers =
-      FirebaseFirestore.instance.collection('customers');
+      FirebaseFirestore.instance.collection('Customers');
   final GlobalKey<ScaffoldMessengerState> _scaffoldKey =
       GlobalKey<ScaffoldMessengerState>();
   late String orderID;
@@ -199,7 +200,7 @@ class _CheckOutScreenState extends State<CheckOutScreen> {
                                               height: 100,
                                               width: 100,
                                               child: Image.network(order
-                                                  .imageList.first
+                                                  .imageList
                                                   .toString()),
                                             ),
                                           ),
@@ -570,7 +571,7 @@ class _CheckOutScreenState extends State<CheckOutScreen> {
                                                 'orderID': orderID,
                                                 'orderName': item.name,
                                                 'orderImage':
-                                                    item.imageList.first,
+                                                    item.imageList,
                                                 'orderQuantity': item.quantity,
                                                 'orderPrice':
                                                     item.quantity * item.price,
@@ -721,7 +722,7 @@ class _CheckOutScreenState extends State<CheckOutScreen> {
             'proID': item.documentID,
             'orderID': orderID,
             'orderName': item.name,
-            'orderImage': item.imageList.first,
+            'orderImage': item.imageList,
             'orderQuantity': item.quantity,
             'orderPrice': item.quantity * item.price,
             'deliveryStatus': 'Preparing',
@@ -747,7 +748,7 @@ class _CheckOutScreenState extends State<CheckOutScreen> {
           Navigator.pushAndRemoveUntil(
               context,
               MaterialPageRoute(
-                  builder: (context) => const CustomerHomeScreen()),
+                  builder: (context) => const MyOrderScreen()),
               (route) => route.isFirst);
         }
       });

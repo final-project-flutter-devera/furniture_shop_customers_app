@@ -23,7 +23,7 @@ class _ShippingState extends State<Shipping> {
             .collection('orders')
             .where('cid', isEqualTo: FirebaseAuth.instance.currentUser!.uid)
             .where('cancelStatus', isEqualTo: false)
-            .where('deliveryStatus', isEqualTo: 'Shopping')
+            .where('deliveryStatus', isEqualTo: 'Shipping')
             .snapshots(),
         builder: (BuildContext context,
             AsyncSnapshot<QuerySnapshot<Object?>> snapshot) {

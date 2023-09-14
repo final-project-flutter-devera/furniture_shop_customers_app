@@ -22,13 +22,14 @@ import 'Full_Screen_View_Images.dart';
 import 'Visit_Store.dart';
 import 'package:collection/collection.dart';
 import 'package:badges/badges.dart' as badges;
+import 'package:furniture_shop/Providers/Product_class.dart';
 
 class ProductDetailScreen extends StatefulWidget {
-  final dynamic proList;
+  final dynamic products;
 
   const ProductDetailScreen({
     super.key,
-    required this.proList,
+    required this.products,
   });
 
   @override
@@ -41,32 +42,39 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
       GlobalKey<ScaffoldMessengerState>();
 
   @override
+  void initState() {
+    context.read<Cart>().loadCartItemsProvider();
+    context.read<Favorites>().loadWishItemsProvider();
+    super.initState();
+  }
+
+  @override
   Widget build(BuildContext context) {
-    var onSale = widget.proList['discount'];
+    var onSale = widget.products['discount'];
     double wMQ = MediaQuery.of(context).size.width;
     double hMQ = MediaQuery.of(context).size.height;
     Stream<QuerySnapshot> _productsStream = FirebaseFirestore.instance
         .collection('products')
-        .where('mainCategory', isEqualTo: widget.proList['mainCategory'])
-        .where('subCategory', isEqualTo: widget.proList['subCategory'])
+        .where('mainCategory', isEqualTo: widget.products['mainCategory'])
+        .where('subCategory', isEqualTo: widget.products['subCategory'])
         .snapshots();
     Stream<QuerySnapshot> reviewStream = FirebaseFirestore.instance
         .collection('products')
-        .doc(widget.proList['proID'])
+        .doc(widget.products['proID'])
         .collection('reviews')
         .snapshots();
-    late List<dynamic> imagesList = widget.proList['proImages'];
-    CollectionReference customers =
-        FirebaseFirestore.instance.collection('customers');
-    final String supplierID = widget.proList['sid'];
+    late List<dynamic> imagesList = widget.products['proImages'];
+    CollectionReference suppliers =
+        FirebaseFirestore.instance.collection('Suppliers');
+    final String supplierID = widget.products['sid'];
     var existingFavorites = context
         .read<Favorites>()
         .getFavoriteItems
         .firstWhereOrNull(
-            (product) => product.documentID == widget.proList['proID']);
+            (product) => product.documentID == widget.products['proID']);
     var existCart = context.read<Cart>().getItems.firstWhereOrNull(
-        (product) => product.documentID == widget.proList['proID']);
-    final _future = customers.doc(supplierID).get();
+        (product) => product.documentID == widget.products['proID']);
+    final _future = suppliers.doc(supplierID).get();
     return ScaffoldMessenger(
       key: _scaffoldKey,
       child: Scaffold(
@@ -207,7 +215,7 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      widget.proList['proName'],
+                      widget.products['proName'],
                       style: GoogleFonts.gelasio(
                         fontWeight: FontWeight.w500,
                         fontSize: 24,
@@ -229,17 +237,17 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                                     onSale != 0
                                         ? Text(
                                             ((1 - (onSale / 100)) *
-                                                    widget.proList['price'])
+                                                    widget.products['price'])
                                                 .toString(),
                                             style: GoogleFonts.nunito(
                                               fontSize: 30,
                                               fontWeight: FontWeight.w700,
                                             ),
                                           )
-                                        : Text(''),
-                                    SizedBox(width: 10),
+                                        : const Text(''),
+                                    const SizedBox(width: 10),
                                     Text(
-                                      widget.proList['price']
+                                      widget.products['price']
                                           .toStringAsFixed(2),
                                       style: onSale != 0
                                           ? GoogleFonts.nunito(
@@ -260,7 +268,7 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                             ),
                           ],
                         ),
-                        widget.proList['inStock'] == 0
+                        widget.products['inStock'] == 0
                             ? Text(
                                 'Out of stock',
                                 style: GoogleFonts.nunito(
@@ -270,7 +278,7 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                                 ),
                               )
                             : Text(
-                                'In stock: ${widget.proList['inStock']}',
+                                'In stock: ${widget.products['inStock']}',
                                 style: GoogleFonts.nunito(
                                   fontSize: 16,
                                   fontWeight: FontWeight.w700,
@@ -310,20 +318,25 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                                   existingFavorites != null
                                       ? context
                                           .read<Favorites>()
-                                          .removeThis(widget.proList['proID'])
+                                          .removeThis(widget.products['proID'])
                                       : context
                                           .read<Favorites>()
                                           .addFavoriteItems(
-                                            widget.proList['proName'],
-                                            onSale != 0
-                                                ? ((1 - (onSale / 100)) *
-                                                    widget.proList['price'])
-                                                : widget.proList['price'],
-                                            1,
-                                            widget.proList['inStock'],
-                                            widget.proList['proImages'],
-                                            widget.proList['proID'],
-                                            widget.proList['sid'],
+                                            Product(
+                                              name: widget.products['proName'],
+                                              price: onSale != 0
+                                                  ? ((1 - (onSale / 100)) *
+                                                      widget.products['price'])
+                                                  : widget.products['price'],
+                                              quantity: 1,
+                                              availableQuantity:
+                                                  widget.products['inStock'],
+                                              imageList: imagesList.first,
+                                              documentID:
+                                                  widget.products['proID'],
+                                              supplierID:
+                                                  widget.products['sid'],
+                                            ),
                                           );
                                 },
                           icon: context
@@ -331,7 +344,7 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                                       .getFavoriteItems
                                       .firstWhereOrNull((product) =>
                                           product.documentID ==
-                                          widget.proList['proID']) !=
+                                          widget.products['proID']) !=
                                   null
                               ? const Icon(Icons.favorite)
                               : const Icon(Icons.favorite_border_outlined),
@@ -430,7 +443,7 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                     ),
                     const SizedBox(height: 10),
                     Text(
-                      widget.proList['prodesc'],
+                      widget.products['prodesc'],
                       style: GoogleFonts.nunito(
                         color: AppColor.grey,
                         fontSize: 16,
@@ -439,13 +452,13 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                     ),
                     const SizedBox(height: 10),
                     ExpandableTheme(
-                      data: ExpandableThemeData(
+                      data: const ExpandableThemeData(
                           iconColor: AppColor.black,
                           iconSize: 30,
                           tapBodyToCollapse: true,
                           tapBodyToExpand: true,
                           tapHeaderToExpand: true),
-                      child: Review(reviewStream),
+                      child: review(reviewStream),
                     ),
                     const SizedBox(height: 10),
                     const TitleDivider(
@@ -503,18 +516,21 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                         existingFavorites != null
                             ? context
                                 .read<Favorites>()
-                                .removeThis(widget.proList['proID'])
+                                .removeThis(widget.products['proID'])
                             : context.read<Favorites>().addFavoriteItems(
-                                  widget.proList['proName'],
-                                  onSale != 0
-                                      ? ((1 - (onSale / 100)) *
-                                          widget.proList['price'])
-                                      : widget.proList['price'],
-                                  1,
-                                  widget.proList['inStock'],
-                                  widget.proList['proImages'],
-                                  widget.proList['proID'],
-                                  widget.proList['sid'],
+                                  Product(
+                                    name: widget.products['proName'],
+                                    price: onSale != 0
+                                        ? ((1 - (onSale / 100)) *
+                                            widget.products['price'])
+                                        : widget.products['price'],
+                                    quantity: 1,
+                                    availableQuantity:
+                                        widget.products['inStock'],
+                                    imageList: imagesList.first,
+                                    documentID: widget.products['proID'],
+                                    supplierID: widget.products['sid'],
+                                  ),
                                 );
                       },
                 child: PhysicalModel(
@@ -536,7 +552,7 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                                   .getFavoriteItems
                                   .firstWhereOrNull((product) =>
                                       product.documentID ==
-                                      widget.proList['proID']) !=
+                                      widget.products['proID']) !=
                               null
                           ? const Icon(Icons.bookmark)
                           : const Icon(Icons.bookmark_border_outlined)),
@@ -580,7 +596,7 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                                 builder: (context) => const Login()));
                       }
                     : () {
-                        if (widget.proList['inStock'] == 0) {
+                        if (widget.products['inStock'] == 0) {
                           MyMessageHandler.showSnackBar(
                               _scaffoldKey, 'This product out of stock');
                         } else if (existCart != null) {
@@ -588,16 +604,18 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                               'This product already in your cart!');
                         } else {
                           context.read<Cart>().addItems(
-                                widget.proList['proName'],
-                                onSale != 0
-                                    ? ((1 - (onSale / 100)) *
-                                        widget.proList['price'])
-                                    : widget.proList['price'],
-                                1,
-                                widget.proList['inStock'],
-                                widget.proList['proImages'],
-                                widget.proList['proID'],
-                                widget.proList['sid'],
+                                Product(
+                                  name: widget.products['proName'],
+                                  price: onSale != 0
+                                      ? ((1 - (onSale / 100)) *
+                                          widget.products['price'])
+                                      : widget.products['price'],
+                                  quantity: 1,
+                                  availableQuantity: widget.products['inStock'],
+                                  imageList: imagesList.first,
+                                  documentID: widget.products['proID'],
+                                  supplierID: widget.products['sid'],
+                                ),
                               );
                         }
                       },
@@ -675,10 +693,10 @@ class TitleDivider extends StatelessWidget {
   }
 }
 
-Widget Review(var reviewStream) {
+Widget review(var reviewStream) {
   return ExpandablePanel(
     header: Padding(
-      padding: EdgeInsets.all(10),
+      padding: const EdgeInsets.all(10),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
@@ -691,7 +709,7 @@ Widget Review(var reviewStream) {
             ),
           ),
           Text(
-            '   Review  ',
+            '   review  ',
             style: GoogleFonts.gelasio(
               fontSize: 24,
               fontWeight: FontWeight.w300,
@@ -746,7 +764,7 @@ Widget reviewAll(var reviewStream) {
                   Row(
                     children: [
                       Text(snapshot3.data!.docs[index]['rate'].toString()),
-                      Icon(
+                      const Icon(
                         Icons.star,
                         color: AppColor.amber,
                       ),

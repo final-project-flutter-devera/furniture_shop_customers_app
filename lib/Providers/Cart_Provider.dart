@@ -1,58 +1,69 @@
 import 'package:flutter/foundation.dart';
+import 'package:furniture_shop/Providers/SQL_helper.dart';
 import 'Product_class.dart';
 
-
 class Cart extends ChangeNotifier {
-  final List<Product> _list = [];
+  static List<Product> _list = [];
+
   List<Product> get getItems {
+    notifyListeners();
     return _list;
   }
 
   double get totalPrice {
     var total = 0.0;
-    for(var product in _list ){
+    for (var product in _list) {
       total += product.price * product.quantity;
-    } return total;
+    }
+    return total;
   }
 
   int? get count {
-   return _list.length;
+    return _list.length;
   }
 
-  void addItems(
-    String name,
-    double price,
-    int quantity,
-    int availableQuantity,
-    List imageList,
-    String documentID,
-    String supplierID,
-  ) {
-    final product = Product(
-        name: name,
-        price: price,
-        quantity: quantity,
-        availableQuantity: availableQuantity,
-        imageList: imageList,
-        documentID: documentID,
-        supplierID: supplierID);
-    _list.add(product);
+  void addItems(Product product) async {
+    await SQLHelper.insertCart(product).whenComplete(() => _list.add(product));
     notifyListeners();
   }
-  void increment(Product product){
-    product.increase();
+
+  loadCartItemsProvider() async {
+    List<Map> data = await SQLHelper.loadCartItems();
+    _list = data.map((product) {
+      return Product(
+        documentID: product['documentID'],
+        name: product['name'],
+        price: product['price'],
+        quantity: product['quantity'],
+        availableQuantity: product['availableQuantity'],
+        imageList: product['imageList'],
+        supplierID: product['supplierID'],
+      );
+    }).toList();
     notifyListeners();
   }
-  void decrementByOne(Product product){
-    product.decrease();
+
+  void increment(Product product) async {
+    await SQLHelper.updateQuantity(product, 'increment')
+        .whenComplete(() => product.increase());
     notifyListeners();
   }
-  void removeProduct(Product product){
+
+  Future<void> decrementByOne(Product product) async {
+    await SQLHelper.updateQuantity(product, 'decrement')
+        .whenComplete(() => product.decrease());
+    notifyListeners();
+  }
+
+  Future<void> removeProduct(Product product) async {
+    await SQLHelper.deleteCartItem(product.documentID);
     _list.remove(product);
     notifyListeners();
   }
-  void clearAllProduct(){
-    _list.clear();
+
+  Future<void> clearAllProduct() async {
+    await SQLHelper.deleteAllCartItems().whenComplete(() => _list.clear());
+
     notifyListeners();
   }
 }

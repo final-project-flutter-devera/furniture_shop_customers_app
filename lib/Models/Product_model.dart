@@ -7,6 +7,7 @@ import '../Constants/Colors.dart';
 import '../Providers/Favorites_Provider.dart';
 import '../Screen/2. Login - Signup/Login.dart';
 import '../Screen/5. Product/Products_Detail_Screen.dart';
+import 'package:furniture_shop/Providers/Product_class.dart';
 
 class ProductModel extends StatefulWidget {
   final dynamic products;
@@ -18,6 +19,8 @@ class ProductModel extends StatefulWidget {
 }
 
 class _ProductModelState extends State<ProductModel> {
+  late List<dynamic> imageList = widget.products['proImages'];
+
   @override
   Widget build(BuildContext context) {
     var onSale = widget.products['discount'];
@@ -26,9 +29,8 @@ class _ProductModelState extends State<ProductModel> {
         Navigator.push(
             context,
             MaterialPageRoute(
-                builder: (context) => ProductDetailScreen(
-                      proList: widget.products,
-                    )));
+                builder: (context) =>
+                    ProductDetailScreen(products: widget.products)));
       },
       child: Padding(
         padding: const EdgeInsets.all(10.0),
@@ -104,50 +106,53 @@ class _ProductModelState extends State<ProductModel> {
                         ],
                       ),
                       InkWell(
-                              onTap: FirebaseAuth
-                                      .instance.currentUser!.isAnonymous
-                                  ? () {
-                                      Navigator.push(
-                                          context,
-                                          MaterialPageRoute(
-                                              builder: (context) =>
-                                                  const Login()));
-                                    }
-                                  : () {
-                                      context
-                                                  .read<Favorites>()
-                                                  .getFavoriteItems
-                                                  .firstWhereOrNull((product) =>
-                                                      product.documentID ==
-                                                      widget
-                                                          .products['proID']) !=
-                                              null
-                                          ? context
-                                              .read<Favorites>()
-                                              .removeThis(
-                                                  widget.products['proID'])
-                                          : context
-                                              .read<Favorites>()
-                                              .addFavoriteItems(
-                                                widget.products['proName'],
-                                                widget.products['price'],
-                                                1,
-                                                widget.products['inStock'],
-                                                widget.products['proImages'],
+                        onTap: FirebaseAuth.instance.currentUser!.isAnonymous
+                            ? () {
+                                Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (context) => const Login()));
+                              }
+                            : () {
+                                context
+                                            .read<Favorites>()
+                                            .getFavoriteItems
+                                            .firstWhereOrNull((product) =>
+                                                product.documentID ==
+                                                widget.products['proID']) !=
+                                        null
+                                    ? context
+                                        .read<Favorites>()
+                                        .removeThis(widget.products['proID'])
+                                    : context
+                                        .read<Favorites>()
+                                        .addFavoriteItems(
+                                          Product(
+                                            documentID:
                                                 widget.products['proID'],
-                                                widget.products['sid'],
-                                              );
-                                    },
-                              child: context
-                                          .watch<Favorites>()
-                                          .getFavoriteItems
-                                          .firstWhereOrNull((product) =>
-                                              product.documentID ==
-                                              widget.products['proID']) !=
-                                      null
-                                  ? const Icon(Icons.favorite)
-                                  : const Icon(Icons.favorite_border_outlined),
-                            ),
+                                            name: widget.products['proName'],
+                                            price: onSale != 0
+                                                ? ((1 - (onSale / 100)) *
+                                                    widget.products['price'])
+                                                : widget.products['price'],
+                                            quantity: 1,
+                                            availableQuantity:
+                                                widget.products['inStock'],
+                                            imageList: imageList.first,
+                                            supplierID: widget.products['sid'],
+                                          ),
+                                        );
+                              },
+                        child: context
+                                    .watch<Favorites>()
+                                    .getFavoriteItems
+                                    .firstWhereOrNull((product) =>
+                                        product.documentID ==
+                                        widget.products['proID']) !=
+                                null
+                            ? const Icon(Icons.favorite)
+                            : const Icon(Icons.favorite_border_outlined),
+                      ),
                     ],
                   ),
                 ],

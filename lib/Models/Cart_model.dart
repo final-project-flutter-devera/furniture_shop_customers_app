@@ -34,7 +34,7 @@ class CartModel extends StatelessWidget {
                   height: 120,
                   width: 120,
                   child: Image.network(
-                    product.imageList.first,
+                    product.imageList,
                     fit: BoxFit.cover,
                   ),
                 ),
@@ -130,23 +130,21 @@ class CartModel extends StatelessWidget {
                                                                         Cart>()
                                                                     .removeProduct(
                                                                         product)
-                                                                : await context
+                                                                : context
                                                                     .read<
                                                                         Favorites>()
                                                                     .addFavoriteItems(
-                                                                      product
-                                                                          .name,
-                                                                      product
-                                                                          .price,
-                                                                      1,
-                                                                      product
-                                                                          .availableQuantity,
-                                                                      product
-                                                                          .imageList,
-                                                                      product
-                                                                          .documentID,
-                                                                      product
-                                                                          .supplierID,
+                                                              Product(
+                                                                documentID:
+                                                                product.documentID,
+                                                                name: product.name,
+                                                                price: product.price,
+                                                                quantity: 1,
+                                                                availableQuantity:
+                                                                product.availableQuantity,
+                                                                imageList: product.imageList,
+                                                                supplierID: product.supplierID,
+                                                              ),
                                                                     );
                                                             (context)
                                                                 .read<Cart>()

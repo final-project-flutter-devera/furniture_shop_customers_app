@@ -8,6 +8,7 @@ import 'package:furniture_shop/Widgets/CheckValidation.dart';
 import 'package:furniture_shop/Widgets/MyMessageHandler.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:google_sign_in/google_sign_in.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import '../../Constants/Colors.dart';
 import '../../Widgets/LogoLoginSignup.dart';
 import '../../Widgets/SocialLogin.dart';
@@ -32,13 +33,15 @@ class _LoginState extends State<Login> {
   bool processingGuest = false;
   bool processingAccountMail = false;
 
-  CollectionReference users = FirebaseFirestore.instance.collection('users');
+  CollectionReference customers =
+      FirebaseFirestore.instance.collection('Customers');
   CollectionReference anonymous =
       FirebaseFirestore.instance.collection('anonymous');
+  final Future<SharedPreferences> _prefs = SharedPreferences.getInstance();
 
   Future<bool> checkDocExist(String uid) async {
     try {
-      var doc = await users.doc(uid).get();
+      var doc = await customers.doc(uid).get();
       return doc.exists;
     } catch (e) {
       return false;
@@ -57,26 +60,34 @@ class _LoginState extends State<Login> {
       accessToken: googleAuth?.accessToken,
       idToken: googleAuth?.idToken,
     );
+
     return await FirebaseAuth.instance
         .signInWithCredential(credential)
         .whenComplete(() async {
       _uid = AuthRepo.uid;
       docExist = await checkDocExist(_uid);
+
+      final SharedPreferences prefs = await _prefs;
+      prefs.setString('customerID', _uid);
+      print(_uid);
+
       docExist == false
-          ? await users.doc(_uid).set({
+          ? await customers.doc(_uid).set({
               'name': googleUser!.displayName,
               'email': googleUser.email,
               'phone': '',
               'address': '',
               'profileimage': googleUser.photoUrl,
-              'storeLogo': '',
-              'storeCoverImage': '',
-              'storeName': '',
+              'role': 'customer',
               'cid': _uid,
-            }).then((value) => Navigator.pushReplacement(context,
-              MaterialPageRoute(builder: (context) => CustomerHomeScreen())))
-          : Navigator.pushReplacement(context,
-              MaterialPageRoute(builder: (context) => CustomerHomeScreen()));
+            }).then((value) => Navigator.pushReplacement(
+              context,
+              MaterialPageRoute(
+                  builder: (context) => const CustomerHomeScreen())))
+          : Navigator.pushReplacement(
+              context,
+              MaterialPageRoute(
+                  builder: (context) => const CustomerHomeScreen()));
     });
   }
 
@@ -96,14 +107,32 @@ class _LoginState extends State<Login> {
       try {
         await AuthRepo.signInWithEmailAndPassword(email, password);
         await AuthRepo.reloadUser();
+        var user = AuthRepo.uid;
         if (await AuthRepo.checkVerifiedMail()) {
           _formKey.currentState!.reset();
 
-          await Future.delayed(const Duration(microseconds: 100)).whenComplete(
-              () => Navigator.pushReplacement(
-                  context,
-                  MaterialPageRoute(
-                      builder: (context) => const CustomerHomeScreen())));
+          final SharedPreferences prefs = await _prefs;
+          prefs.setString('customerID', user);
+
+          await FirebaseFirestore.instance
+              .collection('Customers')
+              .doc(user)
+              .get()
+              .then((DocumentSnapshot snapshot) async {
+            if (snapshot.exists) {
+              if (snapshot.get('role') == "customer") {
+                final SharedPreferences prefs = await _prefs;
+                prefs.setString('customerID', '');
+                Navigator.pushReplacementNamed(context, '/Customer_screen');
+              }
+            } else {
+              setState(() {
+                processingAccountMail = false;
+              });
+              MyMessageHandler.showSnackBar(
+                  _scaffoldKey, 'Please register account');
+            }
+          });
         } else {
           MyMessageHandler.showSnackBar(
               _scaffoldKey, 'Please check inbox & verify mail');
@@ -242,7 +271,7 @@ class _LoginState extends State<Login> {
                               ),
                             ),
                             Container(
-                              constraints: BoxConstraints(minHeight: 10),
+                              constraints: const BoxConstraints(minHeight: 10),
                               child: resendVerification == true
                                   ? ClipRRect(
                                       borderRadius: BorderRadius.circular(50),
@@ -272,7 +301,7 @@ class _LoginState extends State<Login> {
                                         ),
                                       ),
                                     )
-                                  : SizedBox(),
+                                  : const SizedBox.shrink(),
                             ),
                             Padding(
                               padding: const EdgeInsets.all(10),
@@ -335,7 +364,7 @@ class _LoginState extends State<Login> {
                                     signInWithGoogle();
                                   },
                                 ),
-                                SocialLogin(
+                                /*SocialLogin(
                                   image: 'assets/Images/Icons/fb.png',
                                   label: 'Facebook',
                                   onPressed: () async {
@@ -343,7 +372,7 @@ class _LoginState extends State<Login> {
                                       final UserCredential userCredential =
                                           await signInWithFacebook();
                                       _uid = AuthRepo.uid;
-                                      await users.doc(_uid).set(
+                                      await customers.doc(_uid).set(
                                         {
                                           'name':
                                               userCredential.user!.displayName,
@@ -361,12 +390,11 @@ class _LoginState extends State<Login> {
                                           'storeName': '',
                                           'cid': _uid,
                                         },
-                                      ).then((value) =>
-                                          Navigator.pushReplacement(
-                                              context,
-                                              MaterialPageRoute(
-                                                  builder: (context) =>
-                                                      const CustomerHomeScreen())));
+                                      ).then((value) => Navigator.pushReplacement(
+                                          context,
+                                          MaterialPageRoute(
+                                              builder: (context) =>
+                                                  const CustomerHomeScreen())));
                                     } on FirebaseAuthException catch (e) {
                                       print(e);
                                       if (e.code ==
@@ -378,7 +406,7 @@ class _LoginState extends State<Login> {
                                       ;
                                     }
                                   },
-                                ),
+                                ),*/
                                 processingGuest == true
                                     ? const CircularProgressIndicator()
                                     : SocialLogin(
@@ -402,6 +430,10 @@ class _LoginState extends State<Login> {
                                               'cid': _uid,
                                               'role': 'Supplier'
                                             });
+                                            var user = AuthRepo.uid;
+                                            final SharedPreferences prefs =
+                                                await _prefs;
+                                            prefs.setString('customerID', user);
                                           });
                                           if (context.mounted) {
                                             Navigator.pushReplacementNamed(
@@ -415,7 +447,7 @@ class _LoginState extends State<Login> {
                               padding: const EdgeInsets.all(10),
                               child: GestureDetector(
                                 onTap: () {
-                                  Navigator.pushReplacementNamed(
+                                  Navigator.pushNamed(
                                       context, '/Signup_cus');
                                 },
                                 child: Text(

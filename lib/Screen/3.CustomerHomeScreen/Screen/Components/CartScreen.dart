@@ -1,5 +1,4 @@
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:furniture_shop/Constants/Colors.dart';
 import 'package:furniture_shop/Providers/Cart_Provider.dart';
@@ -8,7 +7,6 @@ import 'package:furniture_shop/Widgets/AppBarTitle.dart';
 import 'package:google_fonts/google_fonts.dart';
 import '../../../../Models/Cart_model.dart';
 import '../../../../Widgets/ShowAlertDialog.dart';
-import '../../../2. Login - Signup/Login.dart';
 import '../../../8.CheckOut/Check_Out_Screen.dart';
 import '../CustomerHomeScreen.dart';
 import 'package:provider/provider.dart';

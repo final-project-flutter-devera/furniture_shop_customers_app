@@ -29,7 +29,7 @@ class _SignupState extends State<Signup> {
       GlobalKey<ScaffoldMessengerState>();
   final TextEditingController _pwController = TextEditingController();
   bool visiblePassword = false;
-  CollectionReference users = FirebaseFirestore.instance.collection('users');
+  CollectionReference customers = FirebaseFirestore.instance.collection('Customers');
 
   void signUp() async {
     if (_formKey.currentState!.validate()) {
@@ -43,15 +43,13 @@ class _SignupState extends State<Signup> {
             await AuthRepo.updateDisplayName(name);
             await AuthRepo.sendVerificationEmail();
 
-            await users.doc(AuthRepo.uid).set({
+            await customers.doc(AuthRepo.uid).set({
               'name': name,
               'email': email,
               'phone': '',
               'address': '',
               'profileimage': '',
-              'storeLogo': '',
-              'storeCoverImage': '',
-              'storeName': '',
+              'role': 'customer',
               'cid': AuthRepo.uid,
             });
             _formKey.currentState!.reset();

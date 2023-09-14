@@ -28,10 +28,10 @@ class _ProcessingState extends State<Processing> {
         builder: (BuildContext context,
             AsyncSnapshot<QuerySnapshot<Object?>> snapshot) {
           if (snapshot.hasError) {
-            return Scaffold(body: Center(child: Text('Something went wrong')));
+            return const Scaffold(body: Center(child: Text('Something went wrong')));
           }
           if (snapshot.connectionState == ConnectionState.waiting) {
-            return Center(child: CircularProgressIndicator());
+            return const Center(child: CircularProgressIndicator());
           }
 
           return ListView.builder(
