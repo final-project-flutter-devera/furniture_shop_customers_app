@@ -3,10 +3,13 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_pw_validator/flutter_pw_validator.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:furniture_shop/Objects/customer.dart';
 import 'package:furniture_shop/Providers/Auth_reponse.dart';
+import 'package:furniture_shop/Providers/customer_provider.dart';
 import 'package:furniture_shop/Widgets/CheckValidation.dart';
 import 'package:furniture_shop/Widgets/MyMessageHandler.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:provider/provider.dart';
 import '../../Widgets/TextLoginWidget.dart';
 
 class Signup extends StatefulWidget {
@@ -29,7 +32,8 @@ class _SignupState extends State<Signup> {
       GlobalKey<ScaffoldMessengerState>();
   final TextEditingController _pwController = TextEditingController();
   bool visiblePassword = false;
-  CollectionReference customers = FirebaseFirestore.instance.collection('Customers');
+  CollectionReference customers =
+      FirebaseFirestore.instance.collection('Customers');
 
   void signUp() async {
     if (_formKey.currentState!.validate()) {
@@ -43,15 +47,13 @@ class _SignupState extends State<Signup> {
             await AuthRepo.updateDisplayName(name);
             await AuthRepo.sendVerificationEmail();
 
-            await customers.doc(AuthRepo.uid).set({
-              'name': name,
-              'email': email,
-              'phone': '',
-              'address': '',
-              'profileimage': '',
-              'role': 'customer',
-              'cid': AuthRepo.uid,
-            });
+            Customer _customer = Customer(
+              id: AuthRepo.uid,
+              name: name,
+              emailAddress: email,
+            );
+
+            await customers.doc(AuthRepo.uid).set(_customer.toJson());
             _formKey.currentState!.reset();
             if (context.mounted) {
               Navigator.pushReplacementNamed(context, '/Login_cus');

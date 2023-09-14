@@ -46,4 +46,8 @@ class AppStyle {
     fontSize: 12,
     color: AppColor.text_secondary,
   );
+
+  static const List<Shadow> white_shadow = [
+    Shadow(color: AppColor.white, blurRadius: 50)
+  ];
 }

@@ -21,7 +21,8 @@ class ProfileScreen extends StatefulWidget {
 }
 
 class _ProfileScreenState extends State<ProfileScreen> {
-  CollectionReference customer = FirebaseFirestore.instance.collection('Customers');
+  CollectionReference customer =
+      FirebaseFirestore.instance.collection('Customers');
   CollectionReference anonymous =
       FirebaseFirestore.instance.collection('anonymous');
   final Future<SharedPreferences> _prefs = SharedPreferences.getInstance();
@@ -48,7 +49,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
       setState(() {
         documentId = value;
       });
-      print( 'profile: $documentId');
+      print('profile: $documentId');
     });
     /*FirebaseAuth.instance.authStateChanges().listen((User? user) {
       if (user != null) {
@@ -67,6 +68,29 @@ class _ProfileScreenState extends State<ProfileScreen> {
   Widget build(BuildContext context) {
     print('ID: $documentId');
     final wMQ = MediaQuery.of(context).size.width;
+    return IconButton(
+      icon: SvgPicture.asset('assets/Images/Icons/Logout.svg',
+          height: 24, width: 24),
+      onPressed: () async {
+        MyAlertDialog.showMyDialog(
+          context: context,
+          title: 'Log out',
+          content: 'Are you sure log out?',
+          tabNo: () {
+            Navigator.pop(context);
+          },
+          tabYes: () async {
+            await FirebaseAuth.instance.signOut();
+            final SharedPreferences prefs = await _prefs;
+            prefs.setString('customerID', '');
+            if (context.mounted) {
+              Navigator.pop(context);
+              Navigator.pushReplacementNamed(context, '/Welcome_boarding');
+            }
+          },
+        );
+      },
+    );
     return FutureBuilder<DocumentSnapshot>(
       future: FirebaseAuth.instance.currentUser!.isAnonymous
           ? anonymous.doc(documentId).get()

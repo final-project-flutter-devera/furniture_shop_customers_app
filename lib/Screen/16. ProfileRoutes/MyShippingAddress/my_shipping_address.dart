@@ -1,9 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:furniture_shop/Constants/Colors.dart';
 import 'package:furniture_shop/Constants/style.dart';
+import 'package:furniture_shop/Objects/address.dart';
+import 'package:furniture_shop/Providers/customer_provider.dart';
 import 'package:furniture_shop/Screen/16.%20ProfileRoutes/MyShippingAddress/Components/my_shipping_address_card.dart';
 import 'package:furniture_shop/Screen/16.%20ProfileRoutes/MyShippingAddress/add_shipping_address.dart';
 import 'package:furniture_shop/localization/app_localization.dart';
+import 'package:provider/provider.dart';
 
 class MyShippingAddress extends StatefulWidget {
   @override
@@ -11,6 +14,57 @@ class MyShippingAddress extends StatefulWidget {
 }
 
 class _MyShippingAddressState extends State<MyShippingAddress> {
+  late List<Address> myAddress = [];
+  bool _isLoading = true;
+  @override
+  void initState() {
+    _getAddress();
+    super.initState();
+  }
+
+  _addAddress(Address address) {
+    //If there is no address in address list, the new address will be the default
+    address.isDefault = myAddress.isEmpty;
+    myAddress.add(address);
+    context.read<CustomerProdivder>().updateUser(shippingAddress: myAddress);
+    setState(() {});
+  }
+
+  _editAddress(Address address, int index) {
+    setState(() {
+      myAddress[index] = address;
+    });
+    context.read<CustomerProdivder>().updateUser(shippingAddress: myAddress);
+  }
+
+  _getAddress() async {
+    myAddress =
+        await context.read<CustomerProdivder>().getCurrentUser().then((value) {
+      return value.shippingAddress;
+    });
+    setState(() {
+      _isLoading = false;
+    });
+  }
+
+  _setAsMainAddress(int index) async {
+    setState(() {
+      myAddress[index].isDefault = true;
+      for (int i = 0; i < myAddress.length; i++) {
+        if (i != index) myAddress[i].isDefault = false;
+      }
+    });
+    context.read<CustomerProdivder>().updateUser(shippingAddress: myAddress);
+  }
+
+  _deleteAddress(int index) {
+    setState(() {
+      myAddress.removeAt(index);
+    });
+    context.read<CustomerProdivder>().updateUser(shippingAddress: myAddress);
+    Navigator.pop(context);
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -37,21 +91,50 @@ class _MyShippingAddressState extends State<MyShippingAddress> {
         onPressed: () {
           Navigator.push(
             context,
-            MaterialPageRoute(builder: (context) => const AddShippingAddress()),
+            MaterialPageRoute(
+                builder: (context) => AddShipingAddress(
+                      onTap: _addAddress,
+                    )),
           );
         },
-        child: const Icon(
+        child: Icon(
           Icons.add,
           size: 24,
         ),
       ),
-      body: ListView.builder(
-        itemCount: 5,
-        itemBuilder: (context, index) => Padding(
-          padding:
-              const EdgeInsets.only(top: 20, left: 20, right: 20, bottom: 10),
-          child: MyShippingAddressCard(),
-        ),
+      body: RefreshIndicator(
+        onRefresh: () {
+          _getAddress();
+          setState(() {});
+          return Future.value();
+        },
+        child: (_isLoading == true)
+            ? const Center(
+                child: CircularProgressIndicator(
+                color: AppColor.black,
+              ))
+            : myAddress.isEmpty
+                ? Center(
+                    child: Text(
+                      context.localize('message_no_address'),
+                      style: AppStyle.tab_title_text_style,
+                    ),
+                  )
+                : ListView.builder(
+                    itemCount: myAddress.length,
+                    itemBuilder: (context, index) => Padding(
+                      padding: const EdgeInsets.only(
+                          top: 20, left: 20, right: 20, bottom: 10),
+                      child: MyShippingAddressCard(
+                        index: index,
+                        address: myAddress[index],
+                        setAsDefaultOnTap: (value) => _setAsMainAddress(index),
+                        deleteAddressOnTap: (value) => _deleteAddress(value),
+                        editAddressOnTap: (Address address) =>
+                            _editAddress(address, index),
+                      ),
+                    ),
+                  ),
       ),
     );
   }

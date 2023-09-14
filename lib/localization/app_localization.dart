@@ -21,6 +21,10 @@ class AppLocalization {
 
   static final Map<String, Map<String, String>> _localizedValues = {
     'en': {
+      //general
+      'label_yes': 'Yes',
+      'label_no': 'No',
+
       ///boarding
       'boarding_title_1': 'MAKE YOUR',
       'boarding_title_2': 'HOME BEAUTIFUL',
@@ -153,13 +157,32 @@ class AppLocalization {
       'place_holder_zipcode': '900000',
       'label_country': 'Country',
       'place_holder_country': "Select Country",
+      'label_place': 'Street/Commune',
+      'place_holder_place': 'Lower Manhattan',
       'label_city': 'City',
+      'app_bar_title_edit_shipping_address': 'Edit Shipping Address',
       'place_holder_city': 'Select City',
       'label_district': 'District',
       'place_holder_district': 'Select District',
       'label_empty_field': "can't be empty",
+      'message_no_address': 'You have no delivery addresses.',
       'label_pick_a_location': 'Pick a location on the map',
+      'error_message_empty_address': 'Please fill all your address information',
       'label_save_button': 'SAVE ADDRESS',
+      'mapbox_app_bar_title': 'Pick an address',
+      'title_current_location': 'Your current location',
+      'title_chosen_location': 'Your chosen location',
+      'label_choose_current_location': 'Choose current location',
+      'location_not_chosen': 'You have not choose a location',
+      'label_choose_as_delivery_address': 'Choose as your delivery address',
+      'alert_box_title_delete_address': 'Delete this address?',
+      'alert_box_title_choose_as_delivery_address':
+          'Choose this address as your deliver address?',
+      'label_search_for_address': 'Search for an address...',
+      'alert_box_title_address_not_chosen': 'You have not chosen an address',
+      'hint_text_address_search': 'Search for an address...',
+
+      'label_move_to_current_location': 'Move to your current location',
 
       ///ADD PAYMENT
       'add_payment_app_bar_title': 'Add payment method',
@@ -182,6 +205,10 @@ class AppLocalization {
       'label_contact': 'Contact us',
     },
     'vi': <String, String>{
+      //general
+      'label_yes': 'Có',
+      'label_no': 'Không',
+
       ///Boarding
       'boarding_title_1': 'TRANG TRÍ',
       'boarding_title_2': 'NGÔI NHÀ CỦA BẠN',
@@ -316,12 +343,30 @@ class AppLocalization {
       'label_country': 'Quốc gia',
       'place_holder_country': "Chọn quốc gia",
       'label_city': 'Thành phố',
+      'app_bar_title_edit_shipping_address': 'Chỉnh sửa địa chỉ giao hàng',
+      'place_holder_place': 'Bình Thạnh',
+      'label_place': 'Xã/Phường/Thị Trấn',
       'place_holder_city': 'Chọn thành phố',
       'label_district': 'Quận/Huyện',
       'place_holder_district': 'Chọn quận/huyện',
       'label_empty_field': "không thể trống",
       'label_pick_a_location': 'Chọn vị trí trên bản đồ',
+      'message_no_address': 'Bạn không có địa chỉ giao hàng.',
+      'error_message_empty_address': 'Vui lòng điền thông tin địa chỉ',
       'label_save_button': 'LƯU ĐỊA CHỈ',
+      'mapbox_app_bar_title': 'Chọn một địa chỉ',
+      'title_current_location': 'Vị trí hiện tại',
+      'title_chosen_location': 'Vị trí đã chọn',
+      'label_choose_current_location': 'Chọn vị trí hiện tại',
+      'location_not_chosen': 'Bạn chưa chọn địa chỉ',
+      'label_choose_as_delivery_address': 'Chọn làm địa chỉ giao hàng',
+      'alert_box_title_delete_address': 'Xóa địa chỉ này?',
+      'alert_box_title_choose_as_delivery_address':
+          'Chọn địa chỉ này làm địa chỉ giao hàng?',
+      'title_move_to_current_location': 'Di chuyển đến vị trí hiện tại của bạn',
+      'label_search_for_address': 'Tìm một địa chỉ...',
+      'alert_box_title_address_not_chosen': 'Bạn chưa chọn địa chỉ giao hàng',
+      'hint_text_address_search': 'Tìm kiếm một địa chỉ...',
 
       ///ADD PAYMENT
       'add_payment_app_bar_title': 'Thêm phương thức thanh toán',

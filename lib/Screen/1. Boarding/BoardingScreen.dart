@@ -5,6 +5,8 @@ import 'dart:ui';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:furniture_shop/Constants/Colors.dart';
+import 'package:furniture_shop/Constants/style.dart';
 import 'package:furniture_shop/localization/app_localization.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -108,11 +110,13 @@ class _BoardingScreenState extends State<BoardingScreen> {
                       children: [
                         Text(context.localize('boarding_title_1'),
                             style: GoogleFonts.gelasio(
-                                fontSize: 24,
-                                fontWeight: FontWeight.w600,
-                                // color: AppColor.white,
-                                color: const Color(0xFF606060),
-                                letterSpacing: 1.2)),
+                              fontSize: 24,
+                              fontWeight: FontWeight.w600,
+                              // color: AppColor.white,
+                              color: const Color(0xFF606060),
+                              letterSpacing: 1.2,
+                              shadows: AppStyle.white_shadow,
+                            )),
                       ],
                     )),
               ),
@@ -128,6 +132,7 @@ class _BoardingScreenState extends State<BoardingScreen> {
                       fontWeight: FontWeight.w700,
                       // color: AppColor.white
                       color: const Color(0xFF303030),
+                      shadows: AppStyle.white_shadow,
                     ),
                   ),
                 ),
@@ -143,9 +148,10 @@ class _BoardingScreenState extends State<BoardingScreen> {
                     context.localize('boarding_description'),
                     style: GoogleFonts.nunito(
                       fontSize: 18,
-                      fontWeight: FontWeight.w400,
+                      fontWeight: FontWeight.w700,
                       // color: AppColor.white
-                      color: const Color(0xFF808080),
+                      color: AppColor.black,
+                      shadows: AppStyle.white_shadow,
                     ),
                     textAlign: TextAlign.justify,
                   ),

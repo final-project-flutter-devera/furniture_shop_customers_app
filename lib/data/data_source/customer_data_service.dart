@@ -1,8 +1,8 @@
 import 'package:furniture_shop/Objects/address.dart';
-import 'package:furniture_shop/Objects/user.dart';
+import 'package:furniture_shop/Objects/customer.dart';
 
-abstract class UserDataService {
-  Future<void> addUser(User user);
+abstract class CustomerDataService {
+  Future<void> addUser(Customer user);
   Future<void> updateUser(
     String userID, {
     List<String>? role,
@@ -16,5 +16,5 @@ abstract class UserDataService {
     bool? isDeleted,
   });
   Future<void> deleteUser(String userID);
-  Future<User> getUser(String userID);
+  Future<Customer> getUser(String userID);
 }

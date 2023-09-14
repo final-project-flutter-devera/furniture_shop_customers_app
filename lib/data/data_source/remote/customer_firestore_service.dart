@@ -1,45 +1,45 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:furniture_shop/Objects/address.dart';
-import 'package:furniture_shop/Objects/user.dart';
-import 'package:furniture_shop/data/data_source/user_data_service.dart';
+import 'package:furniture_shop/Objects/customer.dart';
+import 'package:furniture_shop/data/data_source/customer_data_service.dart';
 
-class UserFirestoreService implements UserDataService {
-  CollectionReference users = FirebaseFirestore.instance.collection('users');
+class CustomerFirestoreService implements CustomerDataService {
+  CollectionReference customers =
+      FirebaseFirestore.instance.collection('Customers');
   @override
-  Future<void> addUser(User user) {
-    return users
-        .doc(user.id)
-        .set(user.toJson())
-        .then((value) => debugPrint('Added a User with ID: ${user.id}'))
+  Future<void> addUser(Customer customer) {
+    return customers
+        .doc(customer.id)
+        .set(customer.toJson())
+        .then((value) => debugPrint('Added a User with ID: ${customer.id}'))
         .catchError((error) => debugPrint('Failed to add a User: $error'));
   }
 
   @override
 
   ///DO NOT USE WHEN USER REQUEST TO DELETE. To delete a user set flag isDeleted to true
-  Future<void> deleteUser(String userID) {
-    return users
-        .doc(userID)
+  Future<void> deleteUser(String customerID) {
+    return customers
+        .doc(customerID)
         .delete()
-        .then((value) => debugPrint('Deleted a user with ID: $userID'))
+        .then((value) => debugPrint('Deleted a user with ID: $customerID'))
         .catchError((error) => debugPrint('Failed to delete a user: $error'));
   }
 
   @override
-  Future<User> getUser(String userID) async {
-    User? user;
-    await users.where('userID', isEqualTo: userID).get().then((querySnapshot) {
-      debugPrint('Get user successfully');
-      user =
-          User.fromJson(querySnapshot.docs[0].data() as Map<String, dynamic>);
+  Future<Customer> getUser(String customerID) async {
+    Customer? user;
+    await customers.doc(customerID).get().then((querySnapshot) {
+      debugPrint('Get user $customerID successfully');
+      user = Customer.fromJson(querySnapshot.data() as Map<String, dynamic>);
     });
     return Future.value(user);
   }
 
   @override
   Future<void> updateUser(
-    String userID, {
+    String customerID, {
     List<String>? role,
     String? name,
     String? emailAddres,
@@ -63,10 +63,10 @@ class UserFirestoreService implements UserDataService {
       if (isDeleted != null) 'isDeleted': isDeleted,
     };
     if (updates.isNotEmpty) {
-      return users
-          .doc(userID)
+      return customers
+          .doc(customerID)
           .update(updates)
-          .then((value) => debugPrint('Updated a user: $userID'))
+          .then((value) => debugPrint('Updated a user: $customerID'))
           .catchError((error) => debugPrint('Failed to update a user: $error'));
     } else {
       debugPrint('Nothing to update');
