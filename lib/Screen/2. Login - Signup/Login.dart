@@ -33,11 +33,11 @@ class _LoginState extends State<Login> {
   bool processingGuest = false;
   bool processingAccountMail = false;
 
-  CollectionReference customers = FirebaseFirestore.instance.collection('Customers');
+  CollectionReference customers =
+      FirebaseFirestore.instance.collection('Customers');
   CollectionReference anonymous =
       FirebaseFirestore.instance.collection('anonymous');
   final Future<SharedPreferences> _prefs = SharedPreferences.getInstance();
-
 
   Future<bool> checkDocExist(String uid) async {
     try {
@@ -78,9 +78,7 @@ class _LoginState extends State<Login> {
               'phone': '',
               'address': '',
               'profileimage': googleUser.photoUrl,
-              'storeLogo': '',
-              'storeCoverImage': '',
-              'storeName': '',
+              'role': 'customer',
               'cid': _uid,
             }).then((value) => Navigator.pushReplacement(
               context,
@@ -107,7 +105,6 @@ class _LoginState extends State<Login> {
         processingAccountMail = true;
       });
       try {
-        await AuthRepo.signInWithEmailAndPassword(email, password);
         await AuthRepo.reloadUser();
         var user = AuthRepo.uid;
         if (await AuthRepo.checkVerifiedMail()) {
@@ -117,15 +114,19 @@ class _LoginState extends State<Login> {
           prefs.setString('customerID', user);
 
           await FirebaseFirestore.instance
-              .collection('Suppliers')
+              .collection('Customers')
               .doc(user)
               .get()
-              .then((DocumentSnapshot snapshot) {
+              .then((DocumentSnapshot snapshot) async {
             if (snapshot.exists) {
-              if (snapshot.get('role') == "supplier") {
-                Navigator.pushReplacementNamed(context, '/Supplier_screen');
+              if (snapshot.get('role') == "customer") {
+                await AuthRepo.signInWithEmailAndPassword(email, password);
+                Navigator.pushReplacementNamed(context, '/Customer_screen');
               }
             } else {
+              setState(() {
+                processingAccountMail = false;
+              });
               MyMessageHandler.showSnackBar(
                   _scaffoldKey, 'Please register account');
             }
@@ -428,7 +429,8 @@ class _LoginState extends State<Login> {
                                               'role': 'Supplier'
                                             });
                                             var user = AuthRepo.uid;
-                                            final SharedPreferences prefs = await _prefs;
+                                            final SharedPreferences prefs =
+                                                await _prefs;
                                             prefs.setString('customerID', user);
                                           });
                                           if (context.mounted) {
@@ -443,7 +445,7 @@ class _LoginState extends State<Login> {
                               padding: const EdgeInsets.all(10),
                               child: GestureDetector(
                                 onTap: () {
-                                  Navigator.pushReplacementNamed(
+                                  Navigator.pushNamed(
                                       context, '/Signup_cus');
                                 },
                                 child: Text(
