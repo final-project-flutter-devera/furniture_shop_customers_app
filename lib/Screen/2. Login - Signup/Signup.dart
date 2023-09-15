@@ -31,6 +31,7 @@ class _SignupState extends State<Signup> {
   bool visiblePassword = false;
   CollectionReference customers =
       FirebaseFirestore.instance.collection('Customers');
+  CollectionReference checkUID = FirebaseFirestore.instance.collection('UID');
 
   void signUp() async {
     if (_formKey.currentState!.validate()) {
@@ -39,6 +40,7 @@ class _SignupState extends State<Signup> {
           setState(() {
             processing = true;
           });
+          print('uid: ${AuthRepo.uid}');
           try {
             await AuthRepo.signUpWithEmailAndPassword(email, password);
             await AuthRepo.updateDisplayName(name);
@@ -53,6 +55,9 @@ class _SignupState extends State<Signup> {
               'role': 'customer',
               'cid': AuthRepo.uid,
             });
+
+            await checkUID.doc(email).set({'uid': AuthRepo.uid});
+
             _formKey.currentState!.reset();
             if (context.mounted) {
               Navigator.pushReplacementNamed(context, '/Login_cus');
@@ -65,14 +70,38 @@ class _SignupState extends State<Signup> {
                 processing = false;
               });
             } else if (e.code == 'email-already-in-use') {
-              MyMessageHandler.showSnackBar(
-                  _scaffoldKey, 'The account already exists for that email.');
-              await customers.doc(AuthRepo.uid).update({
-                'role': 'customer',
-              });
-              Navigator.pushReplacementNamed(context, '/Customer_screen');
-              setState(() {
-                processing = false;
+              await FirebaseFirestore.instance
+                  .collection('Customers')
+                  .doc(AuthRepo.uid)
+                  .get()
+                  .then((DocumentSnapshot snapshot) async {
+                if (snapshot.exists) {
+                  if (snapshot.get('role') == "customer") {
+                    await AuthRepo.signInWithEmailAndPassword(email, password);
+                    if (context.mounted) {
+                      Navigator.pushReplacementNamed(
+                          context, '/Customer_screen');
+                    }
+                  }
+                } else {
+                  var uID = await FirebaseFirestore.instance
+                      .collection('UID')
+                      .doc(email)
+                      .get();
+                  await customers.doc(uID['uid']).set({
+                    'name': name,
+                    'email': email,
+                    'phone': '',
+                    'address': '',
+                    'profileimage': '',
+                    'role': 'customer',
+                    'cid': uID['uid'],
+                  });
+                  _formKey.currentState!.reset();
+                  if (context.mounted) {
+                    Navigator.pushReplacementNamed(context, '/Login_cus');
+                  }
+                }
               });
             }
           }
