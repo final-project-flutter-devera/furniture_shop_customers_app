@@ -29,7 +29,8 @@ class _SignupState extends State<Signup> {
       GlobalKey<ScaffoldMessengerState>();
   final TextEditingController _pwController = TextEditingController();
   bool visiblePassword = false;
-  CollectionReference customers = FirebaseFirestore.instance.collection('Customers');
+  CollectionReference customers =
+      FirebaseFirestore.instance.collection('Customers');
 
   void signUp() async {
     if (_formKey.currentState!.validate()) {
@@ -66,6 +67,10 @@ class _SignupState extends State<Signup> {
             } else if (e.code == 'email-already-in-use') {
               MyMessageHandler.showSnackBar(
                   _scaffoldKey, 'The account already exists for that email.');
+              await customers.doc(AuthRepo.uid).update({
+                'role': 'customer',
+              });
+              Navigator.pushReplacementNamed(context, '/Customer_screen');
               setState(() {
                 processing = false;
               });
