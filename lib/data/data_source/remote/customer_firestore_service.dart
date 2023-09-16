@@ -8,39 +8,41 @@ class CustomerFirestoreService implements CustomerDataService {
   CollectionReference customers =
       FirebaseFirestore.instance.collection('Customers');
   @override
-  Future<void> addUser(Customer customer) {
+  Future<void> addCustomer(Customer customer) {
     return customers
         .doc(customer.cid)
         .set(customer.toJson())
-        .then((value) => debugPrint('Added a User with ID: ${customer.cid}'))
-        .catchError((error) => debugPrint('Failed to add a User: $error'));
+        .then(
+            (value) => debugPrint('Added a customer with ID: ${customer.cid}'))
+        .catchError((error) => debugPrint('Failed to add a customer: $error'));
   }
 
   @override
 
-  ///DO NOT USE WHEN USER REQUEST TO DELETE. To delete a user set flag isDeleted to true
-  Future<void> deleteUser(String customerID) {
+  ///DO NOT USE WHEN customer REQUEST TO DELETE. To delete a customer set flag isDeleted to true
+  Future<void> deleteCustomer(String customerID) {
     return customers
         .doc(customerID)
         .delete()
-        .then((value) => debugPrint('Deleted a user with ID: $customerID'))
-        .catchError((error) => debugPrint('Failed to delete a user: $error'));
+        .then((value) => debugPrint('Deleted a customer with ID: $customerID'))
+        .catchError(
+            (error) => debugPrint('Failed to delete a customer: $error'));
   }
 
   @override
-  Future<Customer> getUser(String customerID) async {
-    Customer? user;
+  Future<Customer> getCustomer(String customerID) async {
+    Customer? customer;
     await customers.doc(customerID).get().then((querySnapshot) {
-      debugPrint('Get user $customerID successfully');
-      user = Customer.fromJson(querySnapshot.data() as Map<String, dynamic>);
+      debugPrint('Get customer $customerID successfully');
+      customer =
+          Customer.fromJson(querySnapshot.data() as Map<String, dynamic>);
     });
-    return Future.value(user);
+    return Future.value(customer);
   }
 
   @override
-  Future<void> updateUser(
+  Future<void> updateCustomer(
     String customerID, {
-    List<String>? role,
     String? name,
     String? email,
     String? phone,
@@ -50,7 +52,6 @@ class CustomerFirestoreService implements CustomerDataService {
     bool? isDeleted,
   }) {
     final updates = {
-      if (role != null) 'role': role,
       if (name != null) 'name': name,
       if (email != null) 'email': email,
       if (phone != null) 'phone': phone,
@@ -64,8 +65,9 @@ class CustomerFirestoreService implements CustomerDataService {
       return customers
           .doc(customerID)
           .update(updates)
-          .then((value) => debugPrint('Updated a user: $customerID'))
-          .catchError((error) => debugPrint('Failed to update a user: $error'));
+          .then((value) => debugPrint('Updated a customer: $customerID'))
+          .catchError(
+              (error) => debugPrint('Failed to update a customer: $error'));
     } else {
       debugPrint('Nothing to update');
       return Future.value(null);

@@ -2,23 +2,26 @@ import 'package:flutter/material.dart';
 import 'package:furniture_shop/Constants/Colors.dart';
 import 'package:furniture_shop/Constants/style.dart';
 import 'package:furniture_shop/Objects/address.dart';
+import 'package:furniture_shop/Objects/customer.dart';
 import 'package:furniture_shop/Providers/customer_provider.dart';
-import 'package:furniture_shop/Screen/16.%20ProfileRoutes/MyShippingAddress/Components/my_shipping_address_card.dart';
-import 'package:furniture_shop/Screen/16.%20ProfileRoutes/MyShippingAddress/add_shipping_address.dart';
+import 'package:furniture_shop/Screen/16.%20ProfileRoutes/my_shipping_address/components/my_shipping_address_card.dart';
+import 'package:furniture_shop/Screen/16.%20ProfileRoutes/my_shipping_address/add_shipping_address.dart';
 import 'package:furniture_shop/localization/app_localization.dart';
 import 'package:provider/provider.dart';
 
 class MyShippingAddress extends StatefulWidget {
+  final Customer currentCustomer;
+  const MyShippingAddress({super.key, required this.currentCustomer});
   @override
   State<MyShippingAddress> createState() => _MyShippingAddressState();
 }
 
 class _MyShippingAddressState extends State<MyShippingAddress> {
   late List<Address> myAddress = [];
-  bool _isLoading = true;
+  bool _isLoading = false;
   @override
   void initState() {
-    _getAddress();
+    myAddress = widget.currentCustomer.shippingAddress;
     super.initState();
   }
 
@@ -26,7 +29,9 @@ class _MyShippingAddressState extends State<MyShippingAddress> {
     //If there is no address in address list, the new address will be the default
     address.isDefault = myAddress.isEmpty;
     myAddress.add(address);
-    context.read<CustomerProdivder>().updateUser(shippingAddress: myAddress);
+    context
+        .read<CustomerProvider>()
+        .updateCurrentCustomer(shippingAddress: myAddress);
     setState(() {});
   }
 
@@ -34,12 +39,16 @@ class _MyShippingAddressState extends State<MyShippingAddress> {
     setState(() {
       myAddress[index] = address;
     });
-    context.read<CustomerProdivder>().updateUser(shippingAddress: myAddress);
+    context
+        .read<CustomerProvider>()
+        .updateCurrentCustomer(shippingAddress: myAddress);
   }
 
   _getAddress() async {
-    myAddress =
-        await context.read<CustomerProdivder>().getCurrentUser().then((value) {
+    myAddress = await context
+        .read<CustomerProvider>()
+        .getCurrentCustomer()
+        .then((value) {
       return value.shippingAddress;
     });
     setState(() {
@@ -54,14 +63,18 @@ class _MyShippingAddressState extends State<MyShippingAddress> {
         if (i != index) myAddress[i].isDefault = false;
       }
     });
-    context.read<CustomerProdivder>().updateUser(shippingAddress: myAddress);
+    context
+        .read<CustomerProvider>()
+        .updateCurrentCustomer(shippingAddress: myAddress);
   }
 
   _deleteAddress(int index) {
     setState(() {
       myAddress.removeAt(index);
     });
-    context.read<CustomerProdivder>().updateUser(shippingAddress: myAddress);
+    context
+        .read<CustomerProvider>()
+        .updateCurrentCustomer(shippingAddress: myAddress);
     Navigator.pop(context);
   }
 

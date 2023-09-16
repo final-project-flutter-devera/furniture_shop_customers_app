@@ -19,7 +19,7 @@ class Customer {
       this.profileimage,
       this.role,
       this.isDeleted = false,
-      this.following,
+      this.following = const [],
       this.shippingAddress = const []});
 
   Map<String, dynamic> toJson() {

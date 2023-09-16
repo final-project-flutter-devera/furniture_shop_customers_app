@@ -14,7 +14,6 @@ import 'package:mapbox_maps_flutter/mapbox_maps_flutter.dart';
 import 'dart:convert';
 import 'dart:async';
 import 'package:http/http.dart' as http;
-import 'package:provider/provider.dart';
 
 class PickLocation extends StatefulWidget {
   final ValueChanged<Address> onSubmit;
@@ -44,7 +43,6 @@ class _PickLocationState extends State<PickLocation>
   final searchController = SearchController();
 
   Location location = new Location();
-  LocationData? _locationData;
   @override
   void initState() {
     super.initState();
@@ -232,7 +230,6 @@ class _PickLocationState extends State<PickLocation>
   final SearchController controller = SearchController();
   @override
   Widget build(BuildContext context) {
-    final wMQ = MediaQuery.of(context).size.width;
     final hMQ = MediaQuery.of(context).size.height;
 
     return Scaffold(
@@ -349,7 +346,7 @@ class _PickLocationState extends State<PickLocation>
                       ),
                       color: AppColor.black,
                       onPressed: () {
-                        if (chosenLocation != null)
+                        if (chosenLocation != null) {
                           showDialog(
                               context: context,
                               builder: (BuildContext context) =>
@@ -381,7 +378,7 @@ class _PickLocationState extends State<PickLocation>
                                           )),
                                     ],
                                   ));
-                        else
+                        } else {
                           showDialog(
                               context: context,
                               builder: (BuildContext context) =>
@@ -399,6 +396,7 @@ class _PickLocationState extends State<PickLocation>
                                           )),
                                     ],
                                   ));
+                        }
                       })
                 ],
               ),
@@ -471,7 +469,7 @@ class AddressSearchDelegate extends SearchDelegate {
           onPressed: () {
             query = '';
           },
-          icon: Icon(Icons.clear))
+          icon: const Icon(Icons.clear))
     ];
   }
 
@@ -481,17 +479,17 @@ class AddressSearchDelegate extends SearchDelegate {
         onPressed: () {
           close(context, null);
         },
-        icon: Icon(Icons.arrow_back_ios));
+        icon: const Icon(Icons.arrow_back_ios));
   }
 
   @override
   Widget buildResults(BuildContext context) {
-    if (query.length == 0) return SizedBox();
+    if (query.isEmpty) return const SizedBox();
     return FutureBuilder<List<dynamic>>(
       future: _onSearchSubmit(query),
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
-          return Center(
+          return const Center(
               child:
                   CircularProgressIndicator()); // Show a loading indicator while fetching data
         } else if (snapshot.hasError) {
@@ -627,7 +625,7 @@ class AddressSearchDelegate extends SearchDelegate {
                 decoration: BoxDecoration(
                     border: Border(
                         top: index != 0
-                            ? BorderSide(color: AppColor.blur_grey)
+                            ? const BorderSide(color: AppColor.blur_grey)
                             : BorderSide.none)),
                 child: ListTile(
                   onTap: () {

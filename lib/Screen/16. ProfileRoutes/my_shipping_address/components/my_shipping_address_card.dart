@@ -2,12 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:furniture_shop/Constants/Colors.dart';
 import 'package:furniture_shop/Constants/style.dart';
 import 'package:furniture_shop/Objects/address.dart';
-import 'package:furniture_shop/Providers/customer_provider.dart';
-import 'package:furniture_shop/Screen/16.%20ProfileRoutes/MyShippingAddress/edit_shipping_address.dart';
+import 'package:furniture_shop/Screen/16.%20ProfileRoutes/my_shipping_address/edit_shipping_address.dart';
 import 'package:furniture_shop/Widgets/delete_alert_dialog.dart';
 import 'package:furniture_shop/localization/app_localization.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:provider/provider.dart';
 
 class MyShippingAddressCard extends StatefulWidget {
   final Address address;

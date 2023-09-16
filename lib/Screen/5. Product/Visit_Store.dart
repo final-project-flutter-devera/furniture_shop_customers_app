@@ -2,8 +2,14 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:furniture_shop/Constants/Colors.dart';
+import 'package:furniture_shop/Objects/customer.dart';
+import 'package:furniture_shop/Objects/supplier.dart';
+import 'package:furniture_shop/Providers/customer_provider.dart';
+import 'package:furniture_shop/Providers/supplier_provider.dart';
 import 'package:furniture_shop/Widgets/AppBarButton.dart';
+import 'package:furniture_shop/localization/app_localization.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:provider/provider.dart';
 import 'package:staggered_grid_view_flutter/widgets/staggered_grid_view.dart';
 import 'package:staggered_grid_view_flutter/widgets/staggered_tile.dart';
 
@@ -20,6 +26,31 @@ class VisitStore extends StatefulWidget {
 
 class _VisitStoreState extends State<VisitStore> {
   bool following = false;
+  late Customer customer;
+  late Supplier supplier;
+  @override
+  void initState() {
+    _getCurrentCustomer();
+    _getSupplier();
+    super.initState();
+  }
+
+  _getCurrentCustomer() async {
+    customer = await context
+        .read<CustomerProvider>()
+        .getCurrentCustomer()
+        .then((value) => value);
+
+    setState(() {
+      following = customer.following!.contains(widget.supplierID);
+    });
+  }
+
+  _getSupplier() async {
+    supplier =
+        await context.read<SupplierProvider>().getSupplier(widget.supplierID);
+    setState(() {});
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -59,7 +90,10 @@ class _VisitStoreState extends State<VisitStore> {
                           'assets/Images/Images/boarding.png',
                           fit: BoxFit.cover,
                         )
-                      : Image.network(data['storeCoverImage'],fit: BoxFit.cover,),
+                      : Image.network(
+                          data['storeCoverImage'],
+                          fit: BoxFit.cover,
+                        ),
                   Container(
                     decoration: const BoxDecoration(
                       gradient: LinearGradient(
@@ -120,7 +154,7 @@ class _VisitStoreState extends State<VisitStore> {
                             ),
                           ),
                           Text(
-                            '110 followers',
+                            "${supplier.follower?.length.toString() ?? '0'} ${context.localize('follower')}",
                             style: GoogleFonts.nunito(
                               fontSize: 15,
                               fontWeight: FontWeight.w400,
@@ -129,37 +163,52 @@ class _VisitStoreState extends State<VisitStore> {
                           ),
                         ],
                       ),
-                     GestureDetector(
-                              onTap: () {
-                                setState(() {
-                                  following = !following;
-                                });
-                              },
-                              child: Container(
-                                  width: 110,
-                                  height: 35,
-                                  margin: const EdgeInsets.all(10),
-                                  decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(15),
-                                    border: Border.all(
-                                        width: 2, color: AppColor.white),
-                                  ),
-                                  child: following == true
-                                      ? Center(
-                                          child: Text(
-                                            'Following',
-                                            style: GoogleFonts.nunito(
-                                                color: AppColor.white),
-                                          ),
-                                        )
-                                      : Center(
-                                          child: Text(
-                                            '+ Follow',
-                                            style: GoogleFonts.nunito(
-                                                color: AppColor.white),
-                                          ),
-                                        )),
+                      GestureDetector(
+                        onTap: () {
+                          if (following) {
+                            customer.following?.remove(widget.supplierID);
+                            supplier.follower?.remove(customer.cid);
+                          } else {
+                            customer.following?.add(widget.supplierID);
+                            supplier.follower?.add(customer.cid);
+                          }
+                          context
+                              .read<CustomerProvider>()
+                              .updateCurrentCustomer(
+                                  following: customer.following);
+
+                          context.read<SupplierProvider>().updateSupplier(
+                              supplier.sid,
+                              follower: supplier.follower);
+                          setState(() {
+                            following = !following;
+                          });
+                        },
+                        child: Container(
+                            width: 110,
+                            height: 35,
+                            margin: const EdgeInsets.all(10),
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(15),
+                              border:
+                                  Border.all(width: 2, color: AppColor.white),
                             ),
+                            child: following == true
+                                ? Center(
+                                    child: Text(
+                                      'Following',
+                                      style: GoogleFonts.nunito(
+                                          color: AppColor.white),
+                                    ),
+                                  )
+                                : Center(
+                                    child: Text(
+                                      '+ Follow',
+                                      style: GoogleFonts.nunito(
+                                          color: AppColor.white),
+                                    ),
+                                  )),
+                      ),
                     ],
                   ),
                 ],

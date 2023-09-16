@@ -11,32 +11,30 @@ class CustomerRepositoryImpl implements CustomerRepository {
             userFirestoreService ?? CustomerFirestoreService();
 
   @override
-  Future<void> addUser(Customer user) {
-    return _userFirestoreService.addUser(user);
+  Future<void> addCustomer(Customer user) {
+    return _userFirestoreService.addCustomer(user);
   }
 
   @override
-  Future<void> deleteUser(String userID) {
-    return _userFirestoreService.deleteUser(userID);
+  Future<void> deleteCustomer(String userID) {
+    return _userFirestoreService.deleteCustomer(userID);
   }
 
   @override
-  Future<Customer> getUser(String userID) {
-    return _userFirestoreService.getUser(userID);
+  Future<Customer> getCustomer(String userID) {
+    return _userFirestoreService.getCustomer(userID);
   }
 
   @override
-  Future<void> updateUser(String userID,
-      {List<String>? role,
-      String? name,
+  Future<void> updateCustomer(String userID,
+      {String? name,
       String? email,
       String? phone,
       String? profileimage,
       List<String>? following,
       List<Address>? shippingAddresses,
       bool? isDeleted}) {
-    return _userFirestoreService.updateUser(userID,
-        role: role,
+    return _userFirestoreService.updateCustomer(userID,
         name: name,
         email: email,
         phone: phone,

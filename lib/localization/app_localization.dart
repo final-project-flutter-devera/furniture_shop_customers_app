@@ -121,6 +121,7 @@ class AppLocalization {
       'payment_method_description': 'You have %variable cards',
       'my_reviews_option': 'My reviews',
       'my_reviews_description': 'Reviews for %variable items',
+      'followed_suppliers_option': 'Followed Suppliers',
       'setting_option': 'Setting',
       'setting_description': 'Notification, Password, FAQ, Contact,...',
 
@@ -191,6 +192,10 @@ class AppLocalization {
       'label_card_holder_name': 'Ex: Bruno Pham',
       'label_cvv': 'CVV',
 
+      ///Following Supplier
+      'label_no_supplier_followed': 'You are not following any stores',
+      'label_search_for_supplier': 'Search for a supplier',
+
       ///Setting
       'label_personal_information': 'Personal Information',
       // 'label_name': ,
@@ -203,6 +208,11 @@ class AppLocalization {
       'label_help_center': 'Help Center',
       'label_faq': 'FAQ',
       'label_contact': 'Contact us',
+
+      //Store Page
+      'follower': 'Followers',
+      'label_follow': 'Follow',
+      'label_following': 'Following',
     },
     'vi': <String, String>{
       //general
@@ -304,6 +314,7 @@ class AppLocalization {
       'payment_methods_option': 'Phương thức thanh toán',
       'payment_method_description': 'Banh có %variable thẻ',
       'my_reviews_option': 'Nhận xét của tôi',
+      'followed_suppliers_option': 'Cửa hàng đang theo dõi',
       'my_reviews_description': 'Nhận xét cho %variable vật phẩm',
       'setting_option': 'Tùy chỉnh',
       'setting_description':
@@ -375,6 +386,10 @@ class AppLocalization {
       'label_card_holder_name': 'VD: Phạm Văn A',
       'label_cvv': 'CVV',
 
+      ///Following Supplier
+      'label_no_supplier_followed': 'Bạn chưa theo dõi người bán nào',
+      'label_search_for_supplier': 'Tìm một người bán',
+
       ///Setting
       'label_personal_information': 'Thông tin cá nhân',
       // 'label_name': ,
@@ -387,6 +402,11 @@ class AppLocalization {
       'label_help_center': 'Trung tâm trợ giúp',
       'label_faq': 'Câu hỏi thường gặp',
       'label_contact': 'Liên hệ chúng tôi',
+
+      //Store Page
+      'follower': 'Người theo dõi',
+      'label_follow': 'Theo dõi',
+      'label_following': 'Đang theo dõi',
     },
   };
 }

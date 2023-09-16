@@ -3,25 +3,23 @@ import 'package:flutter/material.dart';
 import 'package:furniture_shop/Constants/Colors.dart';
 import 'package:furniture_shop/Constants/style.dart';
 import 'package:furniture_shop/Objects/address.dart';
-import 'package:furniture_shop/Screen/16.%20ProfileRoutes/MyShippingAddress/Components/app_text_field.dart';
-import 'package:furniture_shop/Screen/16.%20ProfileRoutes/MyShippingAddress/pick_location.dart';
+import 'package:furniture_shop/Screen/16.%20ProfileRoutes/my_shipping_address/components/app_text_field.dart';
+import 'package:furniture_shop/Screen/16.%20ProfileRoutes/my_shipping_address/pick_location.dart';
 import 'package:furniture_shop/Widgets/action_button.dart';
 import 'package:furniture_shop/Widgets/default_app_bar.dart';
 import 'package:furniture_shop/localization/app_localization.dart';
 import 'package:google_fonts/google_fonts.dart';
 
-class EditShippingAddress extends StatefulWidget {
-  final Address address;
-
+class AddShipingAddress extends StatefulWidget {
   final ValueChanged<Address> onTap;
 
-  EditShippingAddress({super.key, required this.address, required this.onTap});
+  AddShipingAddress({super.key, required this.onTap});
 
   @override
-  State<EditShippingAddress> createState() => _EditShippingAddressState();
+  State<AddShipingAddress> createState() => _AddShippingAddressState();
 }
 
-class _EditShippingAddressState extends State<EditShippingAddress> {
+class _AddShippingAddressState extends State<AddShipingAddress> {
   // String? countryValue = '';
   // String? cityValue = '';
   // String? districtValue = '';
@@ -39,24 +37,20 @@ class _EditShippingAddressState extends State<EditShippingAddress> {
   final TextEditingController countryController = TextEditingController();
 
   @override
-  void initState() {
-    countryController.text = widget.address.country ?? '';
-    districtController.text = widget.address.district ?? '';
-    cityController.text = widget.address.city ?? '';
-    nameController.text = widget.address.name;
-    streetController.text = widget.address.street ?? '';
-    zipcodeController.text = widget.address.zipCode ?? '';
-    placeController.text = widget.address.place ?? '';
-    super.initState();
+  void dispose() {
+    nameController.dispose();
+    streetController.dispose();
+    zipcodeController.dispose();
+    super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      resizeToAvoidBottomInset: false,
+      resizeToAvoidBottomInset: true,
       appBar: DefaultAppBar(
           context: context,
-          title: context.localize('app_bar_title_edit_shipping_address')),
+          title: context.localize('add_shipping_address_app_bar_title')),
       body: Form(
         key: _formKey,
         child: ListView(children: [
@@ -238,7 +232,7 @@ class _EditShippingAddressState extends State<EditShippingAddress> {
                     //           context.localize('error_message_empty_address');
                     //     });
                     //   }
-                    //}
+                    // }
                   })),
         ]),
       ),

@@ -9,6 +9,7 @@ import 'package:furniture_shop/Providers/Cart_Provider.dart';
 import 'package:furniture_shop/Providers/Favorites_Provider.dart';
 import 'package:furniture_shop/Providers/SQL_helper.dart';
 import 'package:furniture_shop/Providers/customer_provider.dart';
+import 'package:furniture_shop/Providers/supplier_provider.dart';
 import 'package:furniture_shop/localization/localization_delegate.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -46,7 +47,8 @@ void main() async {
       providers: [
         ChangeNotifierProvider(create: (_) => Cart()),
         ChangeNotifierProvider(create: (_) => Favorites()),
-        ChangeNotifierProvider(create: (_) => CustomerProdivder()),
+        ChangeNotifierProvider(create: (_) => CustomerProvider()),
+        ChangeNotifierProvider(create: (_) => SupplierProvider()),
       ],
       child: const MyApp(),
     ),

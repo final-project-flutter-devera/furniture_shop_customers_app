@@ -5,9 +5,9 @@ import 'package:furniture_shop/Providers/Auth_reponse.dart';
 import 'package:furniture_shop/data/repository/customer_repository.dart';
 import 'package:furniture_shop/data/repository/customer_repository_implement.dart';
 
-class CustomerProdivder extends ChangeNotifier {
+class CustomerProvider extends ChangeNotifier {
   late CustomerRepository _userRepository;
-  CustomerProdivder() {
+  CustomerProvider() {
     _userRepository = CustomerRepositoryImpl();
     _init();
   }
@@ -15,27 +15,28 @@ class CustomerProdivder extends ChangeNotifier {
     notifyListeners();
   }
 
+  ///Only used to get customer ID when using customer app
   String getID() {
     return AuthRepo.uid;
   }
 
   void addUser(Customer user) async {
-    await _userRepository.addUser(user);
+    await _userRepository.addCustomer(user);
     notifyListeners();
   }
 
-  Future<Customer> getCurrentUser() async {
+  Future<Customer> getCurrentCustomer() async {
     Customer user;
-    user = await _userRepository.getUser(getID());
+    user = await _userRepository.getCustomer(getID());
     notifyListeners();
     return user;
   }
 
-  Future<Customer> getUser(String userID) async {
-    Customer user;
-    user = await _userRepository.getUser(userID);
+  Future<Customer> getCustomer(String customerID) async {
+    Customer customer;
+    customer = await _userRepository.getCustomer(customerID);
     notifyListeners();
-    return user;
+    return customer;
   }
 
   ///Call updateUser instead
@@ -54,17 +55,33 @@ class CustomerProdivder extends ChangeNotifier {
   //   notifyListeners();
   // }
 
-  void updateUser(
-      {List<String>? role,
-      String? name,
+  void updateCurrentCustomer(
+      {String? name,
       String? email,
       String? phone,
       String? profileimage,
       List<String>? following,
       List<Address>? shippingAddress,
       bool? isDeleted}) {
-    _userRepository.updateUser(getID(),
-        role: role,
+    _userRepository.updateCustomer(getID(),
+        name: name,
+        email: email,
+        phone: phone,
+        profileimage: profileimage,
+        following: following,
+        shippingAddresses: shippingAddress,
+        isDeleted: isDeleted);
+  }
+
+  void updateCustomer(String customerID,
+      {String? name,
+      String? email,
+      String? phone,
+      String? profileimage,
+      List<String>? following,
+      List<Address>? shippingAddress,
+      bool? isDeleted}) {
+    _userRepository.updateCustomer(customerID,
         name: name,
         email: email,
         phone: phone,
