@@ -1,36 +1,35 @@
 import 'package:furniture_shop/Objects/address.dart';
 
 class Customer {
-  final String id;
+  final String cid;
   String name;
-  String? emailAddress;
-  String? phoneNumber;
-  String? avatar;
+  String? email;
+  String? phone;
+  String? profileimage;
+  String? role;
   List<String>? following;
-  List<String>? follower;
   List<Address> shippingAddress;
-  bool isDeleted;
+  bool? isDeleted;
 
   Customer(
-      {required this.id,
+      {required this.cid,
       required this.name,
-      this.emailAddress,
-      this.phoneNumber = '',
-      this.avatar,
+      this.email,
+      this.phone = '',
+      this.profileimage,
+      this.role,
       this.isDeleted = false,
       this.following,
-      this.follower,
       this.shippingAddress = const []});
 
   Map<String, dynamic> toJson() {
     return {
-      'id': id,
+      'cid': cid,
       'name': name,
-      'emailAddress': emailAddress,
-      'phoneNumber': phoneNumber,
-      'avatar': avatar,
+      'email': email,
+      'phone': phone,
+      'profileimage': profileimage,
       'following': following,
-      'follower': follower,
       'isDeleted': isDeleted,
       //TODO: TO JSON FOR SHIPPING ADDRESS
       'shippingAddress': shippingAddress.map(
@@ -41,12 +40,11 @@ class Customer {
 
   factory Customer.fromJson(Map<String, dynamic> json) {
     return Customer(
-      id: json['id'],
+      cid: json['cid'],
       name: json['name'],
-      emailAddress: json['emailAddress'],
-      phoneNumber: json['phoneNumber'],
-      avatar: json['avatar'],
-      follower: (json['follower'] as List?)?.map((e) => e as String).toList(),
+      email: json['email'],
+      phone: json['phone'],
+      profileimage: json['profileimage'],
       following: (json['following'] as List?)?.map((e) => e as String).toList(),
       isDeleted: json['isDeleted'],
       shippingAddress: (json['shippingAddress'] as List<dynamic>)

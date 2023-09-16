@@ -49,28 +49,16 @@ class _SignupState extends State<Signup> {
             await AuthRepo.updateDisplayName(name);
             await AuthRepo.sendVerificationEmail();
 
-<<<<<<< HEAD
             Customer _customer = Customer(
-              id: AuthRepo.uid,
+              cid: AuthRepo.uid,
               name: name,
-              emailAddress: email,
+              email: email,
+              role: 'customer',
             );
-
             await customers.doc(AuthRepo.uid).set(_customer.toJson());
-=======
-            await customers.doc(AuthRepo.uid).set({
-              'name': name,
-              'email': email,
-              'phone': '',
-              'address': '',
-              'profileimage': '',
-              'role': 'customer',
-              'cid': AuthRepo.uid,
-            });
 
             await checkUID.doc(email).set({'uid': AuthRepo.uid});
 
->>>>>>> beda3f4e355f7abcbb08ac4c7ab634644a19234f
             _formKey.currentState!.reset();
             if (context.mounted) {
               Navigator.pushReplacementNamed(context, '/Login_cus');

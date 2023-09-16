@@ -47,7 +47,7 @@ class _AddShippingAddressState extends State<AddShipingAddress> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      resizeToAvoidBottomInset: false,
+      resizeToAvoidBottomInset: true,
       appBar: DefaultAppBar(
           context: context,
           title: context.localize('add_shipping_address_app_bar_title')),

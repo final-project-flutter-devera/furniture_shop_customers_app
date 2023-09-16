@@ -10,9 +10,9 @@ class CustomerFirestoreService implements CustomerDataService {
   @override
   Future<void> addUser(Customer customer) {
     return customers
-        .doc(customer.id)
+        .doc(customer.cid)
         .set(customer.toJson())
-        .then((value) => debugPrint('Added a User with ID: ${customer.id}'))
+        .then((value) => debugPrint('Added a User with ID: ${customer.cid}'))
         .catchError((error) => debugPrint('Failed to add a User: $error'));
   }
 
@@ -42,22 +42,20 @@ class CustomerFirestoreService implements CustomerDataService {
     String customerID, {
     List<String>? role,
     String? name,
-    String? emailAddres,
-    String? phoneNumber,
-    String? avatar,
+    String? email,
+    String? phone,
+    String? profileimage,
     List<String>? following,
-    List<String>? follower,
     List<Address>? shippingAddresses,
     bool? isDeleted,
   }) {
     final updates = {
       if (role != null) 'role': role,
       if (name != null) 'name': name,
-      if (emailAddres != null) 'emailAddres': emailAddres,
-      if (phoneNumber != null) 'phoneNumber': phoneNumber,
-      if (avatar != null) 'avatar': avatar,
+      if (email != null) 'email': email,
+      if (phone != null) 'phone': phone,
+      if (profileimage != null) 'profileimage': profileimage,
       if (following != null) 'following': following,
-      if (follower != null) 'follower': follower,
       if (shippingAddresses != null)
         'shippingAddress': shippingAddresses.map((e) => e.toJson()),
       if (isDeleted != null) 'isDeleted': isDeleted,

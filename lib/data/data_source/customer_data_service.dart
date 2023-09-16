@@ -7,11 +7,10 @@ abstract class CustomerDataService {
     String userID, {
     List<String>? role,
     String? name,
-    String? emailAddres,
-    String? phoneNumber,
-    String? avatar,
+    String? email,
+    String? phone,
+    String? profileimage,
     List<String>? following,
-    List<String>? follower,
     List<Address>? shippingAddresses,
     bool? isDeleted,
   });

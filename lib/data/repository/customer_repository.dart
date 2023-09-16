@@ -7,12 +7,11 @@ abstract class CustomerRepository {
     String userID, {
     List<String>? role,
     String? name,
-    String? emailAddres,
-    String? phoneNumber,
-    String? avatar,
+    String? email,
+    String? phone,
+    String? profileimage,
     List<String>? following,
     List<Address>? shippingAddresses,
-    List<String>? follower,
     bool? isDeleted,
   });
   Future<void> deleteUser(String userID);

@@ -68,29 +68,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
   Widget build(BuildContext context) {
     print('ID: $documentId');
     final wMQ = MediaQuery.of(context).size.width;
-    return IconButton(
-      icon: SvgPicture.asset('assets/Images/Icons/Logout.svg',
-          height: 24, width: 24),
-      onPressed: () async {
-        MyAlertDialog.showMyDialog(
-          context: context,
-          title: 'Log out',
-          content: 'Are you sure log out?',
-          tabNo: () {
-            Navigator.pop(context);
-          },
-          tabYes: () async {
-            await FirebaseAuth.instance.signOut();
-            final SharedPreferences prefs = await _prefs;
-            prefs.setString('customerID', '');
-            if (context.mounted) {
-              Navigator.pop(context);
-              Navigator.pushReplacementNamed(context, '/Welcome_boarding');
-            }
-          },
-        );
-      },
-    );
+
     return FutureBuilder<DocumentSnapshot>(
       future: FirebaseAuth.instance.currentUser!.isAnonymous
           ? anonymous.doc(documentId).get()
@@ -167,7 +145,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
                           CircleAvatar(
                             backgroundColor: AppColor.amber,
                             radius: 45,
-                            child: data['profileimage'] == ''
+                            child: data['profileimage'] == null ||
+                                    data['profileimage'] == ''
                                 ? const CircleAvatar(
                                     backgroundColor: AppColor.white,
                                     radius: 40,
