@@ -595,9 +595,9 @@ class AddressSearchDelegate extends SearchDelegate {
               final double latitude = thisResult['geometry']['coordinates'][1];
               final double longitude = thisResult['geometry']['coordinates'][0];
 
-              final String addressString = thisResult['place_name'];
+              final String? addressString = thisResult['place_name'];
 
-              final String street = thisResult['text'];
+              final String? street = thisResult['text'];
               final List<dynamic> context = thisResult['context'];
               String? zipCode;
               String? place;
@@ -642,7 +642,7 @@ class AddressSearchDelegate extends SearchDelegate {
                     close(this.context, null);
                   },
                   title: Text(
-                    addressString,
+                    addressString ?? '',
                     style: AppStyle.secondary_text_style,
                     maxLines: 3,
                     overflow: TextOverflow.ellipsis,
