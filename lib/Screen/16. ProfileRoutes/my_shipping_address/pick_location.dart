@@ -112,6 +112,7 @@ class _PickLocationState extends State<PickLocation>
     currentLocation = thisResult['place_name'];
     currentAddress = Address(
         name: '',
+        phone: '',
         street: street,
         place: place,
         district: district,
@@ -207,6 +208,7 @@ class _PickLocationState extends State<PickLocation>
     chosenLocation = thisResult['place_name'];
     selectedAddress = Address(
         name: '',
+        phone: '',
         street: street,
         place: place,
         district: district,
@@ -511,13 +513,13 @@ class AddressSearchDelegate extends SearchDelegate {
               final String addressString = thisResult['place_name'];
 
               final String street = thisResult['text'];
-              final List<dynamic> context = thisResult['context'];
+              final List<dynamic>? context = thisResult['context'];
               String? zipCode;
               String? place;
               String? district;
               String? region;
               String? country;
-              context.forEach((element) {
+              context?.forEach((element) {
                 if ((element['id'] as String).contains('place')) {
                   place = element['text'];
                 }
@@ -544,6 +546,7 @@ class AddressSearchDelegate extends SearchDelegate {
                   onTap: () {
                     onSelected.call(Address(
                         name: '',
+                        phone: '',
                         street: street,
                         place: place,
                         district: district,
@@ -598,13 +601,13 @@ class AddressSearchDelegate extends SearchDelegate {
               final String? addressString = thisResult['place_name'];
 
               final String? street = thisResult['text'];
-              final List<dynamic> context = thisResult['context'];
+              final List<dynamic>? context = thisResult['context'];
               String? zipCode;
               String? place;
               String? district;
               String? region;
               String? country;
-              context.forEach((element) {
+              context?.forEach((element) {
                 if ((element['id'] as String).contains('place')) {
                   place = element['text'];
                 }
@@ -631,6 +634,7 @@ class AddressSearchDelegate extends SearchDelegate {
                   onTap: () {
                     onSelected.call(Address(
                         name: '',
+                        phone: '',
                         street: street,
                         place: place,
                         district: district,

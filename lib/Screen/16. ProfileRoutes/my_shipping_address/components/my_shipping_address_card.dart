@@ -74,7 +74,7 @@ class _MyShippingAddressCardState extends State<MyShippingAddressCard> {
                     const Spacer(),
                     IconButton(
                       padding: EdgeInsets.zero,
-                      constraints: BoxConstraints(),
+                      constraints: const BoxConstraints(),
                       onPressed: () {
                         Navigator.push(
                             context,
@@ -86,7 +86,7 @@ class _MyShippingAddressCardState extends State<MyShippingAddressCard> {
                                   }),
                             ));
                       },
-                      icon: Icon(
+                      icon: const Icon(
                         Icons.edit,
                         color: AppColor.black,
                         size: 24,
@@ -95,14 +95,14 @@ class _MyShippingAddressCardState extends State<MyShippingAddressCard> {
                     const Padding(padding: EdgeInsets.only(left: 20)),
                     IconButton(
                       padding: EdgeInsets.zero,
-                      constraints: BoxConstraints(),
+                      constraints: const BoxConstraints(),
                       onPressed: () {
                         DeleteAlertDialog.showAlertDialog(
                           context: context,
                           title: context
                               .localize('alert_box_title_delete_address'),
                           content:
-                              '${widget.address.zipCode}, ${widget.address.street}, ${widget.address.place}, ${widget.address.city}, ${widget.address.district}, ${widget.address.country}',
+                              '${widget.address.zipCode}, ${widget.address.street}, ${widget.address.place}, ${widget.address.city}, ${widget.address.district}, ${widget.address.country}\n${widget.address.phone}',
                           onNoPressed: () {
                             Navigator.pop(context);
                           },
@@ -111,7 +111,7 @@ class _MyShippingAddressCardState extends State<MyShippingAddressCard> {
                           },
                         );
                       },
-                      icon: Icon(
+                      icon: const Icon(
                         Icons.delete,
                         color: AppColor.black,
                         size: 24,
@@ -120,7 +120,7 @@ class _MyShippingAddressCardState extends State<MyShippingAddressCard> {
                   ]),
                 ),
                 const Padding(
-                  padding: const EdgeInsets.only(top: 5, bottom: 10),
+                  padding: EdgeInsets.only(top: 5, bottom: 10),
                   child: Divider(
                     color: AppColor.blur_grey,
                     thickness: 3,
