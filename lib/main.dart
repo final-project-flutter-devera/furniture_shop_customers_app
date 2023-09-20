@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
@@ -18,9 +19,19 @@ import 'Screen/1. Boarding/BoardingScreen.dart';
 import 'Screen/2. Login - Signup/Login.dart';
 import 'Screen/2. Login - Signup/Signup.dart';
 import 'Screen/3.CustomerHomeScreen/Screen/CustomerHomeScreen.dart';
+import 'Services/Notification_Service.dart';
 import 'firebase_options.dart';
 
 late SharedPreferences sharedPreferences;
+
+Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
+  print("Handling a background message: ${message.messageId}");
+  print("Handling a background message: ${message.notification!.title}");
+  print("Handling a background message: ${message.notification!.body}");
+  print("Handling a background message: ${message.data}");
+  print("Handling a background message: ${message.data['key1']}");
+}
+
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -33,6 +44,10 @@ void main() async {
 
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
+  NotificationService.checkPermission();
+  NotificationService.createNotificationChanelAndInitialize();
+  FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
+
   SystemChrome.setSystemUIOverlayStyle(const SystemUiOverlayStyle(
       statusBarColor: Colors.transparent,
       statusBarIconBrightness: Brightness.dark,

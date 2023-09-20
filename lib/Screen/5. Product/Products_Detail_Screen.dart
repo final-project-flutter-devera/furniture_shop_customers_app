@@ -53,16 +53,18 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
     var onSale = widget.products['discount'];
     double wMQ = MediaQuery.of(context).size.width;
     double hMQ = MediaQuery.of(context).size.height;
-    Stream<QuerySnapshot> _productsStream = FirebaseFirestore.instance
+    Stream<QuerySnapshot> productsStream() => FirebaseFirestore.instance
         .collection('products')
         .where('mainCategory', isEqualTo: widget.products['mainCategory'])
         .where('subCategory', isEqualTo: widget.products['subCategory'])
         .snapshots();
-    Stream<QuerySnapshot> reviewStream = FirebaseFirestore.instance
+    final _productsStream = productsStream();
+    Stream<QuerySnapshot> reviewStream() => FirebaseFirestore.instance
         .collection('products')
         .doc(widget.products['proID'])
         .collection('reviews')
         .snapshots();
+    final _reviewStream = reviewStream();
     late List<dynamic> imagesList = widget.products['proImages'];
     CollectionReference suppliers =
         FirebaseFirestore.instance.collection('Suppliers');
@@ -458,7 +460,7 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                           tapBodyToCollapse: true,
                           tapBodyToExpand: true,
                           tapHeaderToExpand: true),
-                      child: review(reviewStream),
+                      child: review(_reviewStream),
                     ),
                     const SizedBox(height: 10),
                     const TitleDivider(
@@ -743,7 +745,7 @@ Widget reviewAll(var reviewStream) {
       }
 
       if (snapshot3.connectionState == ConnectionState.waiting) {
-        return const CircularProgressIndicator();
+        return const Center(child: CircularProgressIndicator());
       }
 
       return ListView.builder(
