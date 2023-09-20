@@ -1,8 +1,11 @@
+import 'package:double_tap_to_exit/double_tap_to_exit.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:furniture_shop/Constants/Colors.dart';
 import 'package:furniture_shop/Providers/Favorites_Provider.dart';
+import 'package:google_fonts/google_fonts.dart';
 import '../../../Providers/Cart_Provider.dart';
 import '../../../Services/Notification_Service.dart';
 import 'Components/HomeScreen.dart';
@@ -25,6 +28,7 @@ class _CustomerHomeScreen extends State<CustomerHomeScreen> {
     const NotificationScreen(),
     const ProfileScreen(),
   ];
+
   @override
   void initState() {
     WidgetsBinding.instance.addPostFrameCallback((_) {
@@ -48,39 +52,48 @@ class _CustomerHomeScreen extends State<CustomerHomeScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: _tabs[_selectIndex],
-      bottomNavigationBar: BottomNavigationBar(
-        type: BottomNavigationBarType.fixed,
-        selectedLabelStyle: const TextStyle(
-          fontWeight: FontWeight.w500,
+    return DoubleTapToExit(
+      snackBar: SnackBar(
+        content: Text(
+          "Tag again to exit !",
+          style: GoogleFonts.nunito(color: AppColor.black),
         ),
-        currentIndex: _selectIndex,
-        elevation: 0,
-        selectedItemColor: Colors.black,
-        items: const [
-          BottomNavigationBarItem(
-            icon: Icon(Icons.home),
-            label: 'Home',
+        backgroundColor: AppColor.amber,
+      ),
+      child: Scaffold(
+        body: _tabs[_selectIndex],
+        bottomNavigationBar: BottomNavigationBar(
+          type: BottomNavigationBarType.fixed,
+          selectedLabelStyle: const TextStyle(
+            fontWeight: FontWeight.w500,
           ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.bookmark),
-            label: 'Favorites',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.notifications),
-            label: 'Notifications',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.person),
-            label: 'Profile',
-          ),
-        ],
-        onTap: (index) {
-          setState(() {
-            _selectIndex = index;
-          });
-        },
+          currentIndex: _selectIndex,
+          elevation: 0,
+          selectedItemColor: Colors.black,
+          items: const [
+            BottomNavigationBarItem(
+              icon: Icon(Icons.home),
+              label: 'Home',
+            ),
+            BottomNavigationBarItem(
+              icon: Icon(Icons.bookmark),
+              label: 'Favorites',
+            ),
+            BottomNavigationBarItem(
+              icon: Icon(Icons.notifications),
+              label: 'Notifications',
+            ),
+            BottomNavigationBarItem(
+              icon: Icon(Icons.person),
+              label: 'Profile',
+            ),
+          ],
+          onTap: (index) {
+            setState(() {
+              _selectIndex = index;
+            });
+          },
+        ),
       ),
     );
   }

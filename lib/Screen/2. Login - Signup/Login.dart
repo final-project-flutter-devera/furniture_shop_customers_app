@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:double_tap_to_exit/double_tap_to_exit.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_facebook_auth/flutter_facebook_auth.dart';
@@ -170,302 +171,315 @@ class _LoginState extends State<Login> {
     double wMQ = MediaQuery.of(context).size.width;
     return ScaffoldMessenger(
       key: _scaffoldKey,
-      child: Scaffold(
-        resizeToAvoidBottomInset: false,
-        body: SafeArea(
-          child: SingleChildScrollView(
-            keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
-            child: Form(
-              key: _formKey,
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  LogoLoginSignup(wMQ: wMQ),
-                  const TextLoginSignup(
-                    label: 'Hello' + '\n',
-                    label2: 'WELCOME BACK',
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.all(20),
-                    child: PhysicalModel(
-                      color: Colors.white,
-                      elevation: 3,
-                      child: Padding(
-                        padding: const EdgeInsets.all(20),
-                        child: Column(
-                          children: [
-                            Padding(
-                              padding: const EdgeInsets.all(20),
-                              child: Column(
-                                children: [
-                                  TextFormField(
-                                    validator: (value) {
-                                      if (value!.isEmpty) {
-                                        MyMessageHandler.showSnackBar(
-                                          _scaffoldKey,
-                                          'please enter your email',
-                                        );
-                                        return 'please enter your email';
-                                      } else if (value.isValidEmail() ==
-                                          false) {
-                                        MyMessageHandler.showSnackBar(
-                                          _scaffoldKey,
-                                          'invalid email',
-                                        );
-                                        return 'invalid email';
-                                      } else if (value.isValidEmail() == true) {
+      child: DoubleTapToExit(
+        snackBar: SnackBar(
+          content: Text(
+            "Tag again to exit !",
+            style: GoogleFonts.nunito(color: AppColor.black),
+          ),
+          backgroundColor: AppColor.amber,
+        ),
+        child: Scaffold(
+          resizeToAvoidBottomInset: false,
+          body: SafeArea(
+            child: SingleChildScrollView(
+              keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
+              child: Form(
+                key: _formKey,
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    LogoLoginSignup(wMQ: wMQ),
+                    const TextLoginSignup(
+                      label: 'Hello' + '\n',
+                      label2: 'WELCOME BACK',
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.all(20),
+                      child: PhysicalModel(
+                        color: Colors.white,
+                        elevation: 3,
+                        child: Padding(
+                          padding: const EdgeInsets.all(20),
+                          child: Column(
+                            children: [
+                              Padding(
+                                padding: const EdgeInsets.all(20),
+                                child: Column(
+                                  children: [
+                                    TextFormField(
+                                      validator: (value) {
+                                        if (value!.isEmpty) {
+                                          MyMessageHandler.showSnackBar(
+                                            _scaffoldKey,
+                                            'please enter your email',
+                                          );
+                                          return 'please enter your email';
+                                        } else if (value.isValidEmail() ==
+                                            false) {
+                                          MyMessageHandler.showSnackBar(
+                                            _scaffoldKey,
+                                            'invalid email',
+                                          );
+                                          return 'invalid email';
+                                        } else if (value.isValidEmail() == true) {
+                                          return null;
+                                        }
                                         return null;
-                                      }
-                                      return null;
-                                    },
-                                    onChanged: (value) {
-                                      setState(() {
-                                        email = value;
-                                      });
-                                    },
-                                    textCapitalization:
-                                        TextCapitalization.characters,
-                                    decoration: InputDecoration(
-                                      labelText: 'Mail',
-                                      labelStyle: GoogleFonts.nunito(
-                                        fontSize: 14,
-                                        fontWeight: FontWeight.w400,
-                                        color: const Color(0xFF909090),
-                                      ),
-                                    ),
-                                  ),
-                                  const SizedBox(height: 10),
-                                  TextFormField(
-                                    validator: (value) {
-                                      if (value!.isEmpty) {
-                                        return 'Please enter your password';
-                                      }
-                                      return null;
-                                    },
-                                    onChanged: (value) {
-                                      setState(() {
-                                        password = value;
-                                      });
-                                    },
-                                    obscureText: !visiblePassword,
-                                    decoration: InputDecoration(
-                                      labelText: 'Password',
-                                      labelStyle: GoogleFonts.nunito(
-                                        fontSize: 14,
-                                        fontWeight: FontWeight.w400,
-                                        color: const Color(0xFF909090),
-                                      ),
-                                      suffixIcon: IconButton(
-                                        onPressed: () {
-                                          setState(() {
-                                            visiblePassword = !visiblePassword;
-                                          });
-                                        },
-                                        icon: Icon(visiblePassword
-                                            ? Icons.visibility
-                                            : Icons.visibility_off),
-                                      ),
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ),
-                            Container(
-                              constraints: const BoxConstraints(minHeight: 10),
-                              child: resendVerification == true
-                                  ? ClipRRect(
-                                      borderRadius: BorderRadius.circular(50),
-                                      child: MaterialButton(
-                                        color: AppColor.amber,
-                                        onPressed: () async {
-                                          try {
-                                            await FirebaseAuth
-                                                .instance.currentUser!
-                                                .sendEmailVerification();
-                                            Future.delayed(
-                                                    const Duration(seconds: 3))
-                                                .whenComplete(() {
-                                              setState(() {
-                                                resendVerification = false;
-                                              });
-                                            });
-                                          } catch (e) {
-                                            print(e);
-                                          }
-                                        },
-                                        child: Text(
-                                          'Resend verification mail (click)',
-                                          style: GoogleFonts.nunito(
-                                              fontSize: 16,
-                                              color: AppColor.black),
+                                      },
+                                      onChanged: (value) {
+                                        setState(() {
+                                          email = value;
+                                        });
+                                      },
+                                      textCapitalization:
+                                          TextCapitalization.characters,
+                                      decoration: InputDecoration(
+                                        labelText: 'Mail',
+                                        labelStyle: GoogleFonts.nunito(
+                                          fontSize: 14,
+                                          fontWeight: FontWeight.w400,
+                                          color: const Color(0xFF909090),
                                         ),
                                       ),
-                                    )
-                                  : const SizedBox.shrink(),
-                            ),
-                            Padding(
-                              padding: const EdgeInsets.all(10),
-                              child: InkWell(
-                                onTap: () {
-                                  Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                          builder: (context) =>
-                                              const ForgotPass()));
-                                },
-                                child: Text(
-                                  'Forgot Password? (click)',
-                                  style: GoogleFonts.nunito(
-                                    fontSize: 18,
-                                    fontWeight: FontWeight.w600,
-                                    color: const Color(0xFF303030),
+                                    ),
+                                    const SizedBox(height: 10),
+                                    TextFormField(
+                                      validator: (value) {
+                                        if (value!.isEmpty) {
+                                          return 'Please enter your password';
+                                        }
+                                        return null;
+                                      },
+                                      onChanged: (value) {
+                                        setState(() {
+                                          password = value;
+                                        });
+                                      },
+                                      obscureText: !visiblePassword,
+                                      decoration: InputDecoration(
+                                        labelText: 'Password',
+                                        labelStyle: GoogleFonts.nunito(
+                                          fontSize: 14,
+                                          fontWeight: FontWeight.w400,
+                                          color: const Color(0xFF909090),
+                                        ),
+                                        suffixIcon: IconButton(
+                                          onPressed: () {
+                                            setState(() {
+                                              visiblePassword = !visiblePassword;
+                                            });
+                                          },
+                                          icon: Icon(visiblePassword
+                                              ? Icons.visibility
+                                              : Icons.visibility_off),
+                                        ),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                              Container(
+                                constraints: const BoxConstraints(minHeight: 10),
+                                child: resendVerification == true
+                                    ? ClipRRect(
+                                        borderRadius: BorderRadius.circular(50),
+                                        child: MaterialButton(
+                                          color: AppColor.amber,
+                                          onPressed: () async {
+                                            try {
+                                              await FirebaseAuth
+                                                  .instance.currentUser!
+                                                  .sendEmailVerification();
+                                              Future.delayed(
+                                                      const Duration(seconds: 3))
+                                                  .whenComplete(() {
+                                                setState(() {
+                                                  resendVerification = false;
+                                                });
+                                              });
+                                            } catch (e) {
+                                              print(e);
+                                            }
+                                          },
+                                          child: Text(
+                                            'Resend verification mail (click)',
+                                            style: GoogleFonts.nunito(
+                                                fontSize: 16,
+                                                color: AppColor.black),
+                                          ),
+                                        ),
+                                      )
+                                    : const SizedBox.shrink(),
+                              ),
+                              Padding(
+                                padding: const EdgeInsets.all(10),
+                                child: InkWell(
+                                  onTap: () {
+                                    Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                            builder: (context) =>
+                                                const ForgotPass()));
+                                  },
+                                  child: Text(
+                                    'Forgot Password? (click)',
+                                    style: GoogleFonts.nunito(
+                                      fontSize: 18,
+                                      fontWeight: FontWeight.w600,
+                                      color: const Color(0xFF303030),
+                                    ),
                                   ),
                                 ),
                               ),
-                            ),
-                            const SizedBox(height: 10),
-                            Padding(
-                              padding: const EdgeInsets.all(10),
-                              child: processingAccountMail == true
-                                  ? const CircularProgressIndicator()
-                                  : InkWell(
-                                      onTap: () {
-                                        signIn();
-                                      },
-                                      child: Container(
-                                        height: 50,
-                                        width: wMQ * 0.65,
-                                        decoration: BoxDecoration(
-                                          color: Colors.black,
-                                          borderRadius:
-                                              BorderRadius.circular(8),
-                                        ),
-                                        child: Center(
-                                          child: Text(
-                                            'Log in',
-                                            style: GoogleFonts.nunito(
-                                              fontSize: 18,
-                                              fontWeight: FontWeight.w600,
-                                              color: AppColor.white,
+                              const SizedBox(height: 10),
+                              Padding(
+                                padding: const EdgeInsets.all(10),
+                                child: processingAccountMail == true
+                                    ? const CircularProgressIndicator()
+                                    : InkWell(
+                                        onTap: () {
+                                          signIn();
+                                        },
+                                        child: Container(
+                                          height: 50,
+                                          width: wMQ * 0.65,
+                                          decoration: BoxDecoration(
+                                            color: Colors.black,
+                                            borderRadius:
+                                                BorderRadius.circular(8),
+                                          ),
+                                          child: Center(
+                                            child: Text(
+                                              'Log in',
+                                              style: GoogleFonts.nunito(
+                                                fontSize: 18,
+                                                fontWeight: FontWeight.w600,
+                                                color: AppColor.white,
+                                              ),
                                             ),
                                           ),
                                         ),
                                       ),
-                                    ),
-                            ),
-                            const SizedBox(height: 10),
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                              children: [
-                                SocialLogin(
-                                  image: 'assets/Images/Icons/google.jpg',
-                                  label: 'Google',
-                                  onPressed: () {
-                                    signInWithGoogle();
-                                  },
-                                ),
-                                /*SocialLogin(
-                                  image: 'assets/Images/Icons/fb.png',
-                                  label: 'Facebook',
-                                  onPressed: () async {
-                                    try {
-                                      final UserCredential userCredential =
-                                          await signInWithFacebook();
-                                      _uid = AuthRepo.uid;
-                                      await customers.doc(_uid).set(
-                                        {
-                                          'name':
-                                              userCredential.user!.displayName,
-                                          'email':
-                                              userCredential.user!.email ?? '',
-                                          'phone': userCredential
-                                                  .user!.phoneNumber ??
-                                              '',
-                                          'address': '',
-                                          'profileimage':
-                                              userCredential.user!.photoURL ??
-                                                  '',
-                                          'storeLogo': '',
-                                          'storeCoverImage': '',
-                                          'storeName': '',
-                                          'cid': _uid,
-                                        },
-                                      ).then((value) => Navigator.pushReplacement(
-                                          context,
-                                          MaterialPageRoute(
-                                              builder: (context) =>
-                                                  const CustomerHomeScreen())));
-                                    } on FirebaseAuthException catch (e) {
-                                      print(e);
-                                      if (e.code ==
-                                          'account-exists-with-different-credential') {
-                                        MyMessageHandler.showSnackBar(
-                                            _scaffoldKey,
-                                            'An account already exists with the same email address but different sign-in credentials. Sign in using a provider associated with this email address.');
+                              ),
+                              const SizedBox(height: 10),
+                              Row(
+                                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                                children: [
+                                  SocialLogin(
+                                    image: 'assets/Images/Icons/google.jpg',
+                                    label: 'Google',
+                                    onPressed: () {
+                                      signInWithGoogle();
+                                    },
+                                  ),
+                                  /*SocialLogin(
+                                    image: 'assets/Images/Icons/fb.png',
+                                    label: 'Facebook',
+                                    onPressed: () async {
+                                      try {
+                                        final UserCredential userCredential =
+                                            await signInWithFacebook();
+                                        _uid = AuthRepo.uid;
+                                        await customers.doc(_uid).set(
+                                          {
+                                            'name':
+                                                userCredential.user!.displayName,
+                                            'email':
+                                                userCredential.user!.email ?? '',
+                                            'phone': userCredential
+                                                    .user!.phoneNumber ??
+                                                '',
+                                            'address': '',
+                                            'profileimage':
+                                                userCredential.user!.photoURL ??
+                                                    '',
+                                            'storeLogo': '',
+                                            'storeCoverImage': '',
+                                            'storeName': '',
+                                            'cid': _uid,
+                                          },
+                                        ).then((value) => Navigator.pushReplacement(
+                                            context,
+                                            MaterialPageRoute(
+                                                builder: (context) =>
+                                                    const CustomerHomeScreen())));
+                                      } on FirebaseAuthException catch (e) {
+                                        print(e);
+                                        if (e.code ==
+                                            'account-exists-with-different-credential') {
+                                          MyMessageHandler.showSnackBar(
+                                              _scaffoldKey,
+                                              'An account already exists with the same email address but different sign-in credentials. Sign in using a provider associated with this email address.');
+                                        }
+                                        ;
                                       }
-                                      ;
-                                    }
-                                  },
-                                ),*/
-                                processingGuest == true
-                                    ? const CircularProgressIndicator()
-                                    : SocialLogin(
-                                        image: 'assets/Images/Icons/guest.png',
-                                        label: 'Guest',
-                                        onPressed: () async {
-                                          setState(() {
-                                            processingGuest = true;
-                                          });
-                                          await FirebaseAuth.instance
-                                              .signInAnonymously()
-                                              .whenComplete(() async {
-                                            _uid = FirebaseAuth
-                                                .instance.currentUser!.uid;
-                                            await anonymous.doc(_uid).set({
-                                              'name': '',
-                                              'email': '',
-                                              'phone': '',
-                                              'address': '',
-                                              'profileimage': '',
-                                              'cid': _uid,
-                                              'role': 'Supplier'
+                                    },
+                                  ),*/
+                                  processingGuest == true
+                                      ? const CircularProgressIndicator()
+                                      : SocialLogin(
+                                          image: 'assets/Images/Icons/guest.png',
+                                          label: 'Guest',
+                                          onPressed: () async {
+                                            setState(() {
+                                              processingGuest = true;
                                             });
-                                            var user = AuthRepo.uid;
-                                            final SharedPreferences prefs =
-                                                await _prefs;
-                                            prefs.setString('customerID', user);
-                                          });
-                                          if (context.mounted) {
-                                            Navigator.pushReplacementNamed(
-                                                context, '/Customer_screen');
-                                          }
-                                        },
-                                      ),
-                              ],
-                            ),
-                            Padding(
-                              padding: const EdgeInsets.all(10),
-                              child: GestureDetector(
-                                onTap: () {
-                                  Navigator.pushNamed(
-                                      context, '/Signup_cus');
-                                },
-                                child: Text(
-                                  'SIGN UP',
-                                  style: GoogleFonts.nunito(
-                                    fontSize: 18,
-                                    fontWeight: FontWeight.w600,
-                                    color: const Color(0xFF303030),
+                                            await FirebaseAuth.instance
+                                                .signInAnonymously()
+                                                .whenComplete(() async {
+                                              _uid = FirebaseAuth
+                                                  .instance.currentUser!.uid;
+                                              await anonymous.doc(_uid).set({
+                                                'name': 'Guest',
+                                                'email': ' ',
+                                                'phone': '',
+                                                'address': '',
+                                                'profileimage': null,
+                                                'role': 'customer',
+                                                'cid': _uid,
+                                                'follower': const [],
+                                                'following': const [],
+                                                'shippingAddress': const[],
+
+                                              });
+                                              var user = AuthRepo.uid;
+                                              final SharedPreferences prefs =
+                                                  await _prefs;
+                                              prefs.setString('customerID', user);
+                                            });
+                                            if (context.mounted) {
+                                              Navigator.pushReplacementNamed(
+                                                  context, '/Customer_screen');
+                                            }
+                                          },
+                                        ),
+                                ],
+                              ),
+                              Padding(
+                                padding: const EdgeInsets.all(10),
+                                child: GestureDetector(
+                                  onTap: () {
+                                    Navigator.pushNamed(
+                                        context, '/Signup_cus');
+                                  },
+                                  child: Text(
+                                    'SIGN UP',
+                                    style: GoogleFonts.nunito(
+                                      fontSize: 18,
+                                      fontWeight: FontWeight.w600,
+                                      color: const Color(0xFF303030),
+                                    ),
                                   ),
                                 ),
                               ),
-                            ),
-                          ],
+                            ],
+                          ),
                         ),
                       ),
                     ),
-                  ),
-                ],
+                  ],
+                ),
               ),
             ),
           ),
