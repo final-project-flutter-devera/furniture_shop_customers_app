@@ -45,6 +45,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
   @override
   void initState() {
+    _getCurrentCustomer();
     _prefs.then((SharedPreferences prefs) {
       return prefs.getString('customerID') ?? '';
     }).then((String value) {
@@ -53,7 +54,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
       });
       print('profile: $documentId');
     });
-    _getCurrentCustomer();
     /*FirebaseAuth.instance.authStateChanges().listen((User? user) {
       if (user != null) {
         print(user.uid);
@@ -147,7 +147,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                           currentCustomer: _customer,
                         ),
                         null,
-                        const MyReview(),
+                        MyReview(),
                         FollowingStore(
                           currentCustomer: _customer,
                         ),

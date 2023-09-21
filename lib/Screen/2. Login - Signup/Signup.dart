@@ -97,9 +97,6 @@ class _SignupState extends State<Signup> {
                     'profileimage': '',
                     'role': 'customer',
                     'cid': uID['uid'],
-                    'follower': const [],
-                    'storeAddress': const[],
-                    'shippingAddress': const[],
                   });
                   _formKey.currentState!.reset();
                   if (context.mounted) {

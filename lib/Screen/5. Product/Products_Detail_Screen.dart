@@ -53,18 +53,16 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
     var onSale = widget.products['discount'];
     double wMQ = MediaQuery.of(context).size.width;
     double hMQ = MediaQuery.of(context).size.height;
-    Stream<QuerySnapshot> productsStream() => FirebaseFirestore.instance
+    Stream<QuerySnapshot> _productsStream = FirebaseFirestore.instance
         .collection('products')
         .where('mainCategory', isEqualTo: widget.products['mainCategory'])
         .where('subCategory', isEqualTo: widget.products['subCategory'])
         .snapshots();
-    final _productsStream = productsStream();
-    Stream<QuerySnapshot> reviewStream() => FirebaseFirestore.instance
+    Stream<QuerySnapshot> reviewStream = FirebaseFirestore.instance
         .collection('products')
         .doc(widget.products['proID'])
         .collection('reviews')
         .snapshots();
-    final _reviewStream = reviewStream();
     late List<dynamic> imagesList = widget.products['proImages'];
     CollectionReference suppliers =
         FirebaseFirestore.instance.collection('Suppliers');
@@ -212,7 +210,7 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                 ),
               ),
               Padding(
-                padding: const EdgeInsets.all(15),
+                padding: const EdgeInsets.all(25),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
@@ -263,8 +261,6 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                                               fontSize: 30,
                                               fontWeight: FontWeight.w700,
                                             ),
-                                      maxLines: 1,
-                                      overflow: TextOverflow.ellipsis,
                                     ),
                                   ],
                                 ),
@@ -462,7 +458,7 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                           tapBodyToCollapse: true,
                           tapBodyToExpand: true,
                           tapHeaderToExpand: true),
-                      child: review(_reviewStream),
+                      child: review(reviewStream),
                     ),
                     const SizedBox(height: 10),
                     const TitleDivider(
@@ -480,18 +476,20 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                             ConnectionState.waiting) {
                           return const Scaffold();
                         }
-                        return StaggeredGridView.countBuilder(
-                          physics: const NeverScrollableScrollPhysics(),
-                          shrinkWrap: true,
-                          itemCount: snapshot.data!.docs.length,
-                          crossAxisCount: 2,
-                          itemBuilder: (context, index) {
-                            return ProductModel(
-                              products: snapshot.data!.docs[index],
-                            );
-                          },
-                          staggeredTileBuilder: (context) =>
-                              const StaggeredTile.fit(1),
+                        return SizedBox(
+                          child: StaggeredGridView.countBuilder(
+                            physics: const NeverScrollableScrollPhysics(),
+                            shrinkWrap: true,
+                            itemCount: snapshot.data!.docs.length,
+                            crossAxisCount: 2,
+                            itemBuilder: (context, index) {
+                              return ProductModel(
+                                products: snapshot.data!.docs[index],
+                              );
+                            },
+                            staggeredTileBuilder: (context) =>
+                                const StaggeredTile.fit(1),
+                          ),
                         );
                       },
                     ),
@@ -745,7 +743,7 @@ Widget reviewAll(var reviewStream) {
       }
 
       if (snapshot3.connectionState == ConnectionState.waiting) {
-        return const Center(child: CircularProgressIndicator());
+        return const CircularProgressIndicator();
       }
 
       return ListView.builder(

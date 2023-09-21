@@ -3,7 +3,7 @@ import 'dart:math';
 import 'dart:ui';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:double_tap_to_exit/double_tap_to_exit.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:furniture_shop/Constants/Colors.dart';
 import 'package:furniture_shop/Constants/style.dart';
@@ -73,7 +73,7 @@ class _BoardingScreenState extends State<BoardingScreen> {
         stopTimer();
         customerID != ''
             ? Navigator.pushReplacementNamed(context, '/Customer_screen')
-            : Navigator.pushNamed(context, '/Login_cus');
+            : Navigator.pushReplacementNamed(context, '/Login_cus');
       }
       // print(timer.tick);
       // print(seconds);
@@ -88,138 +88,129 @@ class _BoardingScreenState extends State<BoardingScreen> {
   Widget build(BuildContext context) {
     double wMQ = MediaQuery.of(context).size.width;
     double hMQ = MediaQuery.of(context).size.height;
-    return DoubleTapToExit(
-      snackBar: SnackBar(
-        content: Text(
-          "Tag again to exit !",
-          style: GoogleFonts.nunito(color: AppColor.black),
-        ),
-        backgroundColor: AppColor.amber,
-      ),
-      child: Scaffold(
-        body: Container(
-          width: wMQ,
-          height: hMQ,
-          decoration: BoxDecoration(
-              image: DecorationImage(
-                  alignment: Alignment.centerRight,
-                  image: AssetImage(imageIndex),
-                  fit: BoxFit.cover)),
-          child: BackdropFilter(
-            filter: ImageFilter.blur(sigmaX: 1, sigmaY: 1),
-            child: Stack(
-              children: [
-                Positioned(
-                  left: wMQ * 0.1,
-                  top: hMQ * 0.28,
-                  child: Container(
-                      alignment: Alignment.centerLeft,
-                      child: Column(
-                        children: [
-                          Text(context.localize('boarding_title_1'),
-                              style: GoogleFonts.gelasio(
-                                fontSize: 24,
-                                fontWeight: FontWeight.w600,
-                                // color: AppColor.white,
-                                color: const Color(0xFF606060),
-                                letterSpacing: 1.2,
-                                shadows: AppStyle.white_shadow,
-                              )),
-                        ],
-                      )),
-                ),
-                Positioned(
-                  left: wMQ * 0.1,
-                  top: hMQ * 0.35,
-                  child: Container(
+    return Scaffold(
+      body: Container(
+        width: wMQ,
+        height: hMQ,
+        decoration: BoxDecoration(
+            image: DecorationImage(
+                alignment: Alignment.centerRight,
+                image: AssetImage(imageIndex),
+                fit: BoxFit.cover)),
+        child: BackdropFilter(
+          filter: ImageFilter.blur(sigmaX: 1, sigmaY: 1),
+          child: Stack(
+            children: [
+              Positioned(
+                left: wMQ * 0.1,
+                top: hMQ * 0.28,
+                child: Container(
                     alignment: Alignment.centerLeft,
-                    child: Text(
-                      context.localize('boarding_title_2'),
-                      style: GoogleFonts.gelasio(
-                        fontSize: 30,
-                        fontWeight: FontWeight.w700,
-                        // color: AppColor.white
-                        color: const Color(0xFF303030),
-                        shadows: AppStyle.white_shadow,
-                      ),
+                    child: Column(
+                      children: [
+                        Text(context.localize('boarding_title_1'),
+                            style: GoogleFonts.gelasio(
+                              fontSize: 24,
+                              fontWeight: FontWeight.w600,
+                              // color: AppColor.white,
+                              color: const Color(0xFF606060),
+                              letterSpacing: 1.2,
+                              shadows: AppStyle.white_shadow,
+                            )),
+                      ],
+                    )),
+              ),
+              Positioned(
+                left: wMQ * 0.1,
+                top: hMQ * 0.35,
+                child: Container(
+                  alignment: Alignment.centerLeft,
+                  child: Text(
+                    context.localize('boarding_title_2'),
+                    style: GoogleFonts.gelasio(
+                      fontSize: 30,
+                      fontWeight: FontWeight.w700,
+                      // color: AppColor.white
+                      color: const Color(0xFF303030),
+                      shadows: AppStyle.white_shadow,
                     ),
                   ),
                 ),
-                Positioned(
-                  left: wMQ * 0.2,
-                  top: hMQ * 0.45,
+              ),
+              Positioned(
+                left: wMQ * 0.2,
+                top: hMQ * 0.45,
+                child: Container(
+                  height: 105,
+                  width: 286,
+                  alignment: Alignment.centerLeft,
+                  child: Text(
+                    context.localize('boarding_description'),
+                    style: GoogleFonts.nunito(
+                      fontSize: 18,
+                      fontWeight: FontWeight.w700,
+                      // color: AppColor.white
+                      color: AppColor.black,
+                      shadows: AppStyle.white_shadow,
+                    ),
+                    textAlign: TextAlign.justify,
+                  ),
+                ),
+              ),
+              Positioned(
+                top: hMQ * 0.8,
+                left: wMQ * 0.3,
+                child: GestureDetector(
+                  onTap: () async {
+                    stopTimer();
+                    customerID != ''
+                        ? Navigator.pushReplacementNamed(
+                            context, '/Customer_screen')
+                        : Navigator.pushReplacementNamed(context, '/Login_cus');
+                  },
                   child: Container(
-                    height: 105,
-                    width: 286,
-                    alignment: Alignment.centerLeft,
-                    child: Text(
-                      context.localize('boarding_description'),
-                      style: GoogleFonts.nunito(
-                        fontSize: 18,
-                        fontWeight: FontWeight.w700,
-                        // color: AppColor.white
-                        color: AppColor.black,
-                        shadows: AppStyle.white_shadow,
-                      ),
-                      textAlign: TextAlign.justify,
+                    alignment: Alignment.center,
+                    height: 54,
+                    width: 159,
+                    child: Stack(
+                      children: [
+                        Container(
+                          alignment: Alignment.center,
+                          height: 54,
+                          width: 159,
+                          decoration: ShapeDecoration(
+                            color: const Color(0xFF232323),
+                            shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(4)),
+                            shadows: const [
+                              BoxShadow(
+                                  color: Color(0x4C303030),
+                                  blurRadius: 30,
+                                  offset: Offset(0, 8),
+                                  spreadRadius: 0)
+                            ],
+                          ),
+                        ),
+                        Center(
+                          child: seconds < 1
+                              ? Text(context.localize('label_get_started'),
+                                  style: GoogleFonts.gelasio(
+                                      fontSize: 18,
+                                      fontWeight: FontWeight.w600,
+                                      color: Colors.white))
+                              : Text(
+                                  '${context.localize('label_get_started')} | $seconds',
+                                  style: GoogleFonts.gelasio(
+                                      fontSize: 18,
+                                      fontWeight: FontWeight.w600,
+                                      color: Colors.white)),
+                        ),
+                      ],
                     ),
                   ),
                 ),
-                Positioned(
-                  top: hMQ * 0.8,
-                  left: wMQ * 0.3,
-                  child: GestureDetector(
-                    onTap: () async {
-                      stopTimer();
-                      customerID != ''
-                          ? Navigator.pushReplacementNamed(
-                              context, '/Customer_screen')
-                          : Navigator.pushReplacementNamed(context, '/Login_cus');
-                    },
-                    child: Container(
-                      alignment: Alignment.center,
-                      height: 54,
-                      width: 159,
-                      child: Stack(
-                        children: [
-                          Container(
-                            alignment: Alignment.center,
-                            height: 54,
-                            width: 159,
-                            decoration: ShapeDecoration(
-                              color: const Color(0xFF232323),
-                              shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(4)),
-                              shadows: const [
-                                BoxShadow(
-                                    color: Color(0x4C303030),
-                                    blurRadius: 30,
-                                    offset: Offset(0, 8),
-                                    spreadRadius: 0)
-                              ],
-                            ),
-                          ),
-                          Center(
-                            child: seconds < 1
-                                ? Text(context.localize('label_get_started'),
-                                    style: GoogleFonts.gelasio(
-                                        fontSize: 18,
-                                        fontWeight: FontWeight.w600,
-                                        color: Colors.white))
-                                : Text(
-                                    '${context.localize('label_get_started')} | $seconds',
-                                    style: GoogleFonts.gelasio(
-                                        fontSize: 18,
-                                        fontWeight: FontWeight.w600,
-                                        color: Colors.white)),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ),
-                ),
-              ],
-            ),
+              ),
+            ],
           ),
         ),
       ),

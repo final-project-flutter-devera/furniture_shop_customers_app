@@ -1,6 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:furniture_shop/Constants/Colors.dart';
 import 'package:furniture_shop/Objects/customer.dart';
@@ -11,7 +10,6 @@ import 'package:furniture_shop/Widgets/AppBarButton.dart';
 import 'package:furniture_shop/localization/app_localization.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
-import 'package:shimmer/shimmer.dart';
 import 'package:staggered_grid_view_flutter/widgets/staggered_grid_view.dart';
 import 'package:staggered_grid_view_flutter/widgets/staggered_tile.dart';
 
@@ -30,7 +28,6 @@ class _VisitStoreState extends State<VisitStore> {
   bool following = false;
   late Customer customer;
   late Supplier supplier;
-
   @override
   void initState() {
     _getCurrentCustomer();
@@ -169,17 +166,12 @@ class _VisitStoreState extends State<VisitStore> {
                       GestureDetector(
                         onTap: () {
                           if (following) {
-                            FirebaseMessaging.instance
-                                .subscribeToTopic('follow');
                             customer.following?.remove(widget.supplierID);
                             supplier.follower?.remove(customer.cid);
                           } else {
-                            FirebaseMessaging.instance
-                                .unsubscribeFromTopic('follow');
                             customer.following?.add(widget.supplierID);
                             supplier.follower?.add(customer.cid);
                           }
-
                           context
                               .read<CustomerProvider>()
                               .updateCurrentCustomer(
@@ -230,10 +222,10 @@ class _VisitStoreState extends State<VisitStore> {
                   return const Text('Something went wrong');
                 }
                 if (snapshot.connectionState == ConnectionState.waiting) {
-                  return Shimmer.fromColors(
-                    baseColor: AppColor.grey5,
-                    highlightColor: AppColor.blur_grey,
-                    child: const Scaffold(),
+                  return const Scaffold(
+                    body: Center(
+                      child: CircularProgressIndicator(),
+                    ),
                   );
                 }
                 return SingleChildScrollView(
@@ -256,7 +248,7 @@ class _VisitStoreState extends State<VisitStore> {
           );
         }
 
-        return const Scaffold(body: Center(child: CircularProgressIndicator()));
+        return const Scaffold();
       },
     );
   }

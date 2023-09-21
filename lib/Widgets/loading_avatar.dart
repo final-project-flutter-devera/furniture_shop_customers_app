@@ -13,7 +13,7 @@ class LoadingAvatar extends StatelessWidget {
         child: Shimmer.fromColors(
           baseColor: AppColor.baseShimmerColor,
           highlightColor: AppColor.highlightShimmerColor,
-          child: const CircleAvatar(
+          child: CircleAvatar(
             backgroundColor: AppColor.white,
             radius: 40,
           ),

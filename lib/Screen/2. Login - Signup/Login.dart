@@ -1,5 +1,4 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:double_tap_to_exit/double_tap_to_exit.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_facebook_auth/flutter_facebook_auth.dart';
@@ -108,40 +107,59 @@ class _LoginState extends State<Login> {
       try {
         await AuthRepo.reloadUser();
         var user = AuthRepo.uid;
-        if (await AuthRepo.checkVerifiedMail()) {
-          _formKey.currentState!.reset();
+        _formKey.currentState!.reset();
 
-          final SharedPreferences prefs = await _prefs;
-          prefs.setString('customerID', user);
+        final SharedPreferences prefs = await _prefs;
+        prefs.setString('customerID', user);
 
-          await FirebaseFirestore.instance
-              .collection('Customers')
-              .doc(user)
-              .get()
-              .then((DocumentSnapshot snapshot) async {
-            if (snapshot.exists) {
-              if (snapshot.get('role') == "customer") {
-                await AuthRepo.signInWithEmailAndPassword(email, password);
-                if(context.mounted){
-                  Navigator.pushReplacementNamed(context, '/Customer_screen');
-                }
-              }
-            } else {
-              setState(() {
-                processingAccountMail = false;
-              });
-              MyMessageHandler.showSnackBar(
-                  _scaffoldKey, 'Please register account');
-            }
-          });
-        } else {
-          MyMessageHandler.showSnackBar(
-              _scaffoldKey, 'Please check inbox & verify mail');
-          setState(() {
-            processingAccountMail = false;
-            resendVerification = true;
-          });
-        }
+        await FirebaseFirestore.instance
+            .collection('Customers')
+            .doc(user)
+            .get()
+            .then((DocumentSnapshot snapshot) async {
+          if (snapshot.exists) {
+            await AuthRepo.signInWithEmailAndPassword(email, password);
+            Navigator.pushReplacementNamed(context, '/Customer_screen');
+          } else {
+            setState(() {
+              processingAccountMail = false;
+            });
+            MyMessageHandler.showSnackBar(
+                _scaffoldKey, 'Please register account');
+          }
+        });
+        // if (await AuthRepo.checkVerifiedMail()) {
+        //   _formKey.currentState!.reset();
+
+        //   final SharedPreferences prefs = await _prefs;
+        //   prefs.setString('customerID', user);
+
+        //   await FirebaseFirestore.instance
+        //       .collection('Customers')
+        //       .doc(user)
+        //       .get()
+        //       .then((DocumentSnapshot snapshot) async {
+        //     if (snapshot.exists) {
+        //       if (snapshot.get('role') == "customer") {
+        //         await AuthRepo.signInWithEmailAndPassword(email, password);
+        //         Navigator.pushReplacementNamed(context, '/Customer_screen');
+        //       }
+        //     } else {
+        //       setState(() {
+        //         processingAccountMail = false;
+        //       });
+        //       MyMessageHandler.showSnackBar(
+        //           _scaffoldKey, 'Please register account');
+        //     }
+        //   });
+        // } else {
+        //   MyMessageHandler.showSnackBar(
+        //       _scaffoldKey, 'Please check inbox & verify mail');
+        //   setState(() {
+        //     processingAccountMail = false;
+        //     resendVerification = true;
+        //   });
+        // }
       } on FirebaseAuthException catch (e) {
         if (e.code == 'user-not-found') {
           MyMessageHandler.showSnackBar(
@@ -423,17 +441,13 @@ class _LoginState extends State<Login> {
                                             _uid = FirebaseAuth
                                                 .instance.currentUser!.uid;
                                             await anonymous.doc(_uid).set({
-                                              'name': 'Guest',
-                                              'email': ' ',
+                                              'name': '',
+                                              'email': '',
                                               'phone': '',
                                               'address': '',
-                                              'profileimage': null,
-                                              'role': 'customer',
+                                              'profileimage': '',
                                               'cid': _uid,
-                                              'follower': const [],
-                                              'following': const [],
-                                              'shippingAddress': const[],
-
+                                              'role': 'Supplier'
                                             });
                                             var user = AuthRepo.uid;
                                             final SharedPreferences prefs =
@@ -452,8 +466,7 @@ class _LoginState extends State<Login> {
                               padding: const EdgeInsets.all(10),
                               child: GestureDetector(
                                 onTap: () {
-                                  Navigator.pushNamed(
-                                      context, '/Signup_cus');
+                                  Navigator.pushNamed(context, '/Signup_cus');
                                 },
                                 child: Text(
                                   'SIGN UP',
