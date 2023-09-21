@@ -10,7 +10,7 @@ import '../../../../Providers/Cart_Provider.dart';
 import '../../../../Widgets/AppBarTitle.dart';
 import '../../../2. Login - Signup/Login.dart';
 import 'CartScreen.dart';
-import 'SearchScreen.dart';
+import 'home_screen/components/search_screen.dart';
 import 'package:badges/badges.dart' as badges;
 
 class FavoritesScreen extends StatefulWidget {
@@ -33,7 +33,7 @@ class _FavoritesScreenState extends State<FavoritesScreen> {
               Navigator.push(
                 context,
                 MaterialPageRoute(
-                  builder: (context) => const SearchScreen(),
+                  builder: (context) => const ProductSearch(),
                 ),
               );
             },

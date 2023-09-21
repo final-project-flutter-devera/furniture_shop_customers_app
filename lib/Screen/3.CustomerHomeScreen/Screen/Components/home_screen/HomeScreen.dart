@@ -2,19 +2,20 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:furniture_shop/Constants/Colors.dart';
+import 'package:furniture_shop/Screen/3.CustomerHomeScreen/Screen/Components/home_screen/components/product_search_delegate.dart';
 import 'package:furniture_shop/Widgets/AppBarButton.dart';
 import 'package:provider/provider.dart';
-import '../../../../Providers/Cart_Provider.dart';
-import '../../../2. Login - Signup/Login.dart';
-import '../../../Gallery/Gallery_armchair.dart';
-import '../../../Gallery/Gallery_bed.dart';
-import '../../../Gallery/Gallery_chair.dart';
-import '../../../Gallery/Gallery_lamp.dart';
-import '../../../Gallery/Gallery_popular.dart';
-import '../../../Gallery/Gallery_table.dart';
-import '../../Body/Body_Customer_HomeScreen.dart';
-import 'CartScreen.dart';
-import 'SearchScreen.dart';
+import '../../../../../Providers/Cart_Provider.dart';
+import '../../../../2. Login - Signup/Login.dart';
+import '../../../../Gallery/Gallery_armchair.dart';
+import '../../../../Gallery/Gallery_bed.dart';
+import '../../../../Gallery/Gallery_chair.dart';
+import '../../../../Gallery/Gallery_lamp.dart';
+import '../../../../Gallery/Gallery_popular.dart';
+import '../../../../Gallery/Gallery_table.dart';
+import '../../../Body/Body_Customer_HomeScreen.dart';
+import '../CartScreen.dart';
+import 'components/search_screen.dart';
 import 'package:badges/badges.dart' as badges;
 
 class HomeScreen extends StatefulWidget {
@@ -41,15 +42,44 @@ class _HomeScreenState extends State<HomeScreen> {
             GalleryLamp(),
           ],
         ),
+        drawer: Drawer(
+          child: ListView(
+            padding: EdgeInsets.zero,
+            children: const <Widget>[
+              DrawerHeader(
+                decoration: BoxDecoration(
+                  color: Colors.blue,
+                ),
+                child: Text(
+                  'Drawer Header',
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontSize: 24,
+                  ),
+                ),
+              ),
+              ListTile(
+                leading: Icon(Icons.message),
+                title: Text('Messages'),
+              ),
+              ListTile(
+                leading: Icon(Icons.account_circle),
+                title: Text('Profile'),
+              ),
+              ListTile(
+                leading: Icon(Icons.settings),
+                title: Text('Settings'),
+              ),
+            ],
+          ),
+        ),
         appBar: AppBar(
           elevation: 0,
           backgroundColor: AppColor.white,
           leading: AppBarButtonPush(
             aimRoute: () {
-              Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                      builder: (context) => const SearchScreen()));
+              Navigator.push(context,
+                  MaterialPageRoute(builder: (context) => ProductSearch()));
             },
             icon: SvgPicture.asset(
               'assets/Images/Icons/search.svg',

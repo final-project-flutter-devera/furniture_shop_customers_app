@@ -311,6 +311,7 @@ class _PickLocationState extends State<PickLocation>
                             setState(() {
                               chosenCoordinate = currentCoordinate;
                               chosenLocation = currentLocation;
+                              selectedAddress = currentAddress;
                             });
                           },
                           child: Text(context

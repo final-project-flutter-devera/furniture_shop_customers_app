@@ -64,6 +64,11 @@ class AppLocalization {
       'label_home_popular_armchair': 'Armchair',
       'label_home_popular_bed': 'Bed',
       'label_home_popular_lamp': 'Lamp',
+      'label_product_search': 'Search for a product...',
+      'label_advanced_search': 'Advanced Search',
+      'hint_select_main_category': 'Select main category',
+      'disabled_hint_select_sub_category': 'Select main category first',
+      'hint_select_sub_category': 'Select sub category',
 
       ///Product
       'label_review': 'Reviews',
@@ -260,6 +265,11 @@ class AppLocalization {
       'label_home_popular_armchair': 'Ghế bành',
       'label_home_popular_bed': 'Giường',
       'label_home_popular_lamp': 'Đèn',
+      'label_product_search': 'Tìm kiếm một sản phẩm...',
+      'label_advanced_search': 'Tìm kiếm nâng cao',
+      'hint_select_main_category': 'Mục nội thất chính',
+      'disabled_hint_select_sub_category': 'Chọn mục chính trước',
+      'hint_select_sub_category': 'Mục nội thất phụ',
 
       ///Product
       'label_review': 'Đánh giá',

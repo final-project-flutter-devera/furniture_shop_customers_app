@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:furniture_shop/Providers/Favorites_Provider.dart';
 import '../../../Providers/Cart_Provider.dart';
-import 'Components/HomeScreen.dart';
+import 'Components/home_screen/HomeScreen.dart';
 import 'Components/ProfileScreen.dart';
 import 'Components/FavoritesScreen.dart';
 import 'Components/NotificationScreen.dart';

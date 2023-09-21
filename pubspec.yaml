@@ -69,6 +69,7 @@ dependencies:
   google_sign_in: ^6.1.5
   sqflite: ^2.3.0
   shimmer: ^3.0.0
+  fancy_shimmer_image: ^2.0.3
 
 dev_dependencies:
   flutter_test:

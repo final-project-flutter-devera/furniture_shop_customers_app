@@ -17,7 +17,7 @@ import 'package:staggered_grid_view_flutter/widgets/staggered_grid_view.dart';
 import 'package:staggered_grid_view_flutter/widgets/staggered_tile.dart';
 import '../../Models/Product_model.dart';
 import '../3.CustomerHomeScreen/Screen/Components/CartScreen.dart';
-import '../3.CustomerHomeScreen/Screen/Components/SearchScreen.dart';
+import '../3.CustomerHomeScreen/Screen/Components/home_screen/components/search_screen.dart';
 import 'Full_Screen_View_Images.dart';
 import 'Visit_Store.dart';
 import 'package:collection/collection.dart';
@@ -96,7 +96,7 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                 Navigator.push(
                     context,
                     MaterialPageRoute(
-                        builder: (context) => const SearchScreen()));
+                        builder: (context) => const ProductSearch()));
               },
               child: Row(
                 children: [
