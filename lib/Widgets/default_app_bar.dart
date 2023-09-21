@@ -5,6 +5,7 @@ import 'package:furniture_shop/Constants/style.dart';
 AppBar DefaultAppBar({
   required BuildContext context,
   required String title,
+  Widget? titleWidget,
   List<Widget> actions = const [],
 }) {
   return AppBar(
@@ -20,9 +21,10 @@ AppBar DefaultAppBar({
       ),
     ),
     centerTitle: true,
-    title: Text(
-      title,
-      style: AppStyle.app_bar_title_text_style,
-    ),
+    title: titleWidget ??
+        Text(
+          title,
+          style: AppStyle.app_bar_title_text_style,
+        ),
   );
 }

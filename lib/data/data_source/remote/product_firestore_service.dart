@@ -10,9 +10,9 @@ class ProductFirestoreService implements ProductDataService {
   @override
   Future<void> addProduct(Product product) {
     return products
-        .doc(product.id)
+        .doc(product.proID)
         .set(product.toJson())
-        .then((value) => debugPrint('Added a User with ID: ${product.id}'))
+        .then((value) => debugPrint('Added a User with ID: ${product.proID}'))
         .catchError((error) => debugPrint('Failed to add a User: $error'));
   }
 

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:furniture_shop/Constants/Colors.dart';
 import 'package:furniture_shop/Constants/style.dart';
+import 'package:furniture_shop/Screen/13.%20MyOrderScreen/My_Order_Screen.dart';
 import 'package:furniture_shop/Widgets/action_button.dart';
 import 'package:google_fonts/google_fonts.dart';
 
@@ -84,9 +85,15 @@ class OrderSuccess extends StatelessWidget {
                   "Track your orders",
                   style: AppStyle.text_style_on_black_button,
                 ),
-                size: Size(double.infinity, 60),
+                size: const Size(double.infinity, 60),
                 color: AppColor.black,
-                onPressed: () {}),
+                onPressed: () {
+                  Navigator.pushReplacement(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => const MyOrderScreen(),
+                      ));
+                }),
             const Padding(padding: EdgeInsets.only(top: 25)),
             Container(
               decoration: BoxDecoration(
@@ -98,7 +105,7 @@ class OrderSuccess extends StatelessWidget {
                     "BACK TO HOME",
                     style: AppStyle.text_style_on_white_button,
                   ),
-                  size: Size(double.infinity, 60),
+                  size: const Size(double.infinity, 60),
                   color: AppColor.white,
                   onPressed: () {}),
             ),

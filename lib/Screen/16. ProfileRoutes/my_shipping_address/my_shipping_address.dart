@@ -10,8 +10,10 @@ import 'package:furniture_shop/localization/app_localization.dart';
 import 'package:provider/provider.dart';
 
 class MyShippingAddress extends StatefulWidget {
+  final ValueChanged<Address?>? deliveryAddressSet;
   final Customer currentCustomer;
-  const MyShippingAddress({super.key, required this.currentCustomer});
+  const MyShippingAddress(
+      {super.key, this.deliveryAddressSet, required this.currentCustomer});
   @override
   State<MyShippingAddress> createState() => _MyShippingAddressState();
 }
@@ -28,6 +30,9 @@ class _MyShippingAddressState extends State<MyShippingAddress> {
   _addAddress(Address address) {
     //If there is no address in address list, the new address will be the default
     address.isDefault = myAddress.isEmpty;
+    if (address.isDefault) {
+      widget.deliveryAddressSet?.call(address);
+    }
     myAddress.add(address);
     context
         .read<CustomerProvider>()
@@ -59,6 +64,8 @@ class _MyShippingAddressState extends State<MyShippingAddress> {
   _setAsMainAddress(int index) async {
     setState(() {
       myAddress[index].isDefault = true;
+      widget.deliveryAddressSet?.call(myAddress[index]);
+
       for (int i = 0; i < myAddress.length; i++) {
         if (i != index) myAddress[i].isDefault = false;
       }
@@ -70,7 +77,14 @@ class _MyShippingAddressState extends State<MyShippingAddress> {
 
   _deleteAddress(int index) {
     setState(() {
-      myAddress.removeAt(index);
+      if (myAddress[index].isDefault!) {
+        myAddress.removeAt(index);
+        if (myAddress.isNotEmpty) {
+          myAddress[0].isDefault = true;
+        } else {
+          widget.deliveryAddressSet?.call(null);
+        }
+      }
     });
     context
         .read<CustomerProvider>()
@@ -110,7 +124,7 @@ class _MyShippingAddressState extends State<MyShippingAddress> {
                     )),
           );
         },
-        child: Icon(
+        child: const Icon(
           Icons.add,
           size: 24,
         ),

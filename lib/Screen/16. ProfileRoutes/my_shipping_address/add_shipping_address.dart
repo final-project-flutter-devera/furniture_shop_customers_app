@@ -35,6 +35,7 @@ class _AddShippingAddressState extends State<AddShipingAddress> {
   final TextEditingController districtController = TextEditingController();
   final TextEditingController cityController = TextEditingController();
   final TextEditingController countryController = TextEditingController();
+  final TextEditingController phoneController = TextEditingController();
 
   @override
   void dispose() {
@@ -62,6 +63,16 @@ class _AddShippingAddressState extends State<AddShipingAddress> {
               controller: nameController,
               labelText: context.localize('label_full_name'),
               hintText: context.localize('place_holder_full_name'),
+            ),
+          ),
+          Padding(
+            padding:
+                const EdgeInsets.only(top: 10, left: 20, right: 20, bottom: 10),
+            child: AppTextFormField(
+              isNumber: false,
+              controller: phoneController,
+              labelText: context.localize('label_phone_number'),
+              hintText: context.localize('place_holder_phone_number'),
             ),
           ),
           Padding(
@@ -211,6 +222,7 @@ class _AddShippingAddressState extends State<AddShipingAddress> {
                     if (_formKey.currentState!.validate()) {
                       final newAddress = Address(
                         name: nameController.text,
+                        phone: phoneController.text,
                         street: streetController.text,
                         city: cityController.text,
                         place: placeController.text,

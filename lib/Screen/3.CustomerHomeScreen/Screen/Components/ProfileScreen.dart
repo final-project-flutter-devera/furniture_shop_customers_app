@@ -17,7 +17,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import '../../../../Widgets/ShowAlertDialog.dart';
 import '../../../13. MyOrderScreen/My_Order_Screen.dart';
 import 'Profile/EditInfo.dart';
-import 'SearchScreen.dart';
+import 'home_screen/components/search_screen.dart';
 
 class ProfileScreen extends StatefulWidget {
   const ProfileScreen({super.key});
@@ -99,7 +99,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     Navigator.push(
                         context,
                         MaterialPageRoute(
-                            builder: (context) => const SearchScreen()));
+                            builder: (context) => const ProductSearch()));
                   },
                   icon: SvgPicture.asset(
                     'assets/Images/Icons/search.svg',

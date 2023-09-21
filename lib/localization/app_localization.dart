@@ -64,6 +64,11 @@ class AppLocalization {
       'label_home_popular_armchair': 'Armchair',
       'label_home_popular_bed': 'Bed',
       'label_home_popular_lamp': 'Lamp',
+      'label_product_search': 'Search for a product...',
+      'label_advanced_search': 'Advanced Search',
+      'hint_select_main_category': 'Select main category',
+      'disabled_hint_select_sub_category': 'Select main category first',
+      'hint_select_sub_category': 'Select sub category',
 
       ///Product
       'label_review': 'Reviews',
@@ -152,6 +157,8 @@ class AppLocalization {
       'add_shipping_address_app_bar_title': 'Add shipping address',
       'label_full_name': 'Recipient name',
       'place_holder_full_name': 'Ex: Bruno Pham',
+      'label_phone_number': 'Phone number',
+      'placeholder_phone_number': '1 234 567 890',
       'label_address': 'Address',
       'place_holder_address': 'Ex: 25 Robert Latouche Street',
       'label_zipcode': 'Zipcode (Postal Code)',
@@ -258,6 +265,11 @@ class AppLocalization {
       'label_home_popular_armchair': 'Ghế bành',
       'label_home_popular_bed': 'Giường',
       'label_home_popular_lamp': 'Đèn',
+      'label_product_search': 'Tìm kiếm một sản phẩm...',
+      'label_advanced_search': 'Tìm kiếm nâng cao',
+      'hint_select_main_category': 'Mục nội thất chính',
+      'disabled_hint_select_sub_category': 'Chọn mục chính trước',
+      'hint_select_sub_category': 'Mục nội thất phụ',
 
       ///Product
       'label_review': 'Đánh giá',
@@ -347,6 +359,8 @@ class AppLocalization {
       'add_shipping_address_app_bar_title': 'Thêm địa chỉ giao hàng',
       'label_full_name': 'Tên người nhận',
       'place_holder_full_name': 'VD: Phạm Văn A',
+      'label_phone_number': 'Số điện thoại',
+      'placeholder_phone_number': '0987 654 321',
       'label_address': 'Địa Chỉ',
       'place_holder_address': 'VD: 25 Lê Văn Việt',
       'label_zipcode': 'Mã Zip (Mã bưu chính)',

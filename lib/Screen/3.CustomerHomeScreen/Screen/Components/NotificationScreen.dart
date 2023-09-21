@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:furniture_shop/Widgets/AppBarButton.dart';
 import 'package:furniture_shop/Widgets/AppBarTitle.dart';
-import 'SearchScreen.dart';
+import 'home_screen/components/search_screen.dart';
 
 class NotificationScreen extends StatefulWidget {
   const NotificationScreen({super.key});
@@ -19,8 +19,9 @@ class _NotificationScreenState extends State<NotificationScreen> {
         elevation: 0,
         backgroundColor: Colors.white,
         leading: AppBarButtonPush(
-          aimRoute: (){
-            Navigator.push(context, MaterialPageRoute(builder: (context)=>const SearchScreen()));
+          aimRoute: () {
+            Navigator.push(context,
+                MaterialPageRoute(builder: (context) => const ProductSearch()));
           },
           icon: SvgPicture.asset(
             'assets/Images/Icons/search.svg',

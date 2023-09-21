@@ -1,67 +1,59 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 class Product {
-  final String id; //Primary key
-  final String vendorID;
-  String name;
-  String description;
-  List<String> images;
-  List<String> mainCategory;
+  final String proID; //Primary key
+  final String sid;
+  String proName;
+  String prodesc;
+  String proImages;
+  String mainCategory;
   List<String>? subCategory;
-  int stock;
+  int inStock;
   double discount;
-  Timestamp? discountStart;
-  Timestamp? discountEnd;
   double price;
   bool isDeleted;
   Product({
-    required this.id,
-    required this.vendorID,
-    required this.name,
-    required this.description,
-    required this.images,
+    required this.proID,
+    required this.sid,
+    required this.proName,
+    required this.prodesc,
+    required this.proImages,
     required this.mainCategory,
     this.subCategory,
     required this.price,
-    required this.stock,
+    required this.inStock,
     required this.discount,
-    this.discountStart,
-    this.discountEnd,
     this.isDeleted = false,
   });
 
   Map<String, dynamic> toJson() {
     return {
-      'id': id,
-      'vendorID': vendorID,
-      'name': name,
-      'description': description,
-      'images': images,
+      'proID': proID,
+      'sid': sid,
+      'proName': proName,
+      'prodesc': prodesc,
+      'proImages': proImages,
       'mainCategory': mainCategory,
       'subCategory': subCategory,
       'price': price,
-      'stock': stock,
+      'inStock': inStock,
       'discount': discount,
-      'discountStart': discountStart,
-      'discountEnd': discountEnd,
       'isDeleted': isDeleted,
     };
   }
 
   factory Product.fromJson(Map<String, dynamic> json) {
     return Product(
-        id: json['id'] as String,
-        vendorID: json['vendorID'],
-        name: json['name'] as String,
-        description: json['description'] as String,
-        images: json['images'] as List<String>,
-        mainCategory: json['mainCategory'] as List<String>,
-        subCategory: json['subCategory'] as List<String>?,
+        proID: json['proID'] as String,
+        sid: json['sid'],
+        proName: json['proName'] as String,
+        prodesc: json['description'] as String,
+        proImages: json['proImages'],
+        mainCategory: json['mainCategory'],
+        subCategory: json['subCategory'],
         price: json['price'] as double,
-        stock: json['stock'],
+        inStock: json['stock'],
         discount: json['discount'],
-        discountStart: json['discountStart'],
-        discountEnd: json['discountEnd'],
         isDeleted: json['isDeleted'] as bool);
   }
 }
