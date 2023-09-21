@@ -8,6 +8,7 @@ import 'package:furniture_shop/Providers/Favorites_Provider.dart';
 import 'package:google_fonts/google_fonts.dart';
 import '../../../Providers/Cart_Provider.dart';
 import '../../../Services/Notification_Service.dart';
+import '../../2. Login - Signup/Login.dart';
 import 'Components/HomeScreen.dart';
 import 'Components/ProfileScreen.dart';
 import 'Components/FavoritesScreen.dart';
@@ -22,11 +23,12 @@ class CustomerHomeScreen extends StatefulWidget {
 
 class _CustomerHomeScreen extends State<CustomerHomeScreen> {
   int _selectIndex = 0;
+
   final List<Widget> _tabs = [
     const HomeScreen(),
     const FavoritesScreen(),
     const NotificationScreen(),
-    const ProfileScreen(),
+    FirebaseAuth.instance.currentUser!.isAnonymous ? Login() : ProfileScreen(),
   ];
 
   @override

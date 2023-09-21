@@ -212,7 +212,7 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                 ),
               ),
               Padding(
-                padding: const EdgeInsets.all(25),
+                padding: const EdgeInsets.all(15),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
@@ -240,7 +240,7 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                                         ? Text(
                                             ((1 - (onSale / 100)) *
                                                     widget.products['price'])
-                                                .toString(),
+                                                .toStringAsFixed(2),
                                             style: GoogleFonts.nunito(
                                               fontSize: 30,
                                               fontWeight: FontWeight.w700,
@@ -263,6 +263,8 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                                               fontSize: 30,
                                               fontWeight: FontWeight.w700,
                                             ),
+                                      maxLines: 1,
+                                      overflow: TextOverflow.ellipsis,
                                     ),
                                   ],
                                 ),
@@ -478,20 +480,18 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                             ConnectionState.waiting) {
                           return const Scaffold();
                         }
-                        return SizedBox(
-                          child: StaggeredGridView.countBuilder(
-                            physics: const NeverScrollableScrollPhysics(),
-                            shrinkWrap: true,
-                            itemCount: snapshot.data!.docs.length,
-                            crossAxisCount: 2,
-                            itemBuilder: (context, index) {
-                              return ProductModel(
-                                products: snapshot.data!.docs[index],
-                              );
-                            },
-                            staggeredTileBuilder: (context) =>
-                                const StaggeredTile.fit(1),
-                          ),
+                        return StaggeredGridView.countBuilder(
+                          physics: const NeverScrollableScrollPhysics(),
+                          shrinkWrap: true,
+                          itemCount: snapshot.data!.docs.length,
+                          crossAxisCount: 2,
+                          itemBuilder: (context, index) {
+                            return ProductModel(
+                              products: snapshot.data!.docs[index],
+                            );
+                          },
+                          staggeredTileBuilder: (context) =>
+                              const StaggeredTile.fit(1),
                         );
                       },
                     ),

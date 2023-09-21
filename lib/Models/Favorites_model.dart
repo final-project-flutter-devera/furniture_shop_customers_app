@@ -45,14 +45,17 @@ class FavoritesModel extends StatelessWidget {
                       Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Text(
-                            product.name,
-                            maxLines: 2,
-                            overflow: TextOverflow.ellipsis,
-                            style: GoogleFonts.nunito(
-                              fontWeight: FontWeight.w600,
-                              fontSize: 14,
-                              color: AppColor.grey,
+                          SizedBox(
+                            width: MediaQuery.of(context).size.width*0.45,
+                            child: Text(
+                              product.name,
+                              maxLines: 2,
+                              overflow: TextOverflow.ellipsis,
+                              style: GoogleFonts.nunito(
+                                fontWeight: FontWeight.w600,
+                                fontSize: 14,
+                                color: AppColor.grey,
+                              ),
                             ),
                           ),
                           SizedBox(

@@ -55,9 +55,11 @@ class _CartScreenState extends State<CartScreen> {
                 ),
         ],
       ),
-      body: context.watch<Cart>().getItems.isNotEmpty
-          ? const CartProduct()
-          : CartProductEmpty(wMQ: wMQ),
+      body: SafeArea(
+        child: context.watch<Cart>().getItems.isNotEmpty
+            ? const CartProduct()
+            : CartProductEmpty(wMQ: wMQ),
+      ),
       bottomSheet: total == 0.0 ? null :  Padding(
         padding: const EdgeInsets.all(20),
         child: Row(

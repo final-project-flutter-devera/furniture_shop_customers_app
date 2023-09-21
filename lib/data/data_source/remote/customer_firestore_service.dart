@@ -7,6 +7,7 @@ import 'package:furniture_shop/data/data_source/customer_data_service.dart';
 class CustomerFirestoreService implements CustomerDataService {
   CollectionReference customers =
       FirebaseFirestore.instance.collection('Customers');
+
   @override
   Future<void> addCustomer(Customer customer) {
     return customers

@@ -91,7 +91,7 @@ class _EditInfoState extends State<EditInfo> {
   Future editStoreData() async {
     await FirebaseFirestore.instance.runTransaction((transaction) async {
       DocumentReference documentReference = FirebaseFirestore.instance
-          .collection('customers')
+          .collection('Customers')
           .doc(FirebaseAuth.instance.currentUser!.uid);
       transaction.update(documentReference, {
         'name': name,

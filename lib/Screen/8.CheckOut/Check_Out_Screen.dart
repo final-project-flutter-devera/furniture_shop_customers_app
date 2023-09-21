@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_stripe/flutter_stripe.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:furniture_shop/Constants/Colors.dart';
+import 'package:furniture_shop/Providers/Auth_reponse.dart';
 import 'package:furniture_shop/Screen/13.%20MyOrderScreen/My_Order_Screen.dart';
 import 'package:furniture_shop/Screen/3.CustomerHomeScreen/Screen/CustomerHomeScreen.dart';
 import 'package:furniture_shop/Widgets/AppBarButton.dart';
@@ -13,8 +14,13 @@ import 'package:furniture_shop/Widgets/MyMessageHandler.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 import 'package:uuid/uuid.dart';
+import '../../Objects/customer.dart';
 import '../../Providers/Cart_Provider.dart';
 import '../../Providers/Stripe_ID.dart';
+import '../../Providers/customer_provider.dart';
+import '../16. ProfileRoutes/my_shipping_address/add_shipping_address.dart';
+import '../16. ProfileRoutes/my_shipping_address/edit_shipping_address.dart';
+import '../16. ProfileRoutes/my_shipping_address/my_shipping_address.dart';
 import 'Delivery_Method.dart';
 import 'Payment_Method_Screen.dart';
 import 'Shipping_Address.dart';
@@ -37,6 +43,17 @@ class _CheckOutScreenState extends State<CheckOutScreen> {
   final GlobalKey<ScaffoldMessengerState> _scaffoldKey =
       GlobalKey<ScaffoldMessengerState>();
   late String orderID;
+  late Customer _customer;
+
+  _getCurrentCustomer() async {
+    _customer = await context.read<CustomerProvider>().getCurrentCustomer();
+  }
+
+  @override
+  void initState() {
+    _getCurrentCustomer();
+    super.initState();
+  }
 
   void showProgress() {
     ProgressDialog progressDialog = ProgressDialog(context: context);
@@ -95,8 +112,9 @@ class _CheckOutScreenState extends State<CheckOutScreen> {
                           Navigator.push(
                               context,
                               MaterialPageRoute(
-                                  builder: (context) =>
-                                      const ShippingAddress()));
+                                builder: (context) => MyShippingAddress(
+                                    currentCustomer: _customer),
+                              ));
                         },
                       ),
                       Padding(
@@ -142,7 +160,7 @@ class _CheckOutScreenState extends State<CheckOutScreen> {
                                   ),
                                   const SizedBox(height: 5),
                                   Text(
-                                    '${data['address']}',
+                                    '${data['shippingAddress']}',
                                     style: GoogleFonts.nunito(
                                         fontWeight: FontWeight.w700,
                                         fontSize: 14,
@@ -199,9 +217,8 @@ class _CheckOutScreenState extends State<CheckOutScreen> {
                                             child: SizedBox(
                                               height: 100,
                                               width: 100,
-                                              child: Image.network(order
-                                                  .imageList
-                                                  .toString()),
+                                              child: Image.network(
+                                                  order.imageList.toString()),
                                             ),
                                           ),
                                           const SizedBox(width: 10),
@@ -570,8 +587,7 @@ class _CheckOutScreenState extends State<CheckOutScreen> {
                                                 'proID': item.documentID,
                                                 'orderID': orderID,
                                                 'orderName': item.name,
-                                                'orderImage':
-                                                    item.imageList,
+                                                'orderImage': item.imageList,
                                                 'orderQuantity': item.quantity,
                                                 'orderPrice':
                                                     item.quantity * item.price,
@@ -747,8 +763,7 @@ class _CheckOutScreenState extends State<CheckOutScreen> {
           context.read<Cart>().clearAllProduct();
           Navigator.pushAndRemoveUntil(
               context,
-              MaterialPageRoute(
-                  builder: (context) => const MyOrderScreen()),
+              MaterialPageRoute(builder: (context) => const MyOrderScreen()),
               (route) => route.isFirst);
         }
       });
