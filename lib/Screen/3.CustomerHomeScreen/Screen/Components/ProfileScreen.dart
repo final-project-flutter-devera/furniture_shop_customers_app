@@ -4,10 +4,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:furniture_shop/Constants/Colors.dart';
 import 'package:furniture_shop/Objects/customer.dart';
+import 'package:furniture_shop/Providers/Auth_reponse.dart';
 import 'package:furniture_shop/Providers/customer_provider.dart';
 import 'package:furniture_shop/Screen/16.%20ProfileRoutes/my_review/my_review.dart';
 import 'package:furniture_shop/Screen/16.%20ProfileRoutes/my_shipping_address/my_shipping_address.dart';
 import 'package:furniture_shop/Screen/16.%20ProfileRoutes/following_store/following_store.dart';
+import 'package:furniture_shop/Screen/2.%20Login%20-%20Signup/Login.dart';
 import 'package:furniture_shop/Widgets/AppBarButton.dart';
 import 'package:furniture_shop/Widgets/AppBarTitle.dart';
 import 'package:furniture_shop/localization/app_localization.dart';
@@ -42,10 +44,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
       isLoading = false;
     });
   }
-
+   var isAnonymous;
   @override
   void initState() {
-    _getCurrentCustomer();
+     isAnonymous = FirebaseAuth.instance.currentUser!.isAnonymous;    _getCurrentCustomer();
     _prefs.then((SharedPreferences prefs) {
       return prefs.getString('customerID') ?? '';
     }).then((String value) {
@@ -65,7 +67,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
     super.initState();
   }
 
-  var isAnonymous = FirebaseAuth.instance.currentUser!.isAnonymous;
+
 
   @override
   Widget build(BuildContext context) {
@@ -136,179 +138,209 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   ),
                 ],
               ),
-              body: isLoading
-                  ? const Center(
-                      child: CircularProgressIndicator(),
+              body: isAnonymous
+                  ? Center(
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Text('Must login for more features'),
+                          MaterialButton(
+                              child: Text(
+                                'LOGIN',
+                                style: TextStyle(color: AppColor.white),
+                              ),
+                              color: AppColor.black,
+                              onPressed: () {
+                                Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (context) => Login()));
+                              }),
+                        ],
+                      ),
                     )
-                  : () {
-                      List tabRoute = [
-                        const MyOrderScreen(),
-                        MyShippingAddress(
-                          currentCustomer: _customer,
-                        ),
-                        null,
-                        MyReview(),
-                        FollowingStore(
-                          currentCustomer: _customer,
-                        ),
-                        null
-                      ];
-                      List<String> tabName = [
-                        context.localize('my_order_option'),
-                        context.localize('shipping_addresses_option'),
-                        context.localize('payment_methods_option'),
-                        context.localize('my_reviews_option'),
-                        context.localize('followed_suppliers_option'),
-                        context.localize('setting_option'),
-                      ];
-                      return Padding(
-                        padding: const EdgeInsets.all(10),
-                        child: Column(
-                          children: [
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  : isLoading
+                      ? const Center(
+                          child: CircularProgressIndicator(),
+                        )
+                      : () {
+                          List tabRoute = [
+                            const MyOrderScreen(),
+                            MyShippingAddress(
+                              currentCustomer: _customer,
+                            ),
+                            null,
+                            MyReview(),
+                            FollowingStore(
+                              currentCustomer: _customer,
+                            ),
+                            null
+                          ];
+                          List<String> tabName = [
+                            context.localize('my_order_option'),
+                            context.localize('shipping_addresses_option'),
+                            context.localize('payment_methods_option'),
+                            context.localize('my_reviews_option'),
+                            context.localize('followed_suppliers_option'),
+                            context.localize('setting_option'),
+                          ];
+                          return Padding(
+                            padding: const EdgeInsets.all(10),
+                            child: Column(
                               children: [
                                 Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceEvenly,
                                   children: [
-                                    CircleAvatar(
-                                      backgroundColor: AppColor.amber,
-                                      radius: 45,
-                                      child: data['profileimage'] == null ||
-                                              data['profileimage'] == ''
-                                          ? const CircleAvatar(
-                                              backgroundColor: AppColor.white,
-                                              radius: 40,
-                                              backgroundImage: AssetImage(
-                                                  'assets/Images/Images/avatarGuest.jpg'),
-                                            )
-                                          : CircleAvatar(
-                                              backgroundColor: AppColor.white,
-                                              radius: 40,
-                                              backgroundImage: NetworkImage(
-                                                data['profileimage'],
-                                              ),
-                                            ),
-                                    ),
-                                    const SizedBox(
-                                      width: 20,
-                                    ),
-                                    SizedBox(
-                                      width: wMQ * 0.5,
-                                      child: Text.rich(
-                                        overflow: TextOverflow.fade,
-                                        softWrap: false,
-                                        TextSpan(
-                                          children: [
-                                            TextSpan(
-                                              text: data['name'] == ''
-                                                  ? 'Guest'.toUpperCase()
-                                                  : data['name'].toUpperCase(),
-                                              style: GoogleFonts.nunito(
-                                                fontSize: 20,
-                                                fontWeight: FontWeight.w700,
-                                                color: AppColor.black,
-                                              ),
-                                            ),
-                                            const TextSpan(text: '\n'),
-                                            TextSpan(
-                                              text: data['email'] == ''
-                                                  ? 'Anonymous'
-                                                  : data['email'],
-                                              style: GoogleFonts.nunito(
-                                                fontSize: 14,
-                                                fontWeight: FontWeight.w400,
-                                                color: AppColor.black,
-                                              ),
-                                            ),
-                                          ],
+                                    Row(
+                                      children: [
+                                        CircleAvatar(
+                                          backgroundColor: AppColor.amber,
+                                          radius: 45,
+                                          child: data['profileimage'] == null ||
+                                                  data['profileimage'] == ''
+                                              ? const CircleAvatar(
+                                                  backgroundColor:
+                                                      AppColor.white,
+                                                  radius: 40,
+                                                  backgroundImage: AssetImage(
+                                                      'assets/Images/Images/avatarGuest.jpg'),
+                                                )
+                                              : CircleAvatar(
+                                                  backgroundColor:
+                                                      AppColor.white,
+                                                  radius: 40,
+                                                  backgroundImage: NetworkImage(
+                                                    data['profileimage'],
+                                                  ),
+                                                ),
                                         ),
-                                      ),
+                                        const SizedBox(
+                                          width: 20,
+                                        ),
+                                        SizedBox(
+                                          width: wMQ * 0.5,
+                                          child: Text.rich(
+                                            overflow: TextOverflow.fade,
+                                            softWrap: false,
+                                            TextSpan(
+                                              children: [
+                                                TextSpan(
+                                                  text: data['name'] == ''
+                                                      ? 'Guest'.toUpperCase()
+                                                      : data['name']
+                                                          .toUpperCase(),
+                                                  style: GoogleFonts.nunito(
+                                                    fontSize: 20,
+                                                    fontWeight: FontWeight.w700,
+                                                    color: AppColor.black,
+                                                  ),
+                                                ),
+                                                const TextSpan(text: '\n'),
+                                                TextSpan(
+                                                  text: data['email'] == ''
+                                                      ? 'Anonymous'
+                                                      : data['email'],
+                                                  style: GoogleFonts.nunito(
+                                                    fontSize: 14,
+                                                    fontWeight: FontWeight.w400,
+                                                    color: AppColor.black,
+                                                  ),
+                                                ),
+                                              ],
+                                            ),
+                                          ),
+                                        ),
+                                      ],
                                     ),
+                                    IconButton(
+                                        onPressed: () {
+                                          isAnonymous
+                                              ? Navigator.pushNamed(
+                                                  context, '/Login_cus')
+                                              : Navigator.push(
+                                                  context,
+                                                  MaterialPageRoute(
+                                                    builder: (context) =>
+                                                        EditInfo(
+                                                      data: data,
+                                                    ),
+                                                  ),
+                                                );
+                                        },
+                                        icon: SvgPicture.asset(
+                                            'assets/Images/Icons/edit.svg')),
                                   ],
                                 ),
-                                IconButton(
-                                    onPressed: () {
-                                      isAnonymous
-                                          ? Navigator.pushNamed(
-                                              context, '/Login_cus')
-                                          : Navigator.push(
-                                              context,
-                                              MaterialPageRoute(
-                                                builder: (context) => EditInfo(
-                                                  data: data,
+                                const SizedBox(height: 20),
+                                Flexible(
+                                  child: ListView.builder(
+                                    shrinkWrap: true,
+                                    itemCount: tabName.length,
+                                    itemBuilder: (BuildContext context, index) {
+                                      return Padding(
+                                        padding: const EdgeInsets.symmetric(
+                                            vertical: 10),
+                                        child: GestureDetector(
+                                          onTap: () {
+                                            isAnonymous
+                                                ? Navigator.pushNamed(
+                                                    context, '/Login_cus')
+                                                : Navigator.push(
+                                                    context,
+                                                    MaterialPageRoute(
+                                                        builder: (context) =>
+                                                            tabRoute[index]));
+                                          },
+                                          child: PhysicalModel(
+                                            elevation: 3,
+                                            borderRadius:
+                                                BorderRadius.circular(10),
+                                            color: AppColor.grey,
+                                            child: ClipRRect(
+                                              borderRadius:
+                                                  BorderRadius.circular(10),
+                                              child: Container(
+                                                height: 80,
+                                                width: wMQ,
+                                                decoration: const BoxDecoration(
+                                                  color: AppColor.white,
                                                 ),
-                                              ),
-                                            );
-                                    },
-                                    icon: SvgPicture.asset(
-                                        'assets/Images/Icons/edit.svg')),
-                              ],
-                            ),
-                            const SizedBox(height: 20),
-                            Flexible(
-                              child: ListView.builder(
-                                shrinkWrap: true,
-                                itemCount: tabName.length,
-                                itemBuilder: (BuildContext context, index) {
-                                  return Padding(
-                                    padding: const EdgeInsets.symmetric(
-                                        vertical: 10),
-                                    child: GestureDetector(
-                                      onTap: () {
-                                        isAnonymous
-                                            ? Navigator.pushNamed(
-                                                context, '/Login_cus')
-                                            : Navigator.push(
-                                                context,
-                                                MaterialPageRoute(
-                                                    builder: (context) =>
-                                                        tabRoute[index]));
-                                      },
-                                      child: PhysicalModel(
-                                        elevation: 3,
-                                        borderRadius: BorderRadius.circular(10),
-                                        color: AppColor.grey,
-                                        child: ClipRRect(
-                                          borderRadius:
-                                              BorderRadius.circular(10),
-                                          child: Container(
-                                            height: 80,
-                                            width: wMQ,
-                                            decoration: const BoxDecoration(
-                                              color: AppColor.white,
-                                            ),
-                                            child: Padding(
-                                              padding: const EdgeInsets.only(
-                                                  left: 20, right: 20),
-                                              child: Row(
-                                                mainAxisAlignment:
-                                                    MainAxisAlignment
-                                                        .spaceBetween,
-                                                children: [
-                                                  Text(
-                                                    tabName[index],
-                                                    style: GoogleFonts.nunito(
-                                                        fontWeight:
-                                                            FontWeight.w700,
-                                                        fontSize: 18),
+                                                child: Padding(
+                                                  padding:
+                                                      const EdgeInsets.only(
+                                                          left: 20, right: 20),
+                                                  child: Row(
+                                                    mainAxisAlignment:
+                                                        MainAxisAlignment
+                                                            .spaceBetween,
+                                                    children: [
+                                                      Text(
+                                                        tabName[index],
+                                                        style:
+                                                            GoogleFonts.nunito(
+                                                                fontWeight:
+                                                                    FontWeight
+                                                                        .w700,
+                                                                fontSize: 18),
+                                                      ),
+                                                      const Icon(Icons
+                                                          .arrow_forward_ios),
+                                                    ],
                                                   ),
-                                                  const Icon(
-                                                      Icons.arrow_forward_ios),
-                                                ],
+                                                ),
                                               ),
                                             ),
                                           ),
                                         ),
-                                      ),
-                                    ),
-                                  );
-                                },
-                              ),
+                                      );
+                                    },
+                                  ),
+                                ),
+                              ],
                             ),
-                          ],
-                        ),
-                      );
-                    }());
+                          );
+                        }());
           // Text("Full Name: ${data['full_name']} ${data['last_name']}");
         }
         return const Center(child: CircularProgressIndicator());

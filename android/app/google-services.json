@@ -8,6 +8,42 @@
   "client": [
     {
       "client_info": {
+        "mobilesdk_app_id": "1:753971544701:android:dedde408a06a36caff6714",
+        "android_client_info": {
+          "package_name": "com.example.funiture_shop"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "753971544701-qo073makt2p51etfjbsgn374l24icarb.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAaHeKKymQEze7rZVFqPRK1ED5fyJv27ns"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "753971544701-h4e9pukuerp703fult4e0eibrvr3o6ej.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "753971544701-f29q7pt6188f4k0bflqcl75b3445kpas.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.funitureShop.RunnerTests"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
         "mobilesdk_app_id": "1:753971544701:android:fbd3e20ec1970ddfff6714",
         "android_client_info": {
           "package_name": "com.example.funiture_shop"
@@ -15,15 +51,15 @@
       },
       "oauth_client": [
         {
-          "client_id": "753971544701-n5ld5mc8v9vcsm23pbeqlr1ctk4bmomk.apps.googleusercontent.com",
+          "client_id": "753971544701-3tc9k9v4l1rmmihk0pkm8rtvmiiqvsf6.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
             "package_name": "com.example.funiture_shop",
-            "certificate_hash": "67d037bdff9682c4222e89bc0045b8fdf7db5012"
+            "certificate_hash": "c0fd04bb8cfe5c31d51436f24c61d4cc35c6653b"
           }
         },
         {
-          "client_id": "753971544701-h4e9pukuerp703fult4e0eibrvr3o6ej.apps.googleusercontent.com",
+          "client_id": "753971544701-qo073makt2p51etfjbsgn374l24icarb.apps.googleusercontent.com",
           "client_type": 3
         }
       ],

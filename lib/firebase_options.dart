@@ -56,7 +56,7 @@ class DefaultFirebaseOptions {
 
   static const FirebaseOptions android = FirebaseOptions(
     apiKey: 'AIzaSyAaHeKKymQEze7rZVFqPRK1ED5fyJv27ns',
-    appId: '1:753971544701:android:fbd3e20ec1970ddfff6714',
+    appId: '1:753971544701:android:dedde408a06a36caff6714',
     messagingSenderId: '753971544701',
     projectId: 'furniture-shop-devera',
     databaseURL: 'https://furniture-shop-devera-default-rtdb.asia-southeast1.firebasedatabase.app',
@@ -65,25 +65,25 @@ class DefaultFirebaseOptions {
 
   static const FirebaseOptions ios = FirebaseOptions(
     apiKey: 'AIzaSyB0Be1QSiRIAliJr61R80lBd7MesczZoQI',
-    appId: '1:753971544701:ios:fc57b6718beaebefff6714',
+    appId: '1:753971544701:ios:38d6cb2294a66366ff6714',
     messagingSenderId: '753971544701',
     projectId: 'furniture-shop-devera',
     databaseURL: 'https://furniture-shop-devera-default-rtdb.asia-southeast1.firebasedatabase.app',
     storageBucket: 'furniture-shop-devera.appspot.com',
-    androidClientId: '753971544701-n5ld5mc8v9vcsm23pbeqlr1ctk4bmomk.apps.googleusercontent.com',
-    iosClientId: '753971544701-o99jivfo2uigqsghd23duqqlvfjmm9vt.apps.googleusercontent.com',
-    iosBundleId: 'com.example.funitureShop',
+    androidClientId: '753971544701-3tc9k9v4l1rmmihk0pkm8rtvmiiqvsf6.apps.googleusercontent.com',
+    iosClientId: '753971544701-gqasdr4dk455qms94t718adnc270pev3.apps.googleusercontent.com',
+    iosBundleId: 'com.example.furnitureShopCustomersApp',
   );
 
   static const FirebaseOptions macos = FirebaseOptions(
     apiKey: 'AIzaSyB0Be1QSiRIAliJr61R80lBd7MesczZoQI',
-    appId: '1:753971544701:ios:d35bc8ffb4c55d71ff6714',
+    appId: '1:753971544701:ios:fc1a82bf9350dd4aff6714',
     messagingSenderId: '753971544701',
     projectId: 'furniture-shop-devera',
     databaseURL: 'https://furniture-shop-devera-default-rtdb.asia-southeast1.firebasedatabase.app',
     storageBucket: 'furniture-shop-devera.appspot.com',
-    androidClientId: '753971544701-n5ld5mc8v9vcsm23pbeqlr1ctk4bmomk.apps.googleusercontent.com',
-    iosClientId: '753971544701-f29q7pt6188f4k0bflqcl75b3445kpas.apps.googleusercontent.com',
-    iosBundleId: 'com.example.funitureShop.RunnerTests',
+    androidClientId: '753971544701-3tc9k9v4l1rmmihk0pkm8rtvmiiqvsf6.apps.googleusercontent.com',
+    iosClientId: '753971544701-kh8ejvqgfivb2hlqktg942rpjdllr27v.apps.googleusercontent.com',
+    iosBundleId: 'com.example.furnitureShopCustomersApp.RunnerTests',
   );
 }
