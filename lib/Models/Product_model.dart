@@ -1,3 +1,4 @@
+import 'package:fancy_shimmer_image/fancy_shimmer_image.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -52,11 +53,12 @@ class _ProductModelState extends State<ProductModel> {
                       ),
                       height: 225,
                       width: 185,
-                      child: Image(
-                        image: NetworkImage(
-                          widget.products['proImages'][0],
-                        ),
-                        fit: BoxFit.cover,
+                      child: FancyShimmerImage(
+                        imageUrl: widget.products['proImages'][0],
+                        boxFit: BoxFit.cover,
+                        shimmerBaseColor: AppColor.baseShimmerColor,
+                        shimmerHighlightColor: AppColor.highlightShimmerColor,
+                        shimmerBackColor: AppColor.widgetShimmerColor,
                       ),
                     ),
                   ),

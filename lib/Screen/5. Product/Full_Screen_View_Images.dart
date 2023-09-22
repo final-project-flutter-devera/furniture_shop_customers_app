@@ -1,3 +1,4 @@
+import 'package:fancy_shimmer_image/fancy_shimmer_image.dart';
 import 'package:flutter/material.dart';
 import 'package:furniture_shop/Constants/Colors.dart';
 import 'package:furniture_shop/Widgets/AppBarButton.dart';
@@ -58,8 +59,15 @@ class _FullScreenViewImagesState extends State<FullScreenViewImages> {
   List<Widget> imageList() {
     return List.generate(widget.imagesList.length, (index) {
       return InteractiveViewer(
-          transformationController: TransformationController(),
-          child: Image.network(widget.imagesList[index].toString()));
+        transformationController: TransformationController(),
+        child: FancyShimmerImage(
+          imageUrl: widget.imagesList[index].toString(),
+          boxFit: BoxFit.cover,
+          shimmerBaseColor: AppColor.baseShimmerColor,
+          shimmerHighlightColor: AppColor.highlightShimmerColor,
+          shimmerBackColor: AppColor.widgetShimmerColor,
+        ),
+      );
     });
   }
 

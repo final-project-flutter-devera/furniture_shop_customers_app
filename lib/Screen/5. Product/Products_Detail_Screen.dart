@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:expandable/expandable.dart';
+import 'package:fancy_shimmer_image/fancy_shimmer_image.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
@@ -192,11 +193,14 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                                   builder: SwiperPagination.dots,
                                 ),
                                 itemBuilder: (context, index) {
-                                  return Image(
-                                    fit: BoxFit.cover,
-                                    image: NetworkImage(
-                                      imagesList[index],
-                                    ),
+                                  return FancyShimmerImage(
+                                    imageUrl: imagesList[index],
+                                    boxFit: BoxFit.cover,
+                                    shimmerBaseColor: AppColor.baseShimmerColor,
+                                    shimmerHighlightColor:
+                                        AppColor.highlightShimmerColor,
+                                    shimmerBackColor:
+                                        AppColor.widgetShimmerColor,
                                   );
                                 },
                                 itemCount: imagesList.length,

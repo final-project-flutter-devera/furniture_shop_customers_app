@@ -176,7 +176,6 @@ class _AddShippingAddressState extends State<AddShipingAddress> {
             errorMessage ?? '',
             style: TextStyle(color: Colors.red),
           ),
-          const Spacer(),
           Padding(
               padding: const EdgeInsets.only(left: 20, right: 20, bottom: 20),
               child: ActionButton(
