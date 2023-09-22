@@ -743,7 +743,7 @@ Widget reviewAll(var reviewStream) {
       }
 
       if (snapshot3.connectionState == ConnectionState.waiting) {
-        return const CircularProgressIndicator();
+        return Center(child: const CircularProgressIndicator());
       }
 
       return ListView.builder(
