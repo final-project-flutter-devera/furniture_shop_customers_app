@@ -105,12 +105,10 @@ class _LoginState extends State<Login> {
         processingAccountMail = true;
       });
       try {
-        await AuthRepo.reloadUser();
+        //await AuthRepo.reloadUser();
+        await AuthRepo.signInWithEmailAndPassword(email, password);
         var user = AuthRepo.uid;
         _formKey.currentState!.reset();
-
-        final SharedPreferences prefs = await _prefs;
-        prefs.setString('customerID', user);
 
         await FirebaseFirestore.instance
             .collection('Customers')
@@ -118,7 +116,6 @@ class _LoginState extends State<Login> {
             .get()
             .then((DocumentSnapshot snapshot) async {
           if (snapshot.exists) {
-            await AuthRepo.signInWithEmailAndPassword(email, password);
             Navigator.pushReplacementNamed(context, '/Customer_screen');
           } else {
             setState(() {
