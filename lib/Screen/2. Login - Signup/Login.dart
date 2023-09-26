@@ -64,7 +64,7 @@ class _LoginState extends State<Login> {
     return await FirebaseAuth.instance
         .signInWithCredential(credential)
         .whenComplete(() async {
-      _uid = AuthRepo.uid;
+      _uid = FirebaseAuth.instance.currentUser!.uid;
       docExist = await checkDocExist(_uid);
 
       final SharedPreferences prefs = await _prefs;
@@ -105,10 +105,12 @@ class _LoginState extends State<Login> {
         processingAccountMail = true;
       });
       try {
-        //await AuthRepo.reloadUser();
-        await AuthRepo.signInWithEmailAndPassword(email, password);
-        var user = AuthRepo.uid;
+        await AuthRepo.reloadUser();
+        var user = FirebaseAuth.instance.currentUser!.uid;
         _formKey.currentState!.reset();
+
+        final SharedPreferences prefs = await _prefs;
+        prefs.setString('customerID', user);
 
         await FirebaseFirestore.instance
             .collection('Customers')
@@ -116,6 +118,7 @@ class _LoginState extends State<Login> {
             .get()
             .then((DocumentSnapshot snapshot) async {
           if (snapshot.exists) {
+            await AuthRepo.signInWithEmailAndPassword(email, password);
             Navigator.pushReplacementNamed(context, '/Customer_screen');
           } else {
             setState(() {
@@ -387,7 +390,7 @@ class _LoginState extends State<Login> {
                                     try {
                                       final UserCredential userCredential =
                                           await signInWithFacebook();
-                                      _uid = AuthRepo.uid;
+                                      _uid = FirebaseAuth.instance.currentUser!.uid;
                                       await customers.doc(_uid).set(
                                         {
                                           'name':
@@ -446,7 +449,7 @@ class _LoginState extends State<Login> {
                                               'cid': _uid,
                                               'role': 'Supplier'
                                             });
-                                            var user = AuthRepo.uid;
+                                            var user = FirebaseAuth.instance.currentUser!.uid;
                                             final SharedPreferences prefs =
                                                 await _prefs;
                                             prefs.setString('customerID', user);

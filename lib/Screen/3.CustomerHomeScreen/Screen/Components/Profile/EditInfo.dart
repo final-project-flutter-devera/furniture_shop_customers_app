@@ -4,7 +4,6 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart' as firebase_storage;
 import 'package:flutter/material.dart';
 import 'package:furniture_shop/Constants/Colors.dart';
-import 'package:furniture_shop/Objects/customer.dart';
 import 'package:furniture_shop/Widgets/AppBarButton.dart';
 import 'package:furniture_shop/Widgets/AppBarTitle.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -13,9 +12,9 @@ import 'package:image_picker/image_picker.dart';
 import '../../../../../Widgets/MyMessageHandler.dart';
 
 class EditInfo extends StatefulWidget {
-  final Customer customer;
+  final dynamic data;
 
-  const EditInfo({super.key, required this.customer});
+  const EditInfo({super.key, required this.data});
 
   @override
   State<EditInfo> createState() => _EditInfoState();
@@ -27,6 +26,8 @@ class _EditInfoState extends State<EditInfo> {
       GlobalKey<ScaffoldMessengerState>();
 
   late String name;
+  late String phone;
+  late String address;
   late String image;
 
   bool processing = false;
@@ -76,14 +77,14 @@ class _EditInfoState extends State<EditInfo> {
       try {
         firebase_storage.Reference ref = firebase_storage
             .FirebaseStorage.instance
-            .ref('customer-Images/${widget.customer.profileimage}.jpg');
+            .ref('customer-Images/${widget.data['profileimage']}.jpg');
         await ref.putFile(File(_imageFile!.path));
         image = await ref.getDownloadURL();
       } catch (e) {
         print(e);
       }
     } else {
-      image = widget.customer.profileimage!;
+      image = widget.data['profileimage'];
     }
   }
 
@@ -94,6 +95,8 @@ class _EditInfoState extends State<EditInfo> {
           .doc(FirebaseAuth.instance.currentUser!.uid);
       transaction.update(documentReference, {
         'name': name,
+        'phone': phone,
+        'address': address,
       });
     }).whenComplete(() => Navigator.pop(context));
   }
@@ -150,8 +153,7 @@ class _EditInfoState extends State<EditInfo> {
                         child: CircleAvatar(
                           radius: 55,
                           backgroundColor: AppColor.white,
-                          backgroundImage:
-                              NetworkImage(widget.customer.profileimage!),
+                          backgroundImage: NetworkImage(widget.data['profileimage']),
                         ),
                       ),
                       Icon(Icons.arrow_forward),
@@ -224,10 +226,52 @@ class _EditInfoState extends State<EditInfo> {
                             onSaved: (value) {
                               name = value!;
                             },
-                            initialValue: widget.customer.name,
+                            initialValue: widget.data['name'],
                             textCapitalization: TextCapitalization.characters,
                             decoration: InputDecoration(
                               labelText: 'Name',
+                              labelStyle: GoogleFonts.nunito(
+                                fontSize: 14,
+                                fontWeight: FontWeight.w400,
+                                color: const Color(0xFF909090),
+                              ),
+                            ),
+                          ),
+                          TextFormField(
+                            validator: (value) {
+                              if (value!.isEmpty) {
+                                return 'Please enter your address';
+                              }
+                              return null;
+                            },
+                            onSaved: (value) {
+                              address = value!;
+                            },
+                            initialValue: widget.data['address'],
+                            textCapitalization: TextCapitalization.characters,
+                            decoration: InputDecoration(
+                              labelText: 'Address',
+                              labelStyle: GoogleFonts.nunito(
+                                fontSize: 14,
+                                fontWeight: FontWeight.w400,
+                                color: const Color(0xFF909090),
+                              ),
+                            ),
+                          ),
+                          TextFormField(
+                            validator: (value) {
+                              if (value!.isEmpty) {
+                                return 'Please enter your name';
+                              }
+                              return null;
+                            },
+                            onSaved: (value) {
+                              phone = value!;
+                            },
+                            initialValue: widget.data['phone'],
+                            textCapitalization: TextCapitalization.characters,
+                            decoration: InputDecoration(
+                              labelText: 'Phone',
                               labelStyle: GoogleFonts.nunito(
                                 fontSize: 14,
                                 fontWeight: FontWeight.w400,

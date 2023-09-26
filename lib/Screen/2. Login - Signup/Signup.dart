@@ -43,21 +43,20 @@ class _SignupState extends State<Signup> {
           setState(() {
             processing = true;
           });
-          print('uid: ${AuthRepo.uid}');
           try {
             await AuthRepo.signUpWithEmailAndPassword(email, password);
             await AuthRepo.updateDisplayName(name);
             await AuthRepo.sendVerificationEmail();
 
             Customer _customer = Customer(
-              cid: AuthRepo.uid,
+              cid: FirebaseAuth.instance.currentUser!.uid,
               name: name,
               email: email,
               role: 'customer',
             );
-            await customers.doc(AuthRepo.uid).set(_customer.toJson());
+            await customers.doc(FirebaseAuth.instance.currentUser!.uid).set(_customer.toJson());
 
-            await checkUID.doc(email).set({'uid': AuthRepo.uid});
+            await checkUID.doc(email).set({'uid': FirebaseAuth.instance.currentUser!.uid});
 
             _formKey.currentState!.reset();
             if (context.mounted) {
@@ -73,7 +72,7 @@ class _SignupState extends State<Signup> {
             } else if (e.code == 'email-already-in-use') {
               await FirebaseFirestore.instance
                   .collection('Customers')
-                  .doc(AuthRepo.uid)
+                  .doc(FirebaseAuth.instance.currentUser!.uid)
                   .get()
                   .then((DocumentSnapshot snapshot) async {
                 if (snapshot.exists) {
